@@ -12,7 +12,7 @@ using namespace std;
 
 static GLfloat spin = 0.0;
 
-const int numShelf = 3; //num of shelves
+const int numShelf = 6; //num of shelves
 const int NUM_PEOPLE = 2;
 
 
@@ -55,8 +55,9 @@ class Global {
 
 Global::Global()
 {
-    float x[numShelf] = {10.0, 10.0, 10.0};
-    float y[numShelf] = {((float)gl.winY-10.0f), ((float)gl.winY-30.0f), ((float)gl.winY-50.0f)};
+    float x[numShelf] = {10.0, 10.0, 10.0, 40.0, 40.0, 40.0};
+    float y[numShelf] = {((float)gl.winY-10.0f), ((float)gl.winY-30.0f), ((float)gl.winY-50.0f),
+                         ((float)gl.winY-10.0f), ((float)gl.winY-30.0f), ((float)gl.winY-50.0f)};
     for (int i = 0; i < numShelf; i++) {
         shelf[i].width = width;
         shelf[i].height = height;
@@ -64,8 +65,8 @@ Global::Global()
         shelf[i].center[1] = y[i];
         shelf[i].center[2] = 0.0;
     } 
-    float xpos[2] = {90.0, 10.0};
-    float ypos[2] = {90.0, 10.0};
+    //float xpos[2] = {90.0, 10.0};
+    //float ypos[2] = {90.0, 10.0};
     for (int i = 0; i < NUM_PEOPLE; i++) {
         person[i].pos[0] = rand() % 100; // 0 - 99
         person[i].pos[1] = rand() % 100;
@@ -123,8 +124,6 @@ void display(void)
 
 void drawPerson()
 {
-    //float xpos = pos[0];
-    //float ypos = pos[1];
     float radBT = 15.0;
     float rad6ft = 6.0;
     float radPer = 1.0;
@@ -213,9 +212,28 @@ void movePerson(float x, float y, int p)
     float speed = 2.0;
     float delta = 0.4;
     int reached = 0;
+    //Collison Detection:
     for (int i = 0; i < numShelf; i++) {
-        if (y < (y + gl.shelf[i].height) && y > (y - gl.shelf[i].height)) {
-
+        if (gl.person[p].pos[1]-1 < (gl.shelf[i].center[1] + gl.shelf[i].height) && 
+            gl.person[p].pos[1]+1 > (gl.shelf[i].center[1] - gl.shelf[i].height)) {
+                //printf("collision on y deteced\n");
+                if (gl.person[p].pos[0]-1 < (gl.shelf[i].center[0] + gl.shelf[i].width) &&
+                    gl.person[p].pos[0]+1 > (gl.shelf[i].center[0] - gl.shelf[i].width)) {
+                        //printf("collision deteced\n");
+                        if (x > 0.0) {
+                            gl.person[p].pos[0] = gl.shelf[i].center[0] - gl.shelf[i].width-2;
+                        }
+                        if (x < 0.0) {
+                            gl.person[p].pos[0] = gl.shelf[i].center[0] + gl.shelf[i].width+2;
+                        }
+                        if (y > 0.0) {
+                            gl.person[p].pos[1] = gl.shelf[i].center[1] - gl.shelf[i].height-2;
+                        }
+                        if (y < 0.0) {
+                            gl.person[p].pos[1] = gl.shelf[i].center[1] + gl.shelf[i].height+2;
+                        }
+                        
+                    }
         }
     }
 
