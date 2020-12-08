@@ -23,4 +23,10 @@ inside the .env files add:
   <br />
   DB_PORT=
   <br />
-  where each of those variables represent the necessary database information
+  where each of those variables represent the necessary database information 
+ <br />
+To run the API server, ensure npm and node.js are installed on your system, then run in the node_server directory:<br />
+npm install
+<br />
+This will download the necessary node modules. Run the API server with:<br />
+node app.js
