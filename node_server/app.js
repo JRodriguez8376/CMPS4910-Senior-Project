@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = process.env.PORT || 3000;
 const db = require('./conn');
+const authMiddleWare = require('./auth');
 
 
 app.use(bodyParser.urlencoded({extended:false}));
@@ -13,7 +14,7 @@ app.use(
         extended: true,
     })
 );
-
+app.use(authMiddleWare);
 app.get('/', (req, res) => {
     res.json({info: 'Node.js, Express, and Postgres API'})
 });

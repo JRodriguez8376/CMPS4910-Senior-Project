@@ -1,5 +1,21 @@
 # Ignoring these files
 
 node_server/.env
+node_server/client.js
 node_server/node_modules/*
 database/*
+README.md
+
+node_modules/**/*
+.expo/*
+npm-debug.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+
+# macOS
+.DS_Store

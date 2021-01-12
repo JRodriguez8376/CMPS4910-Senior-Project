@@ -35,6 +35,7 @@ const getAllUsers = (req, res) => {
             console.log(err, res);
             throw err;
         }
+        res.type('json');
         console.log('User:', results.rows);
         res.status(200).json(results.rows);
     
