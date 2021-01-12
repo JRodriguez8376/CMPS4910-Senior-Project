@@ -16,6 +16,6 @@ README.md
 *.mobileprovision
 *.orig.*
 ./frontend/web-build/
-
+*.code-workspace
 # macOS
 .DS_Store
