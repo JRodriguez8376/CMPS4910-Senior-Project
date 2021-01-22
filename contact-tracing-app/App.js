@@ -21,8 +21,33 @@ import {
 import {
     createBottomTabNavigator
 } from '@react-navigation/bottom-tabs';
+import * as SecureStore from 'expo-secure-store';
 
 import { FlatList, State } from 'react-native-gesture-handler';
+import { acc } from 'react-native-reanimated';
+// Test Variables(DELETE LATER)
+
+let accessToken = {};
+const saveTokenAsync = async (accessToken) => {
+    try {
+        await SecureStore.setItemAsync(
+            'token',
+            accessToken
+        );
+    } catch (error) {
+        console.log("Error in saving Access Token: ", error);
+    }
+}
+const retrieveTokenAsync = async () => {
+    try {
+        return (
+            SecureStore.getItemAsync('token')
+        );
+    } catch (error) {
+        console.log("Error in retrieving Access Token");
+    }
+}
+
 const AuthContext = React.createContext();
 const LoadingScreen = () => {
     return (
@@ -31,8 +56,9 @@ const LoadingScreen = () => {
         </View>
     );
 }
+var savedID = 0;
 const LoginScreen = ({ navigation }) => {
-    const [email, setEmail] = useState('');
+    const [id, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { signIn } = React.useContext(AuthContext);
     return (
@@ -49,7 +75,7 @@ const LoginScreen = ({ navigation }) => {
                         <TextInput style={styles.input}
                             placeholder="johndoe@gmail.com"
                             placeholderTextColor='gray'
-                            value={email}
+                            value={id}
                             onChangeText={setEmail}
                         />
                     </View>
@@ -70,7 +96,7 @@ const LoginScreen = ({ navigation }) => {
                 </View>
                 <View style={styles.formElement}>
                     <TouchableOpacity style={styles.loginButton}
-                        onPress={() => signIn({ email, password })}
+                        onPress={() => signIn({ id, password })}
                     >
                         <Text style={styles.buttonText}> Login </Text>
                     </TouchableOpacity>
@@ -99,7 +125,7 @@ const TestScreen = () => {
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState([]);
     useEffect(() => {
-        fetch('http://localhost:3000/users')
+        fetch('http://localhost:3000/test/users')
             .then((response) => response.json())
             .then((json) => {
                 console.log('JSON here we go babey: ');
@@ -118,27 +144,109 @@ const TestScreen = () => {
                 Test Placeholder
             </Text>
             {isLoading ? <ActivityIndicator /> : (
-            <FlatList
-                data={data}
-                keyExtractor={({ device_id }, index) => device_id}
-                renderItem={({ item }) => (
-                    <Text>User ID: {item.device_id}, Device Type: {item.user_type}</Text>
-                )}
-            />
+                <FlatList
+                    data={data}
+                    keyExtractor={({ device_id }, index) => device_id.toString()}
+                    renderItem={({ item }) => (
+                        <Text>User ID: {item.device_id}, Device Type: {item.user_type}</Text>
+                    )}
+                />
             )}
         </View>
 
     );
 
 }
+
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
+const UserInfoTab = () => {
+    const [isLoading, setLoading] = useState(true);
+    const [data, setData] = useState([]);
+    useEffect(() => {
+        var id = { "id": savedID };
+        console.log(savedID);
+        console.log(id);
+        /*
+        If testing this on a real device, uncomment this code
+        Caused by lack of support from expo-secure-store for web clients,
+        should work on mobile
+        
+        retrieveTokenAsync()
+            .then(result => {
+                console.log("Retrieving: ", result);
+                fetch('http://localhost:3000/api/user/user', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json'
+                    },
 
-const TestFetch = () => {
+                    body: JSON.stringify(id)
 
+                })
+                    .then((response) => response.json())
+                    .then((json) => {
+                        console.log('JSON here we go babey: ');
+                        console.log(json);
+                        setData(json);
+                    })
+                    .catch((error) => {
+                        console.error(error)
+                    })
+                    .finally(() => setLoading(false));
+            })
+            .catch(error => {
+                console.log("Error in promise object retrieveTokenAsync():::", error);
+            });
+            */
+        /* Uncomment this code if testing on Web */
+
+        fetch('http://localhost:3000/api/user/user', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json'
+            },
+
+            body: JSON.stringify(id)
+
+        })
+            .then((response) => response.json())
+            .then((json) => {
+                console.log('JSON here we go babey: ');
+                console.log(json);
+                setData(json);
+            })
+            .catch((error) => {
+                console.error(error)
+            })
+            .finally(() => setLoading(false));
+        /* */
+
+    }, []);
+
+    return (
+        console.log(data),
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Text >
+                User Info Placeholder
+            </Text>
+            {isLoading ? <ActivityIndicator /> : (
+                <View>
+
+                    <Text>Device ID: {data.device_id}</Text>
+                    <Text>User Type: {data.user_type}</Text>
+                    <Text>Email: {data.email}</Text>
+                    <Text>Password: {data.passwrd}</Text>
+                </View>
+
+            )}
+        </View>
+
+    );
 }
-
 /*
 https://reactnavigation.org/docs/auth-flow/
 Modified(And will expand upon to suit our needs) code from the documents on React Navigation
@@ -176,6 +284,7 @@ const App = ({ navigation }) => {
         }
     );
     React.useEffect(() => {
+
         const bootstrapAsync = async () => {
             let userToken;
             try {
@@ -188,18 +297,42 @@ const App = ({ navigation }) => {
             dispatch({ type: 'RESTORE_TOKEN', token: userToken });
         };
         bootstrapAsync();
+
     }, []);
+
     const authContext = React.useMemo(
-        () => ({
-            signIn: async data => {
-                //send sign in data here
-                dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
-            },
-            signOut: () => dispatch({ type: 'SIGN_OUT' }),
-            signUp: async data => {
-                dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
-            },
-        }),
+        () => (
+
+            {
+
+                signIn: async data => {
+                    //send sign in data here
+                    savedID = data.id
+
+                    fetch('http://localhost:3000/api/auth/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data),
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            saveTokenAsync(data.accessToken);
+                            accessToken = data.accessToken;
+                            console.log("Success: ", data);
+
+                        })
+                        .catch((error) => {
+                            console.error('Error: ', error);
+                        });
+                    dispatch({ type: 'SIGN_IN', token: accessToken });
+                },
+                signOut: () => dispatch({ type: 'SIGN_OUT' }),
+                signUp: async data => {
+                    dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
+                },
+            }),
         []
     );
 
@@ -240,8 +373,11 @@ const App = ({ navigation }) => {
         </AuthContext.Provider>
     );
 }
-// Thanks to: https://stackoverflow.com/questions/61025437/how-to-combine-stacknavigator-and-tabnavigator-in-react-navigation-5
-// For helping me with Tab Navigation that is nested inside a Stack Navigation for Auth flow, see the StackNavigator to see the SignedInNavigator Object passed in
+// Thanks to: 
+// https://stackoverflow.com/questions/61025437/how-to-combine-stacknavigator-and-tabnavigator-in-react-navigation-5
+// For helping me with Tab Navigation that is nested inside a 
+// Stack Navigation for Auth flow, see the StackNavigator to see the 
+// SignedInNavigator Object passed in
 const SignedInNavigator = () => {
     return (
         <Tab.Navigator>
@@ -252,6 +388,10 @@ const SignedInNavigator = () => {
             <Tab.Screen
                 name="Test tab"
                 component={TestScreen}
+            />
+            <Tab.Screen
+                name="User info Test tab"
+                component={UserInfoTab}
             />
         </Tab.Navigator>
     )
