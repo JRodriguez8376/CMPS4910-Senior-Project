@@ -9,13 +9,20 @@
   "author": "Joshua Rodriguez",
   "license": "ISC",
   "devDependencies": {
-    "cross-env": "^7.0.2",
-    "nodemon": "^2.0.6"
+    "btoa": "^1.2.1",
+    "cross-env": "^7.0.3",
+    "nodemon": "^2.0.7",
+    "request-promise": "^4.2.6"
   },
   "dependencies": {
+    "@okta/jwt-verifier": "^1.0.1",
+    "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "pg": "^8.4.1"
+    "jsonwebtoken": "^8.5.1",
+    "pg": "^8.5.1",
+    "pg-promise": "^10.9.1"
   }
 }

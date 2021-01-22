@@ -1,5 +1,22 @@
 # Ignoring these files
 
 node_server/.env
+node_server/client.js
+node_server/routes-test/
 node_server/node_modules/*
 database/*
+README.md
+
+contact-tracing-app/node_modules/**/*
+contact-tracing-app/expo/*
+contact-tracing-app/npm-debug.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+contact-tracing-app/web-build/
+*.code-workspace
+# macOS
+.DS_Store
