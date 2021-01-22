@@ -1,11 +1,20 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
+const cors = require('cors');
 const port = process.env.PORT || 3000;
-const db = require('./conn');
-const authMiddleWare = require('./auth');
 
 
+
+const api = require('./routes');
+//const test = require('./routes-test');
+
+// Temporary solution, the port number after "localhost:" corresponds to the
+// port number of the expo application
+app.use(cors({ 
+    origin: 'http://localhost:19006', 
+    credentials :  true
+}));
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 
@@ -14,18 +23,22 @@ app.use(
         extended: true,
     })
 );
-app.use(authMiddleWare);
+//API routes
+app.use('/api', api);
+
+
+// Test routes folder
+//app.use('/test', test);
+
+
 app.get('/', (req, res) => {
     res.json({info: 'Node.js, Express, and Postgres API'})
 });
 
 // API requests for data
 //Implemented queries(subject to change)
-app.get('/connect', db.checkConnection);
-app.get('/users', db.getAllUsers);
 
-app.post('/user', db.createUser);
-app.get('/users/:id', db.getUserByID);
+
 
 //For later to uncomment when they are finished and working
 /*
@@ -51,6 +64,7 @@ app.get('/location/:long&:lat&:', db.getAllContactedLocations);
     // -- Return all contact point coordinates given ids(not fully planned out yet)
 
 */
+
 app.listen(port, () => {
     console.log("Server running on port: ", port);
 });

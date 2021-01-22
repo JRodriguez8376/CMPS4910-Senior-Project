@@ -12,6 +12,6 @@ module.exports = {
     
     issuer: process.env.ISSUER,
     scope: process.env.SCOPE,
-    client_id: process.env.CLIENT_ID,
-    client_secret: process.env.CLIENT_SECRET
+    access_token_secret: process.env.ACCESS_TOKEN_SECRET,
+    refresh_token_secret: process.env.REFRESH_TOKEN_SECRET,
 };
