@@ -7,7 +7,7 @@ const port = process.env.PORT || 3000;
 
 
 const api = require('./routes');
-//const test = require('./routes-test');
+const test = require('./routes-test');
 
 // Temporary solution, the port number after "localhost:" corresponds to the
 // port number of the expo application
@@ -28,7 +28,7 @@ app.use('/api', api);
 
 
 // Test routes folder
-//app.use('/test', test);
+app.use('/test', test);
 
 
 app.get('/', (req, res) => {
