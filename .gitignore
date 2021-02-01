@@ -19,3 +19,6 @@ contact-tracing-app/web-build/
 *.code-workspace
 # macOS
 .DS_Store
+contact-tracing-app/.expo/web/cache/development/babel-loader/001402d6b324f16690d2210416e26082.json
+contact-tracing-app/.expo/web/cache/development/babel-loader/006f935b5cb38d81724a656ab4c21dab.json
+*.json
