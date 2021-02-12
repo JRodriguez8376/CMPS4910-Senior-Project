@@ -1,0 +1,10 @@
+# Ignoring these files
+
+
+node_server/routes-test/
+node_server/node_modules/*
+README.md
+
+*.code-workspace
+# macOS
+.DS_Store

@@ -3,7 +3,7 @@ const express = require('express');
 
 const authRouter = require('./auth');
 const hotspotRouter = require('./hotspot');
-const userRouter = require('./userinfo');
+const userRouter = require('./userInfo');
 
 const api = express.Router()
     .use('/auth', authRouter)
