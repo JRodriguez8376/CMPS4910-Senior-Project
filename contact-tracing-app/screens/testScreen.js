@@ -20,8 +20,10 @@ const TestScreen = () => {
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState([]);
     useEffect(() => {
-        setData(fetchTestData())
-        
+        fetchTestData().then((data) => {
+            console.log("Data returned: ", data);
+        });
+        //setData(response);
         
     }, []);
 

@@ -1,27 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import api from './constants';
-const fetchTestData = async () => {
+const fetchTestData = () => {
 
-    try {
+
         fetch(api + '/test/users', {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json'
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
             }
         })
-            .then((response) => response.json())
-            .then((json) => {
-                console.log('JSON here we go babey: ');
-                console.log(json);
-                return (json);
+            .then((response) => {return response.json()})
+            .then((result) => {
+                return result;
             })
             .catch((error) => {
-                console.error(error)
-            })
-    } catch (error) {
-        console.error(error);
-    }
-
+                console.error(JSON.stringify(error));
+            });
 };
 
 
