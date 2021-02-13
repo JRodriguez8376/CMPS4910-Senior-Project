@@ -3,15 +3,9 @@ import styles from './styles/testScreen.style.js';
 import {
     Text,
     View,
-    StyleSheet,
-    TextInput,
-    ImageBackground,
-    TouchableOpacity,
-    Image,
     ActivityIndicator
 } from 'react-native';
-import {api} from '../api/constants';
-import {fetchTestData} from '../api/fetchAPI';
+import { fetchTestData } from '../api/helpers';
 import { FlatList, State } from 'react-native-gesture-handler';
 //Fetch Requests
 // Example code from: https://reactnative.dev/docs/network
@@ -20,11 +14,13 @@ const TestScreen = () => {
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState([]);
     useEffect(() => {
-        fetchTestData().then((data) => {
-            console.log("Data returned: ", data);
-        });
-        //setData(response);
-        
+        fetchTestData()
+            .then(result => {
+                console.log(result)
+                setData(result);
+            }).then(() => {
+                setLoading(false);
+            });
     }, []);
 
     return (

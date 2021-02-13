@@ -21,7 +21,6 @@ const LoginScreen = () => {
     return (
         
         <View style={styles.container}>
-            {/*<ImageBackground source={require("./assets/images/backgroundLogin.jpg")} style={styles.backgroundImage}>*/}
             <View style={styles.formContainer}>
                 <Image source={require("../assets/images/doge.jpg")} style={styles.logo} />
                 <View style={styles.formElement}>
@@ -59,7 +58,6 @@ const LoginScreen = () => {
                     </TouchableOpacity>
                 </View>
             </View>
-            {/*</ ImageBackground> */}
         </View>
 
     );

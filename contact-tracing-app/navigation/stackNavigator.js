@@ -10,8 +10,9 @@ import LoadingScreen from '../screens/loadingScreen';
 
 import AuthContext from '../context/authContext';
 
-import {saveUnsecured} from '../components/tokenAsync';
-import {api} from '../api/constants';
+import { saveUnsecured } from '../components/tokenAsync';
+import { api } from '../api/constants';
+import { getPostAPIData } from '../api/helpers';
 let savedID = {};
 let accessToken = {};
 const Stack = createStackNavigator();
@@ -63,43 +64,31 @@ const Navigation = () => {
     }, []);
     const authContext = React.useMemo(
         () => (
-
             {
-
                 signIn: async data => {
-                    //send sign in data here
-                    savedID = data.id
-
-                    fetch(api+'/api/auth/login', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(data),
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            //use saveTokenAsync when testing on real device, saveTokenAsync
-                            // does not work on React Native Web
-                            saveUnsecured('token', data.accessToken);
-                            saveUnsecured('id', savedID);
-                            accessToken = data.accessToken;
-                            console.log("Success: ", data);
-
-                        })
-                        .catch((error) => {
-                            console.error('Error: ', error);
+                    //send sign in data here                    
+                    getPostAPIData('/api/auth/login', data)
+                        .then(result => {
+                            //console.log(result);
+                            //Save token information for later
+                            saveUnsecured('token', result.accessToken);
+                            saveUnsecured('id', data.id);
+                            accessToken = result.accessToken;
+                        }).catch((error) => {
+                            console.error('Login error: ', error);
                         });
+                    
                     dispatch({ type: 'SIGN_IN', token: accessToken });
                 },
+                //TO DO: Sign out relinquishes token
                 signOut: () => dispatch({ type: 'SIGN_OUT' }),
+                // TO DO: Sign up creates new token
                 signUp: async data => {
                     dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
                 },
             }),
         []
     );
-
 
     return (
         <AuthContext.Provider value={authContext}>
