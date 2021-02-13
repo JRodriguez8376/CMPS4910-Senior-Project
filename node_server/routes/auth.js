@@ -40,9 +40,9 @@ authRouter.post('/signup', (req, res, next) => {
     //Check if inputs are valid
     if (validateUser(req.body)) {
         //Use pg-promise querying to query db, uses promises for async operations
-        conn.db.one(user.userExists, req.body.id)
+        conn.db.oneOrNone(user.userExists, req.body.id)
             .then(result => {
-                if (result.length != 0) {
+                if ( result && result.length != 0) {
                     //If a user was found, do this
                     res.json({
                         message: "User exists"
