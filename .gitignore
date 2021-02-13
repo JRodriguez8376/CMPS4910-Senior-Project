@@ -1,11 +1,9 @@
 # Ignoring these files
 
-node_server/.env
-node_server/client.js
-node_server/routes-test/
+
+
 node_server/node_modules/*
-database/*
-README.md
+
 
 contact-tracing-app/node_modules/**/*
 contact-tracing-app/expo/*
