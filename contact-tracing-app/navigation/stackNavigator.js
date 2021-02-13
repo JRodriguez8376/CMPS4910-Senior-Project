@@ -11,6 +11,7 @@ import LoadingScreen from '../screens/loadingScreen';
 import AuthContext from '../context/authContext';
 
 import {saveUnsecured} from '../components/tokenAsync';
+import {api} from '../api/constants';
 let savedID = {};
 let accessToken = {};
 const Stack = createStackNavigator();
@@ -69,7 +70,7 @@ const Navigation = () => {
                     //send sign in data here
                     savedID = data.id
 
-                    fetch('http://localhost:3000/api/auth/login', {
+                    fetch(api+'/api/auth/login', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'

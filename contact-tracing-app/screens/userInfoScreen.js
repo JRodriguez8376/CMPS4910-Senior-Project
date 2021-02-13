@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import styles from './styles/testScreen.style.js';
 import {retrieveUnsecured} from '../components/tokenAsync';
+import {api} from '../api/constants';
 const UserInfoTab = () => {
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState([]);
@@ -27,7 +28,7 @@ const UserInfoTab = () => {
             .then(result => {
                 console.log("Retrieving: ", result);
                 console.log("id is", id);
-                fetch('http://localhost:3000/api/user/user', {
+                fetch(api+'/api/user/user', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${result}`,
