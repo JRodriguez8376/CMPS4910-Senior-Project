@@ -20,7 +20,8 @@ const TestScreen = () => {
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState([]);
     useEffect(() => {
-        setData(fetchTestData());
+        setData(fetchTestData())
+        
         
     }, []);
 
