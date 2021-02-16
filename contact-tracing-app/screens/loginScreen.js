@@ -11,6 +11,7 @@ import {
     ActivityIndicator
 } from 'react-native';
 
+//import Virus from '../assets/images/virus.svg';
 import AuthContext from '../context/authContext';
 const LoginScreen = () => {
 
@@ -19,26 +20,11 @@ const LoginScreen = () => {
     const { signIn } = React.useContext(AuthContext);
     
     return (
-        
         <View style={styles.container}>
-            <View style={styles.formContainer}>
+            <ImageBackground source={require("../assets/images/login_img1.jpg")} style={styles.backgroundImage}>
+                <View style={styles.formContainer}>
+                    <View style={styles.name}>Covid Tracing App</View>
                 <Image source={require("../assets/images/doge.jpg")} style={styles.logo} />
-                <View style={styles.formElement}>
-                    <Text style={styles.paragraph}> Email</Text>
-                </View>
-                <View style={styles.formElement}>
-                    <View style={styles.inputView}>
-                        <TextInput style={styles.input}
-                            placeholder="johndoe@gmail.com"
-                            placeholderTextColor='gray'
-                            value={id}
-                            onChangeText={setEmail}
-                        />
-                    </View>
-                </View>
-                <View style={styles.formElement}>
-                    <Text style={styles.paragraph}> Password</Text>
-                </View>
                 <View style={styles.formElement}>
                     <View style={styles.inputView}>
                         <TextInput style={styles.input}
@@ -54,10 +40,18 @@ const LoginScreen = () => {
                     <TouchableOpacity style={styles.loginButton}
                         onPress={() => signIn({ id, password })}
                     >
-                        <Text style={styles.buttonText}> Login </Text>
+                        <Text style={styles.loginText}>LOGIN</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.formElement}>
+                    <TouchableOpacity style={styles.registerButton}
+                        onPress={() => signIn({ id, password })}
+                    >
+                        <Text style={styles.registerText}>Register</Text>
                     </TouchableOpacity>
                 </View>
             </View>
+            </ImageBackground>
         </View>
 
     );
