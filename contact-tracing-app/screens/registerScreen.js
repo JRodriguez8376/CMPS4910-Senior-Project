@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import styles from './styles/RegisterScreen.style.js';
+import styles from './styles/registerScreen.style.js';
 import {
     Text,
     View,
@@ -30,7 +30,6 @@ const RegisterScreen = ({navigation}) => {
                             <TextInput style={styles.input}
                                 placeholder="Email"
                                 placeholderTextColor='gray'
-                                secureTextEntry={true}
                                 value={id}
                                 onChangeText={setEmail}
                             />

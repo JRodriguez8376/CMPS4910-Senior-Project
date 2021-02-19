@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     formElement: {
         //paddingLeft: 40,
         //paddingRight: 40,
-        paddingHorizontal: 40,
+        paddingHorizontal: 20,
         paddingVertical: 10,
         
     },
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     },
     input: {
         height: 50,
-        fontSize: 24,
+        fontSize: 16,
         borderBottomWidth: 0,
         borderColor: 'gray',
         paddingLeft: 10,
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
         //marginTop: 30,
         //marginBottom: 30,
         //maxWidth: '60%',
-        marginHorizontal: 100,
+        marginHorizontal: 40,
         backgroundColor: '#FF0000',
         borderColor: 'white',
         borderWidth: 0.5,
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     },
     loginText: {
         color: '#FFFFFF',
-        fontSize: 24,
+        fontSize: 16,
         paddingBottom: 3
     },
     registerButton: {
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         //marginTop: 30,
         //marginBottom: 30,
-        marginHorizontal: 100,
+        marginHorizontal: 40,
         backgroundColor: '#FFFFFF',
         borderColor: 'red',
         borderWidth: 0.5,
@@ -100,25 +100,25 @@ const styles = StyleSheet.create({
         },
     registerText: {
         color: '#000000',
-        fontSize: 24,
+        fontSize: 16,
         paddingBottom: 3
     },
     titles: {
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: 'bold',
         textAlign: 'center',
         justifyContent: 'center',
     },
     paragraph: {
-        fontSize: 18,
+        fontSize: 16,
         color: 'white',
         textAlign: 'left',
         justifyContent: 'center',
         paddingBottom: 5
     },
     name: {
-        fontfamily: 'sans-serif',
-        fontSize: 36,
+        //fontfamily: 'sans-serif',
+        fontSize: 28,
         fontWeight: 'bold',
         color: 'black',
         textAlign: 'center',
