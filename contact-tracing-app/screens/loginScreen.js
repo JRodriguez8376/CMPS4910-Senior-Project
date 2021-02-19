@@ -23,37 +23,36 @@ const LoginScreen = ({navigation}) => {
         <View style={styles.container}>
             <ImageBackground source={require("../assets/images/login_img.jpg")} style={styles.backgroundImage}>
                 <View style={styles.formContainer}>
-                    <View style={styles.name}>Covid Tracing App</View>
-                <Image source={require("../assets/images/doge.jpg")} style={styles.logo} />
-                <View style={styles.formElement}>
-                    <View style={styles.inputView}>
-                        <TextInput style={styles.input}
-                            placeholder="Password"
-                            placeholderTextColor='gray'
-                            secureTextEntry={true}
-                            value={password}
-                            onChangeText={setPassword}
-                        />
+                    <Text style={styles.name}>Covid Tracing App</Text>
+                    <Image source={require("../assets/images/doge.jpg")} style={styles.logo} />
+                    <View style={styles.formElement}>
+                        <View style={styles.inputView}>
+                            <TextInput style={styles.input}
+                                placeholder="Password"
+                                placeholderTextColor='gray'
+                                secureTextEntry={true}
+                                value={password}
+                                onChangeText={setPassword}
+                            />
+                        </View>
+                    </View>
+                    <View style={styles.formElement}>
+                        <TouchableOpacity style={styles.loginButton}
+                            onPress={() => signIn({ id, password })}
+                        >
+                            <Text style={styles.loginText}>LOGIN</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.formElement}>
+                        <TouchableOpacity style={styles.registerButton}
+                            onPress={() => navigation.push('Register')}
+                        >
+                            <Text style={styles.registerText}>Register</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
-                <View style={styles.formElement}>
-                    <TouchableOpacity style={styles.loginButton}
-                        onPress={() => signIn({ id, password })}
-                    >
-                        <Text style={styles.loginText}>LOGIN</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.formElement}>
-                    <TouchableOpacity style={styles.registerButton}
-                        onPress={() => navigation.push('Register')}
-                    >
-                        <Text style={styles.registerText}>Register</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
             </ImageBackground>
         </View>
-
     );
 }
 

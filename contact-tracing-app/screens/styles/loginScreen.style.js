@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         //marginTop: 30,
         //marginBottom: 30,
+        //maxWidth: '60%',
         marginHorizontal: 100,
         backgroundColor: '#FF0000',
         borderColor: 'white',

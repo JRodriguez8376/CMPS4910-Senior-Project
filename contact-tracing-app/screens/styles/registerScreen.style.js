@@ -85,6 +85,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         //marginTop: 30,
         //marginBottom: 30,
+        paddingHorizontal: 5,
         marginHorizontal: 100,
         backgroundColor: '#FFFFFF',
         borderColor: 'red',
@@ -93,12 +94,14 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.6,
         shadowRadius: 6,
         elevation: 6,
-        shadowOffset: {width: 1, height: 2}
+        shadowOffset: {width: 1, height: 2},
+        flexDirection: 'row',
         },
     registerText: {
         color: '#000000',
-        fontSize: 24,
-        paddingBottom: 3
+        fontSize: 16,
+        paddingBottom: 3,
+        flexShrink: 1,
     },
     titles: {
         fontSize: 18,
