@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import styles from './styles/loginScreen.style.js';
+import styles from './styles/RegisterScreen.style.js';
 import {
     Text,
     View,
@@ -13,11 +13,11 @@ import {
 
 //import Virus from '../assets/images/virus.svg';
 import AuthContext from '../context/authContext';
-const LoginScreen = ({navigation}) => {
+const RegisterScreen = (navigation) => {
 
     const [id, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { signIn } = React.useContext(AuthContext);
+    const { signUp } = React.useContext(AuthContext);
     
     return (
         <View style={styles.container}>
@@ -25,6 +25,17 @@ const LoginScreen = ({navigation}) => {
                 <View style={styles.formContainer}>
                     <View style={styles.name}>Covid Tracing App</View>
                 <Image source={require("../assets/images/doge.jpg")} style={styles.logo} />
+                <View style={styles.formElement}>
+                    <View style={styles.inputView}>
+                        <TextInput style={styles.input}
+                            placeholder="Email"
+                            placeholderTextColor='gray'
+                            secureTextEntry={true}
+                            value={id}
+                            onChangeText={setEmail}
+                        />
+                    </View>
+                </View>
                 <View style={styles.formElement}>
                     <View style={styles.inputView}>
                         <TextInput style={styles.input}
@@ -38,18 +49,20 @@ const LoginScreen = ({navigation}) => {
                 </View>
                 <View style={styles.formElement}>
                     <TouchableOpacity style={styles.loginButton}
-                        onPress={() => signIn({ id, password })}
+                        onPress={() => signUp({ id, password })}
                     >
-                        <Text style={styles.loginText}>LOGIN</Text>
+                        <Text style={styles.loginText}>Sign Up</Text>
                     </TouchableOpacity>
                 </View>
+                {/* 
                 <View style={styles.formElement}>
                     <TouchableOpacity style={styles.registerButton}
-                        onPress={() => navigation.push('Register')}
+                        onPress={() => signIn({ id, password })}
                     >
                         <Text style={styles.registerText}>Register</Text>
                     </TouchableOpacity>
                 </View>
+                */}
             </View>
             </ImageBackground>
         </View>
@@ -57,4 +70,4 @@ const LoginScreen = ({navigation}) => {
     );
 }
 
-export default LoginScreen;
+export default RegisterScreen;

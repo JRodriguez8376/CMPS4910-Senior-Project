@@ -29,9 +29,7 @@ const styles = StyleSheet.create({
     },
     backgroundImage: {
         flex: 1,
-        //width: '100%',
-        //height: '100%',
-        resizeMode: 'contain',
+        resizeMode: 'cover',
         justifyContent: 'flex-start',
     },
     inputView: {
@@ -116,13 +114,12 @@ const styles = StyleSheet.create({
         paddingBottom: 5
     },
     name: {
-        fontfamily: 'sans-serif',
         fontSize: 36,
         fontWeight: 'bold',
         color: 'black',
         textAlign: 'center',
         justifyContent: 'center',
-        paddingBottom: 5,
+        paddingBottom: 5
     },
     logo: {
         width: 150,

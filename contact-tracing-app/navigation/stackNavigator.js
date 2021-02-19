@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import SignedInNavigator from './tabNavigator';
 import LoginScreen from '../screens/loginScreen';
+import RegisterScreen from '../screens/registerScreen';
 import LoadingScreen from '../screens/loadingScreen';
 
 import AuthContext from '../context/authContext';
@@ -102,6 +103,7 @@ const Navigation = () => {
                             />
                         ) : state.userToken == null ? (
                             // No authenticated token
+                            <>
                             <Stack.Screen
                                 name="Login"
                                 component={LoginScreen}
@@ -109,6 +111,15 @@ const Navigation = () => {
                                     headerShown: false
                                 }}
                             />
+                            <Stack.Screen
+                                name="Register"
+                                component={RegisterScreen}
+                                options={{
+                                    headerShown: false
+                                }}
+                            />
+
+                            </>
                         ) : (
                                     <Stack.Screen
                                         name="SignedIn"
