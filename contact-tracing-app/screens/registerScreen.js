@@ -47,17 +47,17 @@ const RegisterScreen = ({navigation}) => {
                         </View>
                     </View>
                     <View style={styles.formElement}>
-                        <TouchableOpacity style={styles.loginButton}
+                        <TouchableOpacity style={styles.signUpButton}
                             onPress={() => signUp({ id, password })}
                         >
-                            <Text style={styles.loginText}>Sign Up</Text>
+                            <Text style={styles.signUpText}>Sign Up</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.formElement}>
-                        <TouchableOpacity style={styles.registerButton}
+                        <TouchableOpacity style={styles.signInPageButton}
                             onPress={() => navigation.push("Login")}
                         >
-                            <Text numberOfLines={1} style={styles.registerText}>Already have an account? Sign In</Text>
+                            <Text numberOfLines={1} style={styles.signInPageText}>Already have an account? Sign In</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

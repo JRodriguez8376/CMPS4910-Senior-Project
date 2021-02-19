@@ -13,11 +13,29 @@ import {
 
 //import Virus from '../assets/images/virus.svg';
 import AuthContext from '../context/authContext';
+
+/*
+validate = (text) => {
+    console.log(text);
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (reg.test(text) === false) {
+        console.log("Email is Not Correct");
+        this.setState({ email: text })
+        return false;
+    }
+    else {
+        this.setState({ email: text })
+        console.log("Email is Correct");
+    }
+}
+*/
 const LoginScreen = ({navigation}) => {
 
     const [id, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { signIn } = React.useContext(AuthContext);
+
+    
     
     return (
         <View style={styles.container}>
@@ -25,6 +43,18 @@ const LoginScreen = ({navigation}) => {
                 <View style={styles.formContainer}>
                     <Text style={styles.name}>Covid Tracing App</Text>
                     <Image source={require("../assets/images/doge.jpg")} style={styles.logo} />
+                    <View style={styles.formElement}>
+                        <View style={styles.inputView}>
+                            <TextInput style={styles.input}
+                                placeholder="Email"
+                                placeholderTextColor='gray'
+                                value={id}
+                                onChangeText={setEmail}
+                                //onChangeText={(text) => this.validate(text)}
+                                //value={this.state.email}
+                            />
+                        </View>
+                        </View>
                     <View style={styles.formElement}>
                         <View style={styles.inputView}>
                             <TextInput style={styles.input}
@@ -37,17 +67,17 @@ const LoginScreen = ({navigation}) => {
                         </View>
                     </View>
                     <View style={styles.formElement}>
-                        <TouchableOpacity style={styles.loginButton}
+                        <TouchableOpacity style={styles.signInButton}
                             onPress={() => signIn({ id, password })}
                         >
-                            <Text style={styles.loginText}>LOGIN</Text>
+                            <Text style={styles.signInText}>LOGIN</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.formElement}>
-                        <TouchableOpacity style={styles.registerButton}
+                        <TouchableOpacity style={styles.signUpPageButton}
                             onPress={() => navigation.push('Register')}
                         >
-                            <Text style={styles.registerText}>Register</Text>
+                            <Text style={styles.signUpPageText}>Register</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

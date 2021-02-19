@@ -58,9 +58,9 @@ const styles = StyleSheet.create({
         textAlign: 'left'
 
     },
-    loginButton: {
+    signInButton: {
         borderRadius: 25,
-        height: 50,
+        height: 40,
         alignItems: 'center',
         justifyContent: 'center',
         //marginTop: 30,
@@ -76,14 +76,14 @@ const styles = StyleSheet.create({
         elevation: 6,
         shadowOffset: {width: 1, height: 2}
     },
-    loginText: {
+    signInText: {
         color: '#FFFFFF',
         fontSize: 16,
         paddingBottom: 3
     },
-    registerButton: {
+    signUpPageButton: {
         borderRadius: 25,
-        height: 50,
+        height: 40,
         alignItems: 'center',
         justifyContent: 'center',
         //marginTop: 30,
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
         elevation: 6,
         shadowOffset: {width: 1, height: 2}
         },
-    registerText: {
+    signUpPageText: {
         color: '#000000',
         fontSize: 16,
         paddingBottom: 3
