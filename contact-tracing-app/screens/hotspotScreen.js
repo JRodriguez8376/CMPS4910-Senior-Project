@@ -3,12 +3,6 @@ import * as React from 'react';
 import {
     Text,
     View,
-    StyleSheet,
-    TextInput,
-    ImageBackground,
-    TouchableOpacity,
-    Image,
-    ActivityIndicator
 } from 'react-native';
 import styles from './styles/hotspotScreen.style'
 

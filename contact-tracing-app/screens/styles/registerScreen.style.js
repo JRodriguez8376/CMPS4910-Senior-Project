@@ -29,9 +29,7 @@ const styles = StyleSheet.create({
     },
     backgroundImage: {
         flex: 1,
-        //width: '100%',
-        //height: '100%',
-        resizeMode: 'contain',
+        resizeMode: 'cover',
         justifyContent: 'flex-start',
     },
     inputView: {
@@ -58,14 +56,13 @@ const styles = StyleSheet.create({
         textAlign: 'left'
 
     },
-    signInButton: {
+    signUpButton: {
         borderRadius: 25,
         height: 40,
         alignItems: 'center',
         justifyContent: 'center',
         //marginTop: 30,
         //marginBottom: 30,
-        //maxWidth: '60%',
         marginHorizontal: 40,
         backgroundColor: '#FF0000',
         borderColor: 'white',
@@ -76,18 +73,19 @@ const styles = StyleSheet.create({
         elevation: 6,
         shadowOffset: {width: 1, height: 2}
     },
-    signInText: {
+    signUpText: {
         color: '#FFFFFF',
         fontSize: 16,
         paddingBottom: 3
     },
-    signUpPageButton: {
+    signInPageButton: {
         borderRadius: 25,
         height: 40,
         alignItems: 'center',
         justifyContent: 'center',
         //marginTop: 30,
         //marginBottom: 30,
+        paddingHorizontal: 5,
         marginHorizontal: 40,
         backgroundColor: '#FFFFFF',
         borderColor: 'red',
@@ -96,12 +94,14 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.6,
         shadowRadius: 6,
         elevation: 6,
-        shadowOffset: {width: 1, height: 2}
+        shadowOffset: {width: 1, height: 2},
+        flexDirection: 'row',
         },
-    signUpPageText: {
+    signInPageText: {
         color: '#000000',
-        fontSize: 16,
-        paddingBottom: 3
+        fontSize: 12,
+        paddingBottom: 3,
+        flexShrink: 1,
     },
     titles: {
         fontSize: 16,
@@ -110,35 +110,23 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     paragraph: {
-<<<<<<< HEAD
-
-        fontSize: 18,
-        color: 'black',
-=======
         fontSize: 16,
         color: 'white',
->>>>>>> a09524d9d244a7970e12c24e238b97478115cf52
         textAlign: 'left',
         justifyContent: 'center',
         paddingBottom: 5
     },
     name: {
-        //fontfamily: 'sans-serif',
         fontSize: 28,
         fontWeight: 'bold',
         color: 'black',
         textAlign: 'center',
         justifyContent: 'center',
-        paddingBottom: 5,
+        paddingBottom: 5
     },
     logo: {
-<<<<<<< HEAD
-        width: 400,
-        height: 400,
-=======
         width: 150,
         height: 150,
->>>>>>> a09524d9d244a7970e12c24e238b97478115cf52
         resizeMode: 'contain',
         alignSelf: 'center',
         margin: 30,

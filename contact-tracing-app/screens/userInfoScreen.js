@@ -1,85 +1,49 @@
+//Test screen for pulling data from API using authorized token
+
 import React, { useState, useEffect } from 'react';
 import {
     Text,
     View,
-    StyleSheet,
-    TextInput,
-    ImageBackground,
-    TouchableOpacity,
-    Image,
     ActivityIndicator
 } from 'react-native';
 import styles from './styles/testScreen.style.js';
-import {retrieveUnsecured} from '../components/tokenAsync';
+import { retrieveUnsecured } from '../components/tokenAsync';
+import { getPostAPIData } from '../api/helpers';
 const UserInfoTab = () => {
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState([]);
-    let id = {}
+
     useEffect(() => {
+        /*
+        Retrieve token id from storage, then auth token, then send POST request that
+        returns data asynchronously
+        */
         retrieveUnsecured('id')
-        .then(resultID => {
-            id = resultID
-        }).catch(error => {
-            console.log(error);
-        });
-        
-        retrieveUnsecured('token')
-            .then(result => {
-                console.log("Retrieving: ", result);
-                console.log("id is", id);
-                fetch('http://localhost:3000/api/user/user', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${result}`,
-                        'Content-Type': 'application/json'
-                    },
-
-                    body: JSON.stringify({"id": id})
-
-                })
-                    .then((response) => response.json())
-                    .then((json) => {
-                        console.log('JSON here we go babey: ');
-                        console.log(json);
-                        setData(json);
+            .then(id => {
+                retrieveUnsecured('token')
+                    .then(result => {
+                        //console.log("Retrieving: ", result);
+                        //console.log("id is", id);
+                        //Send API request with ID and bearer token
+                        getPostAPIData('/api/user/user', { "id": id }, result)
+                            //If completed, setData to screen and take off loading screen
+                            .then(result => setData(result))
+                            .then(() => setLoading(false))
+                            .catch(error => {
+                                console.error(error);
+                            });
                     })
-                    .catch((error) => {
-                        console.error(error)
-                    })
-                    .finally(() => setLoading(false));
+                    .catch(error => {
+                        console.error(error);
+                    });
             })
             .catch(error => {
-                console.log("Error in promise object retrieveTokenAsync():::", error);
+                console.error("Error in promise object retrieveTokenAsync():::", error);
             });
-            
-        /* Uncomment this code if testing on Web 
-
-        fetch('http://localhost:3000/api/user/user', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${accessToken}`,
-                'Content-Type': 'application/json'
-            },
-
-            body: JSON.stringify(id)
-
-        })
-            .then((response) => response.json())
-            .then((json) => {
-                console.log('JSON here we go babey: ');
-                console.log(json);
-                setData(json);
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-            .finally(() => setLoading(false));
-         */
 
     }, []);
 
     return (
-        console.log(data),
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <Text >
                 User Info Placeholder
