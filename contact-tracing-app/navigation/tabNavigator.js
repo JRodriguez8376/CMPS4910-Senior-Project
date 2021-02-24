@@ -5,6 +5,7 @@ import {
 import HotspotScreen from '../screens/hotspotScreen';
 import TestScreen from '../screens/testScreen';
 import UserInfoTab from '../screens/userInfoScreen';
+import ResourcesTips from "../screens/styles/resourcesTips";
 
 
 // Thanks to: 
@@ -27,6 +28,10 @@ const SignedInNavigator = () => {
             <Tab.Screen
                 name="User info Test tab"
                 component={UserInfoTab}
+            />
+            <Tab.Screen
+                name="Resources and Tips tab"
+                component={ResourcesTips}
             />
         </Tab.Navigator>
     )

@@ -21,9 +21,9 @@ const LoginScreen = () => {
     return (
         
         <View style={styles.container}>
-            {/*<ImageBackground source={require("./assets/images/backgroundLogin.jpg")} style={styles.backgroundImage}>*/}
+            <ImageBackground source={require("../assets/images/backgroundLogin.jpg")} style={styles.backgroundImage}/>
             <View style={styles.formContainer}>
-                <Image source={require("../assets/images/testIllya.jpg")} style={styles.logo} />
+                <Image source={require("../assets/images/Path-o-Gen.jpg")} style={styles.logo} />
                 <View style={styles.formElement}>
                     <Text style={styles.paragraph}> Email</Text>
                 </View>

@@ -60,14 +60,14 @@ const styles = StyleSheet.create({
     paragraph: {
 
         fontSize: 18,
-        color: 'white',
+        color: 'black',
         textAlign: 'left',
         justifyContent: 'center',
     },
 
     logo: {
-        width: 100,
-        height: 100,
+        width: 400,
+        height: 400,
         resizeMode: 'contain',
         alignSelf: 'center',
         margin: 100
