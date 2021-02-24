@@ -110,14 +110,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     paragraph: {
-<<<<<<< HEAD
-
-        fontSize: 18,
-        color: 'black',
-=======
         fontSize: 16,
         color: 'white',
->>>>>>> a09524d9d244a7970e12c24e238b97478115cf52
         textAlign: 'left',
         justifyContent: 'center',
         paddingBottom: 5
@@ -132,13 +126,8 @@ const styles = StyleSheet.create({
         paddingBottom: 5,
     },
     logo: {
-<<<<<<< HEAD
-        width: 400,
-        height: 400,
-=======
         width: 150,
         height: 150,
->>>>>>> a09524d9d244a7970e12c24e238b97478115cf52
         resizeMode: 'contain',
         alignSelf: 'center',
         margin: 30,

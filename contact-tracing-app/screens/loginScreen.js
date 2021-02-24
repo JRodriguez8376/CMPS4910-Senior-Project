@@ -39,22 +39,6 @@ const LoginScreen = ({navigation}) => {
     
     return (
         <View style={styles.container}>
-<<<<<<< HEAD
-            <ImageBackground source={require("../assets/images/backgroundLogin.jpg")} style={styles.backgroundImage}/>
-            <View style={styles.formContainer}>
-                <Image source={require("../assets/images/Path-o-Gen.jpg")} style={styles.logo} />
-                <View style={styles.formElement}>
-                    <Text style={styles.paragraph}> Email</Text>
-                </View>
-                <View style={styles.formElement}>
-                    <View style={styles.inputView}>
-                        <TextInput style={styles.input}
-                            placeholder="johndoe@gmail.com"
-                            placeholderTextColor='gray'
-                            value={id}
-                            onChangeText={setEmail}
-                        />
-=======
             <ImageBackground source={require("../assets/images/login_img.jpg")} style={styles.backgroundImage}>
                 <View style={styles.formContainer}>
                     <Text style={styles.name}>Covid Tracing App</Text>
@@ -81,7 +65,6 @@ const LoginScreen = ({navigation}) => {
                                 onChangeText={setPassword}
                             />
                         </View>
->>>>>>> a09524d9d244a7970e12c24e238b97478115cf52
                     </View>
                     <View style={styles.formElement}>
                         <TouchableOpacity style={styles.signInButton}
