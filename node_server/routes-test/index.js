@@ -12,7 +12,7 @@ const api = express.Router()
     .use('/users', usersRouter)
     
     //.use('/auth', authRouter)
-    //.use('/hotspot', hotspotRouter)
+    .use('/hotspot', hotspotRouter)
     //.use('/user', userRouter)
     ;
 

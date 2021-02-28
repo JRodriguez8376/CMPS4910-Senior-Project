@@ -44,14 +44,14 @@ authRouter.post('/signup', (req, res, next) => {
             .then(result => {
                 if ( result && result.length != 0) {
                     //If a user was found, do this
-                    res.json({
+                    res.status(403).json({
                         message: "User exists"
                     })
                     console.log("User already exists");
                 } else {
                     //Hash signup password into database, create new user with hashed password
                     bcrypt.hash(req.body.password, saltRounds).then((hash) => {
-                        res.json({
+                        res.status(200).json({
                             hash,
                             message: 'hashed'
                         });
@@ -60,6 +60,7 @@ authRouter.post('/signup', (req, res, next) => {
                 }
             })
             .catch(error => {
+                res.sendStatus(400);
                 console.log("Error in signup route", error);
             });
     } else {
@@ -76,7 +77,7 @@ authRouter.post('/login', (req, res, next) => {
             .then(result => {
                 if (result.length == 0) {
                     //If no user was found, do this
-                    res.json({
+                    res.status(403).json({
                         message: "User does not exist"
                     })
                     console.log("User does not exist ");
@@ -94,7 +95,7 @@ authRouter.post('/login', (req, res, next) => {
                                 //Signing JSON web tokens for authentication
                                 const accessToken = generateToken(user_token_info);
 
-                                res.json({
+                                res.status(200).json({
                                     answer,
                                     message: "Logged in",
                                     
@@ -102,18 +103,18 @@ authRouter.post('/login', (req, res, next) => {
                                 });
                             } else {
                                 //Else state it does not log in user
-                                res.json({
+                                res.status(401).json({
                                     answer,
                                     message: "Not Logged in"
                                 });
-                                console.log("Failed login attempt");
+                                console.error("Failed login attempt");
                             }
                         });
                 }
             })
             .catch(error => {
                 console.log("Error", error);
-                res.json("Error in logging in");
+                res.status(400).json("Error in logging in");
             });
     } else {
         next(new Error('Invalid User'));

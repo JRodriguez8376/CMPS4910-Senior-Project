@@ -19,6 +19,22 @@ userInfoRouter.all( '/user', (req, res, next) => {
     })
 
 });
+userInfoRouter.post('/sendstatus'), (req, res) => {
+    conn.db.none("INSERT into has(fk_status_id, fk_has_device_id) VALUES($1, $2)",
+    [req.body.status_id, req.body.device_id])
+    .then(() => {
+        console.log("/sendstatus route successful");
+        res.status(200).json({
+            message: "Accepted POST request in /sendStatus"
+        });
+    })
+    .catch(error => {
+        console.error("Error occured in /sendstatus query \n ", error);
+        res.status(400).json({
+            message: "Rejected status send"
+        });
+    });
+}
 userInfoRouter.get('/', (req, res, next) => {
 
 res.json({
