@@ -4,7 +4,7 @@
 #include <iomanip>
 #include <bits10_1.h>
 #include <math.h>
-
+//#include <bits/stdc++.h>
 #define M_PI 3.14159265358979323846
 
 using namespace std;
@@ -55,7 +55,11 @@ int main()
     long double filLat5 = 34.402726;
     long double filLong5 = -118.917734;
 
+    long double alonsoStartlat = 35.59713916;
+    long double alonsoStartlong = 119.35177712;
+    long double alonsoPoint1lat = 35.59722720;
+    long double alonosPoint1long = 119.35184582;
     cout << setprecision(5) << fixed;
-    cout << distance(filLat0, filLong0, filLat5, filLong5) << " Feet\n";
+    cout << distance(alonsoStartlat, alonsoStartlong, alonsoPoint1lat, alonosPoint1long) << " Feet\n";
     return 0; 
 }
