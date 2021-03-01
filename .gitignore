@@ -1,0 +1,8 @@
+# Ignoring these files
+
+node_server/.env
+node_server/node_modules/*
+database/*
+contact-tracing-app/.expo
+contact-tracing-app/.expo-shared
+contact-tracing-app/node_modules
