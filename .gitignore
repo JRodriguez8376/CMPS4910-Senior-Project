@@ -1,5 +1,0 @@
-# Ignoring these files
-
-node_server/.env
-node_server/node_modules/*
-database/*
