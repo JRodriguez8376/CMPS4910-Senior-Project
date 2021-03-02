@@ -1,7 +1,9 @@
 all: test
 
 test:
-	g++ -std=c++17 testPQLIB.cpp -lpqxx -lpq
+	g++ -std=c++17 testPQLIB.cpp -lpqxx -lpq -o testPQLIB
+	g++ -std=c++17 testNotify.cpp -lpqxx -lpq -o testNotify
 
 clean:
-	rm a.out
+	rm testPQLIB
+	rm testNotify
