@@ -5,7 +5,7 @@ import {
 import HotspotScreen from '../screens/hotspotScreen';
 import TestScreen from '../screens/testScreen';
 import UserInfoTab from '../screens/userInfoScreen';
-import ResourcesTips from "../screens/styles/resourcesTips";
+import ResourcesTips from '../screens/resourcesTips';
 
 
 // Thanks to: 
