@@ -11,7 +11,6 @@ const jwt = require('jsonwebtoken');
 //custom modules
 const user = require('../database/user');
 const conn = require('../database/conn');
-const { generateToken } = require('./token');
 // const variables
 
 const saltRounds = 10;
@@ -23,8 +22,22 @@ authRouter.get('/', (req, res) => {
 });
 
 //
-
-//Validate user input for signup/login
+const validateToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    if (authHeader) {
+        const token = authHeader.split(' ')[1];
+    } else {
+        return res.sendStatus(401);
+    }
+    jwt.verify(token, access_token_secret, (err, user) => {
+        if (err) {
+            return res.sendStatus(403);
+        }
+        req.user = user;
+        next();
+    })
+}
+//Validate userinput for signup/login
 const validateUser = (user) => {
     const validID = typeof user.id == 'string' && user.id.trim() != '';
     const validPassword = typeof user.password == 'string' && user.password.trim() != '';
@@ -40,18 +53,18 @@ authRouter.post('/signup', (req, res, next) => {
     //Check if inputs are valid
     if (validateUser(req.body)) {
         //Use pg-promise querying to query db, uses promises for async operations
-        conn.db.oneOrNone(user.userExists, req.body.id)
+        conn.db.one(user.userExists, req.body.id)
             .then(result => {
-                if ( result && result.length != 0) {
+                if (result.length != 0) {
                     //If a user was found, do this
-                    res.status(403).json({
+                    res.json({
                         message: "User exists"
                     })
                     console.log("User already exists");
                 } else {
                     //Hash signup password into database, create new user with hashed password
                     bcrypt.hash(req.body.password, saltRounds).then((hash) => {
-                        res.status(200).json({
+                        res.json({
                             hash,
                             message: 'hashed'
                         });
@@ -60,12 +73,14 @@ authRouter.post('/signup', (req, res, next) => {
                 }
             })
             .catch(error => {
-                res.sendStatus(400);
                 console.log("Error in signup route", error);
+
             });
     } else {
         next(new Error('Invalid User'));
     }
+
+
 });
 
 //Login Route for Authentication
@@ -77,7 +92,7 @@ authRouter.post('/login', (req, res, next) => {
             .then(result => {
                 if (result.length == 0) {
                     //If no user was found, do this
-                    res.status(403).json({
+                    res.json({
                         message: "User does not exist"
                     })
                     console.log("User does not exist ");
@@ -89,37 +104,32 @@ authRouter.post('/login', (req, res, next) => {
                             //If matched, send response and login information
                             if (answer) {
                                 const user_token_info = { id: req.body.id };
-                                console.log("User Token Info", user_token_info);
-                                
                                 console.log("User logging in");
                                 //Signing JSON web tokens for authentication
-                                const accessToken = generateToken(user_token_info);
-
-                                res.status(200).json({
+                                const accessToken = jwt.sign(user_token_info, access_token_secret);
+                                res.json({
                                     answer,
                                     message: "Logged in",
-                                    
                                     accessToken: accessToken
                                 });
                             } else {
                                 //Else state it does not log in user
-                                res.status(401).json({
+                                res.json({
                                     answer,
                                     message: "Not Logged in"
                                 });
-                                console.error("Failed login attempt");
+                                console.log("Failed login attempt");
                             }
                         });
                 }
             })
             .catch(error => {
                 console.log("Error", error);
-                res.status(400).json("Error in logging in");
+                res.json("Error in logging in");
             });
     } else {
         next(new Error('Invalid User'));
     }
 });
-
 
 module.exports = authRouter;

@@ -4,14 +4,14 @@ const bcrypt = require('bcrypt');
 const { access_token_secret, refresh_token_secret } = require('../config');
 const user = require('../database/user');
 const conn = require('../database/conn');
-const { validateToken } = require('./token');
+
 
 hotspotRouter.get('/', (req, res) => {
     res.json({
         Page: "Hotspot page"
     });
-});
-hotspotRouter.post('/locations', validateToken, (req, res) => {
+})
+hotspotRouter.post('/locations',  (req, res) => {
     conn.db.many("SELECT latitude, longitude from locations")
         .then(result => {
             if (result && result.length != 0) {
@@ -28,7 +28,7 @@ hotspotRouter.post('/locations', validateToken, (req, res) => {
             console.error("Error in locations POST route: ", error);
         });
 });
-hotspotRouter.post('/newcontact', validateToken, (req, res) => {
+hotspotRouter.post('/newcontact', (req, res) => {
     conn.db.none("INSERT into potential_contact(device_id_1, device_id_2, latitude, \
         longitude, time_met) VALUES($1, $2, $3, $4, $5)", [req.body.device_id, req.body.device_id_2,
     req.body.latitude, req.body.longitude, req.body.time_recorded])
@@ -58,7 +58,7 @@ hotspotRouter.post('/newcontact', validateToken, (req, res) => {
         })
 });
 
-hotspotRouter.post('/newlocation', validateToken, (req, res) => {
+hotspotRouter.post('/newlocation', (req, res) => {
     conn.db.none("INSERT into locations(fk_device_id, latitude, longitude, time_recorded) \
         VALUES($1, $2, $3, $4)", [req.body.device_id, req.body.latitude,
     req.body.longitude, req.body.time_recorded])
@@ -75,7 +75,7 @@ hotspotRouter.post('/newlocation', validateToken, (req, res) => {
             });
         })
 });
-hotspotRouter.post('/location', validateToken,  (req, res) => {
+hotspotRouter.post('/location',  (req, res) => {
     conn.db.many("SELECT * from locations where fk_device_id = $1", req.body.device_id)
         .then(result => {
             if (result && result.length != 0) {
@@ -92,5 +92,4 @@ hotspotRouter.post('/location', validateToken,  (req, res) => {
             console.error("Error in locations POST route: ", error);
         });
 });
-
 module.exports = hotspotRouter;
