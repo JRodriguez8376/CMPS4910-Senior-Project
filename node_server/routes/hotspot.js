@@ -75,7 +75,7 @@ hotspotRouter.post('/newlocation', validateToken, (req, res) => {
             });
         })
 });
-hotspotRouter.post('/location', validateToken,  (req, res) => {
+hotspotRouter.post('/location', validateToken, (req, res) => {
     conn.db.many("SELECT * from locations where fk_device_id = $1", req.body.device_id)
         .then(result => {
             if (result && result.length != 0) {
@@ -92,5 +92,7 @@ hotspotRouter.post('/location', validateToken,  (req, res) => {
             console.error("Error in locations POST route: ", error);
         });
 });
+
+
 
 module.exports = hotspotRouter;

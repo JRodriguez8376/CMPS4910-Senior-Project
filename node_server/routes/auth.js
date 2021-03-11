@@ -11,7 +11,7 @@ const jwt = require('jsonwebtoken');
 //custom modules
 const user = require('../database/user');
 const conn = require('../database/conn');
-const { generateToken } = require('./token');
+const token = require('./token');
 // const variables
 
 const saltRounds = 10;
@@ -93,13 +93,19 @@ authRouter.post('/login', (req, res, next) => {
                                 
                                 console.log("User logging in");
                                 //Signing JSON web tokens for authentication
-                                const accessToken = generateToken(user_token_info);
-
-                                res.status(200).json({
-                                    answer,
-                                    message: "Logged in",
-                                    
-                                    accessToken: accessToken
+                                const accessToken = token.generateToken(user_token_info);
+                                const refreshToken = token.generateRefreshToken(user_token_info);
+                                conn.db.oneOrNone("UPDATE users SET token = $1 where id = $2", [refreshToken, req.body.id])
+                                .then(result => {
+                                    res.status(200).json({
+                                        answer,
+                                        message: "Logged in",
+                                        
+                                        accessToken: accessToken,
+                                        refreshToken: refreshToken
+                                    });
+                                }).catch(err => {
+                                    console.error("Error in login, update: ", err);
                                 });
                             } else {
                                 //Else state it does not log in user
@@ -120,6 +126,40 @@ authRouter.post('/login', (req, res, next) => {
         next(new Error('Invalid User'));
     }
 });
+authRouter.post('/refresh', (req, res) => {
+    const refreshToken = req.body.token;
+    conn.db.oneOrNone("SELECT * FROM users where token = $1", refreshToken)
+    .then(result => {
+        if(result.length == 0 || result == null) {
+            return res.sendStatus(401);
+        } else if(result != refreshToken) {
+            return res.sendStatus(403);
+        } else {
+            return verifyJWT(refreshToken, result.device_id);
+        }
 
+    }).catch(error => {
+        console.error("Error in /refresh route");
+    });
+
+});
+authRouter.delete('/logout', (req, res) => {
+    //Check if refresh token exists in DB, delete it
+    const refreshToken = req.body.token;
+    
+    conn.db.oneOrNone("UPDATE users set token = $1 WHERE token = $2", ["", refreshToken])
+    .then(result => {
+        if(result != null || result.length != 0) {
+            console.log("Deleted token");
+            res.sendStatus(204);
+        } else {
+            console.log("Token does not exist");
+        }
+    }).catch(error => {
+        console.error("Error in logout route");
+    })
+
+    
+});
 
 module.exports = authRouter;
