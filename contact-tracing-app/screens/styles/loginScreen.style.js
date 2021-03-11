@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
         //height: '100%',
         resizeMode: 'contain',
         justifyContent: 'flex-start',
+        
     },
     inputView: {
         height: 50,
@@ -104,6 +105,12 @@ const styles = StyleSheet.create({
         paddingBottom: 3
     },
     titles: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        justifyContent: 'center',
+    },
+    title: {
         fontSize: 16,
         fontWeight: 'bold',
         textAlign: 'center',

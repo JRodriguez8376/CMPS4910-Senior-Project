@@ -1,19 +1,19 @@
 
 import * as React from 'react';
+import MapView from 'react-native-maps';
 import {
+    StyleSheet,
     Text,
     View,
+    Dimensions,
 } from 'react-native';
 import styles from './styles/hotspotScreen.style'
 
 const HotspotScreen = () => {
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text >
-                Hotspot Map Placeholder
-            </Text>
+        <View style={styles.container}>
+            <MapView style={styles.map} />
         </View>
-
     );
 
 }
