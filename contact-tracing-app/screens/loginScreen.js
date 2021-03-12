@@ -10,7 +10,7 @@ import {
     Image,
     ActivityIndicator
 } from 'react-native';
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 //import Virus from '../assets/images/virus.svg';
 import AuthContext from '../context/authContext';
 
@@ -29,6 +29,9 @@ validate = (text) => {
     }
 }
 */
+
+
+
 const LoginScreen = ({navigation}) => {
 
     const [id, setEmail] = useState('');
@@ -41,6 +44,7 @@ const LoginScreen = ({navigation}) => {
         <View style={styles.container}>
             <ImageBackground source={require("../assets/images/login_img.jpg")} style={styles.backgroundImage}>
                 <View style={styles.formContainer}>
+                <KeyboardAwareScrollView>
                     <Text style={styles.name}>Covid Tracing App</Text>
                     <Image source={require("../assets/images/doge.jpg")} style={styles.logo} />
                     <View style={styles.formElement}>
@@ -80,6 +84,7 @@ const LoginScreen = ({navigation}) => {
                             <Text style={styles.signUpPageText}>Register</Text>
                         </TouchableOpacity>
                     </View>
+                    </KeyboardAwareScrollView>
                 </View>
             </ImageBackground>
         </View>

@@ -1,4 +1,5 @@
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Dimensions} from 'react-native';
+
 
 const styles = StyleSheet.create({
     container: {
@@ -8,6 +9,20 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         alignItems: 'stretch'
     },
+    /*
+    container1: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    */
+    
+    map: {
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height,
+    },
+
     formContainer: {
         flex: 1,
         justifyContent: 'center',

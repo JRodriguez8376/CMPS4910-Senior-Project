@@ -116,12 +116,22 @@ const Navigation = () => {
     return (
         <AuthContext.Provider value={authContext}>
             <NavigationContainer>
-                <Stack.Navigator>
+                <Stack.Navigator
+                    screenOptions={{
+                        headerStyle: {
+                            backgroundColor: '#ff0000',
+                        },
+                        //headerTintColor: '#fff',
+                    }}
+                >
                     {
                         state.isLoading ? (
                             <Stack.Screen
                                 name="LoadingScreen"
                                 component={LoadingScreen}
+                                options={{ 
+                                    title: 'My home' 
+                                }}
                             />
                         ) : state.userToken == null ? (
                             // No authenticated token

@@ -3,9 +3,11 @@ import {
     createBottomTabNavigator
 } from '@react-navigation/bottom-tabs';
 import HotspotScreen from '../screens/hotspotScreen';
+import TestStartScreen from '../screens/testStartScreen';
 import TestScreen from '../screens/testScreen';
+import TestResultsScreen from '../screens/testResultsScreen';
 import UserInfoTab from '../screens/userInfoScreen';
-import ResourcesTips from '../screens/resourcesTips';
+import { createStackNavigator } from "@react-navigation/stack";
 
 
 // Thanks to: 
@@ -14,6 +16,7 @@ import ResourcesTips from '../screens/resourcesTips';
 // Stack Navigation for Auth flow, see the StackNavigator to see the 
 // SignedInNavigator Object passed in
 const Tab = createBottomTabNavigator();
+//const Stack = createStackNavigator();
 const SignedInNavigator = () => {
     return (
         <Tab.Navigator>
@@ -23,7 +26,8 @@ const SignedInNavigator = () => {
             />
             <Tab.Screen
                 name="Test tab"
-                component={TestScreen}
+                component={TestScreenBoi}
+                
             />
             <Tab.Screen
                 name="User info Test tab"
@@ -37,3 +41,46 @@ const SignedInNavigator = () => {
     )
 }
 export default SignedInNavigator;
+
+
+const Stack = createStackNavigator();
+const TestScreenBoi = () => {
+    return (
+        <Stack.Navigator
+            screenOptions={{
+                headerStyle: {
+                    backgroundColor: '#ff0000',
+                },
+                headerTintColor: 'white',
+                headerLeft: null,
+                headerTitleAlign: 'center',
+                //headerTintColor: '#fff',
+            }}
+        >
+            <Stack.Screen
+                name="TestStart"
+                component={TestStartScreen}
+                options={{
+                    title: 'Self Evaluation',
+                    headerShown: true,
+                }}
+            />
+            <Stack.Screen
+                name="TestScreen"
+                component={TestScreen}
+                options={{
+                    title: 'Self Evaluation',
+                    headerShown: true,
+                }}
+            />
+            <Stack.Screen
+                name="TestResults"
+                component={TestResultsScreen}
+                options={{
+                    title: 'Self Evaluation',
+                    headerShown: true,
+                }}
+            />
+        </Stack.Navigator>
+    )
+}
