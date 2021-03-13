@@ -95,7 +95,7 @@ authRouter.post('/login', (req, res, next) => {
                                 //Signing JSON web tokens for authentication
                                 const accessToken = token.generateToken(user_token_info);
                                 const refreshToken = token.generateRefreshToken(user_token_info);
-                                conn.db.oneOrNone("UPDATE users SET token = $1 where id = $2", [refreshToken, req.body.id])
+                                conn.db.oneOrNone("UPDATE users SET token = $1 where device_id = $2", [refreshToken, req.body.id])
                                 .then(result => {
                                     res.status(200).json({
                                         answer,
@@ -105,7 +105,9 @@ authRouter.post('/login', (req, res, next) => {
                                         refreshToken: refreshToken
                                     });
                                 }).catch(err => {
-                                    console.error("Error in login, update: ", err);
+                                    console.log("Refresh Token", refreshToken);
+                                    console.error("Error in login/update: ", err);
+                                    res.status(400).json("Error in logging in");
                                 });
                             } else {
                                 //Else state it does not log in user
@@ -130,36 +132,49 @@ authRouter.post('/refresh', (req, res) => {
     const refreshToken = req.body.token;
     conn.db.oneOrNone("SELECT * FROM users where token = $1", refreshToken)
     .then(result => {
-        if(result.length == 0 || result == null) {
+        if(!result) {
             return res.sendStatus(401);
-        } else if(result != refreshToken) {
+        }else if(result.length == 0) {
+            console.error("User witht that token does not exist");
+            return res.sendStatus(401);
+        } else if(result.token != refreshToken) {
+            console.error("Token does not match user");
             return res.sendStatus(403);
         } else {
-            return verifyJWT(refreshToken, result.device_id);
+            jwt.verify(refreshToken, refresh_token_secret, (err) => {
+                if(err) {
+                    return res.sendStatus(403);
+                }
+                const accessToken = token.generateToken({id: result.device_id});
+                console.log(`Generating new Access token for User ${result.device_id} new token ${accessToken}`);
+                return res.status(200).json({accesstoken: accessToken});
+            });
         }
 
     }).catch(error => {
-        console.error("Error in /refresh route");
+        console.error("/Refresh, ERR: ", error);
     });
 
 });
 authRouter.delete('/logout', (req, res) => {
     //Check if refresh token exists in DB, delete it
     const refreshToken = req.body.token;
-    
-    conn.db.oneOrNone("UPDATE users set token = $1 WHERE token = $2", ["", refreshToken])
+    const user = req.body.device_id;
+
+    conn.db.oneOrNone("SELECT from users WHERE device_id = $1 and token = $2", [user, refreshToken])
     .then(result => {
-        if(result != null || result.length != 0) {
-            console.log("Deleted token");
-            res.sendStatus(204);
+        if(result) {
+            conn.db.none("UPDATE users set token = $1 WHERE token = $2", [null, refreshToken]);
+            console.log(`/logout, deleting  ${user}'s REFRESH_TOKEN: ${refreshToken}`);
+            res.sendStatus(200);
         } else {
-            console.log("Token does not exist");
+            console.log("Mismatch between device_id and token, ignoring update in /logout");
+            res.sendStatus(400);
         }
     }).catch(error => {
-        console.error("Error in logout route");
+        res.sendStatus(400);
+        console.error(`Error in logout route USERID: ${user}, refreshToken: ${refreshToken} ERROR: ${error}`);
     })
-
-    
 });
 
 module.exports = authRouter;
