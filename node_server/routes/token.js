@@ -8,6 +8,7 @@ const generateRefreshToken = (refreshToken) => {
     return jwt.sign(refreshToken, refresh_token_secret);
 }
 
+//Checks if its a valid token
 const validateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     console.log("Validation requested: ", authHeader);
@@ -31,6 +32,5 @@ const validateToken = (req, res, next) => {
 module.exports = {
     validateToken,
     generateToken,
-    generateRefreshToken,
-    verifyJWT
+    generateRefreshToken
 }

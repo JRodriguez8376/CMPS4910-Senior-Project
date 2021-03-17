@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const { access_token_secret, refresh_token_secret } = require('../config');
 const user = require('../database/user');
 const conn = require('../database/conn');
+const { json } = require('body-parser');
 
 
 hotspotRouter.get('/', (req, res) => {
@@ -11,7 +12,7 @@ hotspotRouter.get('/', (req, res) => {
         Page: "Hotspot page"
     });
 })
-hotspotRouter.all('/locations',  (req, res) => {
+hotspotRouter.all('/locations', (req, res) => {
     conn.db.many("SELECT latitude, longitude from potential_contact")
         .then(result => {
             if (result && result.length != 0) {
@@ -75,7 +76,7 @@ hotspotRouter.post('/newlocation', (req, res) => {
             });
         })
 });
-hotspotRouter.post('/location',  (req, res) => {
+hotspotRouter.post('/location', (req, res) => {
     conn.db.many("SELECT * from locations where fk_device_id = $1", req.body.device_id)
         .then(result => {
             if (result && result.length != 0) {
@@ -92,6 +93,24 @@ hotspotRouter.post('/location',  (req, res) => {
             console.error("Error in locations POST route: ", error);
         });
 });
+hotspotRouter.get('/testCalc', (req, res) => {
+    conn.db.many("SELECT * from potential_contact")
+        .then(result => {
+            if (result && result.length != 0) {
+                res.status(200).json(hotspotCalc(result));
+            } else {
+                res.status(204).json({
+                    message: "No location data to return"
+                });
+            }
+        }).catch(error => {
+            res.status(400).json({
+                message: "Error during POST request to /locations"
+            });
+            console.error("Error in locations POST route: ", error);
+        });
+
+})
 
 //JSON Object containing list of coordinates
 //Example format to return
@@ -109,57 +128,188 @@ locationsHotspot = {
         ]
 }
 
+
+potential_contact table
+
+device_id_1
+device_id_2
+latitude
+longitude
+time_met
+speed
+
 */
+let hotspot = {
+
+    hotspots: [
+        {
+            coordinates: [],
+            midpoint: {},
+            radius: 3.3,
+            density: 0
+        }
+    ]
+}
 
 //Expect JSON object as "contact_point"
 const hotspotCalc = (contact_point) => {
-    //Loop through all contact_points
-    //Use distance formula to check if two coordinates within contact_radius
-    //if points < contact_radius/2, they're within each other's circles, make circle denser rather than larger
-    // 
-    //else if, pass coordinates into midpoint formula.
-    //call newradius func using midpoint, any coordinate, number of coordinates total
-    //else
-    //disregard point
-    return(contact_point[0]);
-    /* 
-    
-    /
-    for (let i = 0; i < contact_point.length; i++) {
-        if (distance(contact_point[i], contact_point[i + 1]) < contact_radius / 2) {
+    //turn contact_point into JSON format locationsHotspot
+    let json_obj = makeHotspotJSON(contact_point);
+    //console.log(json_obj.length);
+    //console.log(json_obj);
+    var points = [];
 
-        } else if (distance(contact_point[i], contact_point[i + 1] < contact_radius)) {
-            mid = midpoint(contact_point[i], contact_point[i+1]);
-            radius = newRadius(contact_point[i], mid, 2);
-            //Store this info in JSON Array 
+    for (i = 0; i < json_obj.length; i++) {
+        let point = {
+            midpoint: {},
+            radius: null,
+            density: null
+        };
+        console.log("JSON OBJ", i)
+        if (distance(json_obj[i].coordinates[0], json_obj[i].coordinates[1]) < 3.3) {
+            
+            point.density += 2;
+            point.midpoint = calcMidpoint(json_obj[i].coordinates);
+            point.radius = 3.3;
+            points.push(point);
+        } else if (distance(json_obj[i].coordinates[0], json_obj[i].coordinates[1]) < 6.6) {
+            console.log("GOOO");
+            console.log(`ID1: ${json_obj[i].ids.id1} ${json_obj[i].ids.id2}`);
+            point.density += 1;
+            point.midpoint = calcMidpoint(json_obj[i].coordinates);
+            point.radius = newRadius(json_obj[i].coordinates[0], point.midpoint, 2);
+            points.push(point);
+        } else {
+            continue;
         }
     }
-    */
+    let update = true;
+    let iter = 0;
+    console.log(points);
+    while (update) {
+        let point = {
+            midpoint: {},
+            radius: null,
+            density: null
+        };
+        if (update && iter == points.length) {
+            iter = 0;
+        }
+        console.log("iter:", iter);
+        update = false;
+        if (distance(points[iter].midpoint, points[iter + 1].midpoint) < 3.3) {
+            point.density += 2;
+            point.midpoint = calcMidpoint([points[iter].midpoint, points[iter + 1].midpoint]);
+            point.radius = points[iter].radius;
+            points.splice(iter, 1);
+            points.push(point);
+            update = true;
+        } else if (distance(points[iter].midpoint, points[iter + 1].midpoint) < 6.6) {
+            
+            point.density += 1;
+            point.midpoint = calcMidpoint([points[iter].midpoint, points[iter + 1].midpoint]);
+            point.radius = newRadius(point[iter].midpoint, point.midpoint, 2);
+            points.splice(i, 1);
+            points.push(point);
+            update = true;
+        }
+        iter++;
+    }
+
+    return (points);
+
+
 }
-        
+
 
 //Midpoint Function of n points
-const midpoint = (coordinates) => {
+const calcMidpoint = (coordinates) => {
     let mid_x = 0;
     let mid_y = 0;
     for (let i = 0; i < coordinates.length; i++) {
-        mid_x = coordinates[i].latitude;
-        mid_y = coordinates[i].longitude;
+        mid_x += parseFloat(coordinates[i].latitude);
+        mid_y += parseFloat(coordinates[i].longitude);
     }
-    mid_x = mid_x / 2;
-    mid_y = mid_y / 2;
-    let midpoint = JSON.parse(`"midpoint" : [{"latitude":${mid_x},"longitude":${mid_y}}]`);
+
+    mid_x /= 2;
+    mid_y /= 2;
+    let midpoint = { latitude: mid_x, longitude: mid_y };
+
     return (midpoint);
 }
 //Calculate new circle radius of combined contact distance from the midpoint
 const newRadius = (coordinate, midpoint, pair_count) => {
+
     let d = distance(coordinate, midpoint);
-    return (d + contact_radius * pair_count);
+    console.log("New radius distance", d);
+    return (d + 3.3 * pair_count);
     //Should be new radius of combined circle of circles using radius
 }
 //Distance formula
 const distance = (coordinate1, coordinate2) => {
 
-    return (Math.sqrt(pow((coordinate1.latitude - coordinate2.latitude, 2)) + pow((coordinate2.longitude - coordinate2.longitude, 2))));
+    
+    let R = 6371;
+    let dlat = toRad(parseFloat(coordinate2.latitude) - parseFloat(coordinate1.latitude));
+    let dlong = toRad(parseFloat(coordinate2.longitude) - parseFloat(coordinate1.longitude));
+    let lat1 = toRad(parseFloat(coordinate1.latitude));
+    let lat2 = toRad(parseFloat(coordinate2.latitude));
+
+
+    //console.log(lat, long);
+
+    let dis = Math.sin(dlat / 2) * Math.sin(dlat / 2) +
+        Math.sin(dlong / 2) * Math.sin(dlong / 2) *
+        Math.cos(lat1) * Math.cos(lat2);
+        
+
+    dis2 = 2 * Math.atan2(Math.sqrt(dis), Math.sqrt(1 - dis));
+    dis3 = dis2 * R * 3280.84;
+    console.log(dis3);
+    return (dis3);
+}
+const toRad = (coordinate) => {
+    return coordinate * Math.PI / 180;
+}
+const makeHotspotJSON = (contact_point_arr) => {
+    let hotspot_json = []
+
+
+    let index = 0;
+    for (i = 0; i < contact_point_arr.length; i++) {
+        for (j = i + 1; j < contact_point_arr.length; j++) {
+            //Check ids + check time difference < 2 mins
+            if ((contact_point_arr[i].device_id_1 == contact_point_arr[j].device_id_2) && (contact_point_arr[i].device_id_2 == contact_point_arr[j].device_id_1)) {
+                let hotspots =
+                {
+                    ids: {},
+                    coordinates: [],
+                    midpoint: {},
+                    radius: 3.3,
+                    density: 0
+                }
+                let c1 = {
+                    latitude: contact_point_arr[i].latitude,
+                    longitude: contact_point_arr[i].longitude
+                }
+                let c2 = {
+                    latitude: contact_point_arr[j].latitude,
+                    longitude: contact_point_arr[j].longitude
+                }
+                hotspots.ids = {id1: contact_point_arr[i].device_id_1, id2: contact_point_arr[i].device_id_2};
+                hotspots.coordinates.push(c1);
+                hotspots.coordinates.push(c2);
+                hotspot_json.push(hotspots);
+
+                let removed = contact_point_arr.splice(i, 1);
+                console.log("Coord1: ", removed);
+                removed = contact_point_arr.splice(j - 1, 1);
+                console.log("Coord2: ", removed);
+                break;
+            }
+        }
+    }
+
+    return hotspot_json;
 }
 module.exports = hotspotRouter;
