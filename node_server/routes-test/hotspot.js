@@ -93,11 +93,11 @@ hotspotRouter.post('/location', (req, res) => {
             console.error("Error in locations POST route: ", error);
         });
 });
-hotspotRouter.get('/testCalc', (req, res) => {
+hotspotRouter.post('/testCalc', (req, res) => {
     conn.db.many("SELECT * from potential_contact")
         .then(result => {
             if (result && result.length != 0) {
-                res.status(200).json(hotspotCalc(result));
+                res.status(200).json(getHotspotCoords(req.body.latitude, req.body.longitude, result));
             } else {
                 res.status(204).json({
                     message: "No location data to return"
@@ -150,7 +150,41 @@ let hotspot = {
         }
     ]
 }
+var refreshTime = 0;
+var coords = [];
+const getHotspotCoords = (latitude, longitude, contact_point) => {
+    let areas = []
+    //If its been less than 15 minutes since last check, return old info
+    console.log("Current refresh time", refreshTime);
+    if(refreshTime != 0 || Math.floor((new Date() - refreshTime/60000)) < 15) {
+        console.log("It's been less than 15 mins");
+        if(coords != null || coords.length != 0) {
+            for(i = 0; i < coords.length; i++) {
+                //If hotspot is within 5 miles
+                console.log("Midpoint: ", coords[i].midpoint.latitude, " ", coords[i].midpoint.longitude, " Getting coords", latitude, longitude);
+                if(distance(coords[i].midpoint, {latitude: latitude, longitude: longitude}) < 26400) {
+                    areas.push(coords[i]);
+                }
+            }
+        }
+        return areas;
+    } else {
+        //else calc new hotspot points, return relevant points
+        console.log("Getting new coords ", latitude, longitude);
+        coords = hotspotCalc(contact_point);
+        refreshTime = new Date();
+        for(i = 0; i < coords.length; i++) {
+            //If hotspot is within 5 miles
+            console.log("Midpoint: ", coords[i].midpoint.latitude, " ", coords[i].midpoint.longitude, " Getting coords", latitude, longitude);
+            if(distance(coords[i].midpoint, {latitude: latitude, longitude: longitude}) < 26400) {
+                areas.push(coords[i]);
+            }
+        }
+        return areas;
+    }
+    
 
+}
 //Expect JSON object as "contact_point"
 const hotspotCalc = (contact_point) => {
     //turn contact_point into JSON format locationsHotspot
@@ -248,7 +282,10 @@ const newRadius = (coordinate, midpoint, pair_count) => {
 //Distance formula
 const distance = (coordinate1, coordinate2) => {
 
-    
+
+    console.log("Coordinate 1: ", coordinate1.latitude, " ", coordinate1.longitude);
+
+        console.log("Coordinate 2: ", coordinate2.latitude, " ",coordinate2.longitude);
     let R = 6371;
     let dlat = toRad(parseFloat(coordinate2.latitude) - parseFloat(coordinate1.latitude));
     let dlong = toRad(parseFloat(coordinate2.longitude) - parseFloat(coordinate1.longitude));
