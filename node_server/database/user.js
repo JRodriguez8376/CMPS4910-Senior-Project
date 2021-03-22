@@ -1,14 +1,14 @@
 const conn = require('./conn');
 
-const userExists = 'SELECT * FROM users where device_id = $1';
+const userExists = 'SELECT * FROM users where email = $1';
 
-const signUp = (device_id, password) => {
-    conn.db.none('INSERT into users(device_id, passwrd) VALUES($1, $2)', [device_id, password])
+const signUp = (email, password, bday, user_type) => {
+    conn.db.none('INSERT into users(email, passwrd, b_day, user_type) VALUES($1, $2, $3, $4)', [email, password, bday, user_type])
     .then(() => {
-        console.log("Signup insertion Sucessful");
+        console.error("Signup insertion Sucessful");
     })
     .catch(error => {
-        console.log("Error occurred during Signup insertion, users.js | ERROR:\n", error);
+        console.error("Error occurred during Signup insertion, users.js | ERROR:\n", error);
     })
 }
 

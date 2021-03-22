@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const {access_token_secret, refresh_token_secret} = require('../config');
 
 const generateToken = (userToken) => {
-    return jwt.sign(userToken, access_token_secret, {expiresIn: '1m'});
+    return jwt.sign(userToken, access_token_secret, {expiresIn: '24h'});
 }
 const generateRefreshToken = (refreshToken) => {
     return jwt.sign(refreshToken, refresh_token_secret);
@@ -17,7 +17,7 @@ const validateToken = (req, res, next) => {
         const token = authHeader.split(' ')[1];
         jwt.verify(token, access_token_secret, (err, user) => {
             if (err) {
-                console.log(err);
+                console.error(err);
                 return res.sendStatus(403);
                 
             }
