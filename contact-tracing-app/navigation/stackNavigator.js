@@ -34,6 +34,12 @@ const Navigation = () => {
                         isSignout: false,
                         userToken: action.token,
                     };
+                case 'SIGN_UP':
+                        return {
+                            ...prevState,
+                            isSignout: false,
+                            userToken: action.token,
+                        };
                 case 'SIGN_OUT':
                     return {
                         ...prevState,
@@ -105,14 +111,15 @@ const Navigation = () => {
                         .then(result => {
                             //console.log(result);
                             //Save token information for later
-                            //if (result != null) {
+                            if (result != null) {
                                 saveUnsecured('token', result.accessToken);
-                                saveUnsecured('id', data.id);
+                                saveUnsecured('refresh', result.refreshToken);
+                                saveUnsecured('email', data.email);
                                 accessToken = result.accessToken;
-                                dispatch({ type: 'SIGN_IN', token: accessToken });
-                            //} else {
-                            //    dispatch({ type: 'SIGN_IN', token: null });
-                            //}
+                                dispatch({ type: 'SIGN_UP', token: accessToken });
+                            } else {
+                                dispatch({ type: 'SIGN_UP', token: null });
+                            }
                         
                         }).catch((error) => {
                             console.error('Sign Up error: ', error);
