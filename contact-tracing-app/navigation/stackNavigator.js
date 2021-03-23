@@ -75,7 +75,8 @@ const Navigation = () => {
                             //Save token information for later
                             if (result != null) {
                                 saveUnsecured('token', result.accessToken);
-                                saveUnsecured('id', data.id);
+                                saveUnsecured('refresh', result.refreshToken);
+                                saveUnsecured('email', data.email);
                                 accessToken = result.accessToken;
                                 dispatch({ type: 'SIGN_IN', token: accessToken });
                             } else {
@@ -86,8 +87,18 @@ const Navigation = () => {
                             console.error('Login error: ', error);
                         });
                 },
-                //TO DO: Sign out relinquishes token
-                signOut: () => dispatch({ type: 'SIGN_OUT' }),
+                
+                signOut: async data => {
+                    //Send refresh token to database to relinquish
+                    getPostAPIData('/api/auth/logout', data)
+                        .then(result => {
+                            saveUnsecured('refresh', null);
+                            dispatch({ type: 'SIGN_OUT', token: null });
+                    }).catch((error) => {
+                        console.error('Logout error: ', error);
+                    });
+                    
+                },
                 // TO DO: Sign up creates new token
                 signUp: async data => {
                     getPostAPIData('/api/auth/signup', data)

@@ -34,7 +34,7 @@ validate = (text) => {
 
 const LoginScreen = ({navigation}) => {
 
-    const [id, setEmail] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { signIn } = React.useContext(AuthContext);
 
@@ -52,7 +52,7 @@ const LoginScreen = ({navigation}) => {
                             <TextInput style={styles.input}
                                 placeholder="Email"
                                 placeholderTextColor='gray'
-                                value={id}
+                                value={email}
                                 onChangeText={setEmail}
                                 //onChangeText={(text) => this.validate(text)}
                                 //value={this.state.email}
@@ -72,7 +72,7 @@ const LoginScreen = ({navigation}) => {
                     </View>
                     <View style={styles.formElement}>
                         <TouchableOpacity style={styles.signInButton}
-                            onPress={() => signIn({ id, password })}
+                            onPress={() => signIn({ email, password })}
                         >
                             <Text style={styles.signInText}>LOGIN</Text>
                         </TouchableOpacity>
