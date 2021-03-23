@@ -11,6 +11,7 @@ import {
     ActivityIndicator
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { Alert } from 'react-native';
 //import Virus from '../assets/images/virus.svg';
 import AuthContext from '../context/authContext';
 
@@ -37,7 +38,21 @@ const LoginScreen = ({navigation}) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { signIn } = React.useContext(AuthContext);
-
+    const submit = () => {
+        if(email.length == 0 || password.length == 0) {
+            Alert.alert(
+                "Missing fields",
+                "Empty Fields",
+                [
+                    {
+                        text: "Ok"
+                    }
+                ]
+            );
+        } else {
+            signIn({ email, password })
+        }
+    }
     
     
     return (
@@ -72,7 +87,7 @@ const LoginScreen = ({navigation}) => {
                     </View>
                     <View style={styles.formElement}>
                         <TouchableOpacity style={styles.signInButton}
-                            onPress={() => signIn({ email, password })}
+                            onPress={() => submit()}
                         >
                             <Text style={styles.signInText}>LOGIN</Text>
                         </TouchableOpacity>

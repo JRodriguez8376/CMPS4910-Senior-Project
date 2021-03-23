@@ -41,6 +41,7 @@ const Navigation = () => {
                             userToken: action.token,
                         };
                 case 'SIGN_OUT':
+                    console.log("cocur");
                     return {
                         ...prevState,
                         isSignout: true,

@@ -30,7 +30,6 @@ const RegisterScreen = ({navigation}) => {
             return false
     }
     const submit = () => {
-        setBday('');
         if(!validateField(email, confirmEmail)) {
             Alert.alert(
                 "Mismatching fields",
@@ -51,6 +50,17 @@ const RegisterScreen = ({navigation}) => {
                     }
                 ]
             );
+        } else if(email.length == 0 || password == 0) {
+            Alert.alert(
+                "Missing fields",
+                "Empty Fields",
+                [
+                    {
+                        text: "Ok"
+                    }
+                ]
+            );
+        
         } else {
             signUp({ email, password});
         }
