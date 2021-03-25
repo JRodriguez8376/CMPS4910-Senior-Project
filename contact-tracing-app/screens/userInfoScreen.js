@@ -18,14 +18,14 @@ const UserInfoTab = () => {
         Retrieve token id from storage, then auth token, then send POST request that
         returns data asynchronously
         */
-        retrieveUnsecured('id')
-            .then(id => {
+        retrieveUnsecured('email')
+            .then(email => {
                 retrieveUnsecured('token')
                     .then(result => {
                         //console.log("Retrieving: ", result);
                         //console.log("id is", id);
                         //Send API request with ID and bearer token
-                        getPostAPIData('/api/user/user', { "id": id }, result)
+                        getPostAPIData('/api/user/user', { "email": email }, result)
                             //If completed, setData to screen and take off loading screen
                             .then(result => setData(result))
                             .then(() => setLoading(false))

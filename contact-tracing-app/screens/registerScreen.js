@@ -13,12 +13,59 @@ import {
 
 //import Virus from '../assets/images/virus.svg';
 import AuthContext from '../context/authContext';
+import { Alert } from 'react-native';
 const RegisterScreen = ({navigation}) => {
 
-    const [id, setEmail] = useState('');
+
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmEmail, setConfirmEmail] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [bday, setBday] = useState('');
     const { signUp } = React.useContext(AuthContext);
-    
+    const validateField = (fieldOriginal, fieldValidate) => {
+        if(fieldOriginal === fieldValidate) 
+            return true;
+        else
+            return false
+    }
+    const submit = () => {
+        if(!validateField(email, confirmEmail)) {
+            Alert.alert(
+                "Mismatching fields",
+                "Email fields do not match",
+                [
+                    {
+                        text: "Ok"
+                    }
+                ]
+            );
+        } else if(!validateField(password, confirmPassword)) {
+            Alert.alert(
+                "Mismatching fields",
+                "Password fields do not match",
+                [
+                    {
+                        text: "Ok"
+                    }
+                ]
+            );
+        } else if(email.length == 0 || password == 0) {
+            Alert.alert(
+                "Missing fields",
+                "Empty Fields",
+                [
+                    {
+                        text: "Ok"
+                    }
+                ]
+            );
+        
+        } else {
+            signUp({ email, password});
+        }
+        
+    }
     return (
         <View style={styles.container}>
             <ImageBackground source={require("../assets/images/login_img.jpg")} style={styles.backgroundImage}>
@@ -30,7 +77,7 @@ const RegisterScreen = ({navigation}) => {
                             <TextInput style={styles.input}
                                 placeholder="Email"
                                 placeholderTextColor='gray'
-                                value={id}
+                                value={email}
                                 onChangeText={setEmail}
                             />
                         </View>
@@ -47,8 +94,29 @@ const RegisterScreen = ({navigation}) => {
                         </View>
                     </View>
                     <View style={styles.formElement}>
+                        <View style={styles.inputView}>
+                            <TextInput style={styles.input}
+                                placeholder="Confirm Email"
+                                placeholderTextColor='gray'
+                                value={confirmEmail}
+                                onChangeText={setConfirmEmail}
+                            />
+                        </View>
+                    </View>
+                    <View style={styles.formElement}>
+                        <View style={styles.inputView}>
+                            <TextInput style={styles.input}
+                                placeholder="Confirm Password"
+                                placeholderTextColor='gray'
+                                secureTextEntry={true}
+                                value={confirmPassword}
+                                onChangeText={setConfirmPassword}
+                            />
+                        </View>
+                    </View>
+                    <View style={styles.formElement}>
                         <TouchableOpacity style={styles.signUpButton}
-                            onPress={() => signUp({ id, password })}
+                            onPress={() => submit()}
                         >
                             <Text style={styles.signUpText}>Sign Up</Text>
                         </TouchableOpacity>

@@ -17,7 +17,7 @@ import ResourcesTips from '../screens/resourcesTips';
 // Stack Navigation for Auth flow, see the StackNavigator to see the 
 // SignedInNavigator Object passed in
 const Tab = createBottomTabNavigator();
-//const Stack = createStackNavigator();
+
 const SignedInNavigator = () => {
     return (
         <Tab.Navigator>
@@ -34,10 +34,12 @@ const SignedInNavigator = () => {
                 name="User info Test tab"
                 component={UserInfoTab}
             />
+            {/*
             <Tab.Screen
                 name="Resources and Tips tab"
                 component={ResourcesTips}
             />
+        */}
         </Tab.Navigator>
     )
 }
