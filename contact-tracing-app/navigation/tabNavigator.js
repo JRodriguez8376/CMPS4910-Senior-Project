@@ -7,6 +7,7 @@ import TestStartScreen from '../screens/testStartScreen';
 import TestScreen from '../screens/testScreen';
 import TestResultsScreen from '../screens/testResultsScreen';
 import UserInfoTab from '../screens/userInfoScreen';
+import ResourcesTips from '../screens/resourcesTips';
 import { createStackNavigator } from "@react-navigation/stack";
 
 
@@ -30,7 +31,7 @@ const SignedInNavigator = () => {
                 
             />
             <Tab.Screen
-                name="User info Test tab"
+                name="User info"
                 component={UserInfoTab}
             />
             <Tab.Screen
