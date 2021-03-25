@@ -8,6 +8,7 @@ import TestScreen from '../screens/testScreen';
 import TestResultsScreen from '../screens/testResultsScreen';
 import UserInfoTab from '../screens/userInfoScreen';
 import { createStackNavigator } from "@react-navigation/stack";
+import ResourcesTips from '../screens/resourcesTips';
 
 
 // Thanks to: 
