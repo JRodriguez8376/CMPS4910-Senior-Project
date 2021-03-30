@@ -13,6 +13,8 @@ import { fetchTestData } from '../api/helpers';
 import { FlatList, State } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+// Will probably need to add font "FontAwesome" whem exporting out of expo.
+
 //import TestScreen from '../screens/loginScreen';
 
 const myIcon = <Icon name="rocket" size={30} color="#900" />;

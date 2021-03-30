@@ -20,7 +20,30 @@ const styles = StyleSheet.create({
     
     map: {
         width: Dimensions.get('window').width,
-        height: Dimensions.get('window').height,
+        height: Dimensions.get('window').height-75,
+
+    },
+    userRadius: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: 50,
+        width: 50,
+        backgroundColor: 'rgba(0, 122, 255, 0.1)',
+        borderColor: 'rgba(0, 122, 255, 0.3)',
+        borderWidth: 1,
+        borderRadius: 50 / 2,
+        overflow: 'hidden',
+    },
+    userMarker: {
+        height: 20,
+        width: 20,
+        borderWidth: 3, 
+        borderColor: 'white',
+        borderRadius: 20 / 2,
+        overflow: 'hidden',
+        backgroundColor: '#007Aff',
+        
+        
     },
 
     formContainer: {

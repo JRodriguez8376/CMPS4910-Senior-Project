@@ -4,12 +4,13 @@ import React, { useState, useEffect } from 'react';
 import {
     Text,
     View,
-    ActivityIndicator
+    ActivityIndicator,
+    TouchableOpacity,
 } from 'react-native';
-import styles from './styles/testScreen.style.js';
+import styles from './styles/userInfoScreen.style.js';
 import { retrieveUnsecured } from '../components/tokenAsync';
 import { getPostAPIData } from '../api/helpers';
-const UserInfoTab = () => {
+const UserInfo = ({navigation}) => {
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState([]);
 
@@ -44,23 +45,44 @@ const UserInfoTab = () => {
     }, []);
 
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text >
-                User Info Placeholder
-            </Text>
-            {isLoading ? <ActivityIndicator /> : (
-                <View>
+        <View style={styles.container}>
+            <View style={styles.userInfo}>
+                <Text >
+                    User Info Placeholder
+                </Text>
+                {isLoading ? <ActivityIndicator /> : (
+                    <View>
 
-                    <Text>Device ID: {data.device_id}</Text>
-                    <Text>User Type: {data.user_type}</Text>
-                    <Text>Email: {data.email}</Text>
-                    <Text>Password: {data.passwrd}</Text>
+                        <Text>Device ID: {data.device_id}</Text>
+                        <Text>User Type: {data.user_type}</Text>
+                        <Text>Email: {data.email}</Text>
+                        <Text>Password: {data.passwrd}</Text>
+                    </View>
+
+                )}
+            </View>
+                <View style = {styles.alertOthers}>
+                    <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+                        NOTIFY OTHERS
+                    </Text>
+                    <Text style={{textAlign: 'center', justifyContent: 'center', alignItems: 'center', fontSize: 16}}>
+                        Notify other users that you have contracted COVID-19.
+                    </Text>
+                    <Text style={{textAlign: 'center', justifyContent: 'center', alignItems: 'center', fontSize: 12, fontStyle: 'italic',}}>
+                        Click "Notify Others" to begin notifying.
+                    </Text>
+                    <View style={styles.formElement}>
+                        <TouchableOpacity style={styles.startAlert}
+                            onPress={() => navigation.navigate('UserNotify')}
+                        >
+                        <Text style={{fontSize: 16, color: 'white'}}>Notify Others</Text>
+                    </TouchableOpacity>
                 </View>
-
-            )}
+            </View>
+            
         </View>
 
     );
 }
 
-export default UserInfoTab;
+export default UserInfo;
