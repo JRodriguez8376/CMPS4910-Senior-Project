@@ -2,12 +2,10 @@ import {StyleSheet} from 'react-native';
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        //height: '70%',
-        //width: '100%',
         justifyContent: 'flex-start',
         flexDirection: 'column',
         backgroundColor: '#FBFBFBFB',
-        alignItems: 'stretch'
+        alignItems: 'center'
     },
     formContainer: {
         //flex: 1,
@@ -62,6 +60,14 @@ const styles = StyleSheet.create({
         textAlign: 'left',
         justifyContent: 'center',
         paddingBottom: 5,
-    }
+    },
+    generalText: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        fontSize: 18,
+        margin: 10,
+        color: 'black',
+        textAlign: 'center',
+    },
 });
 export default styles;

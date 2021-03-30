@@ -34,12 +34,12 @@ const SignedInNavigator = () => {
                 name="User info Test tab"
                 component={UserInfoTab}
             />
-            {/*
+            {
             <Tab.Screen
                 name="Resources and Tips tab"
-                component={ResourcesTips}
+                component={ResourcesTipsboi}
             />
-        */}
+        }
         </Tab.Navigator>
     )
 }
@@ -85,5 +85,30 @@ const TestScreenBoi = () => {
                 }}
             />
         </Stack.Navigator>
+    )
+}
+
+const ResourcesTipsboi = () => {
+    return (
+        <Stack.Navigator
+            screenOptions={{
+                headerStyle: {
+                backgroundColor: '#ff0000',
+                },
+                headerTintColor: 'white',
+                headerLeft: null,
+                headerTitleAlign: 'center',
+                //headerTintColor: '#fff',
+            }}
+        >
+         <Stack.Screen
+                name="ResourcesTips"
+                component={ResourcesTips}
+                options={{
+                    title: 'Resources and Tips',
+                    headerShown: true,
+            }}
+        />
+    </Stack.Navigator>
     )
 }
