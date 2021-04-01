@@ -23,7 +23,7 @@ const Tab = createBottomTabNavigator();
 const SignedInNavigator = () => {
     return (
         <Tab.Navigator
-            initialRouteName="Hotspot"
+            initialRouteName="Test tab"
             tabBarOptions={{
                 activeTintColor: '#ffffff',
                 activeBackgroundColor: '#ff0000',
