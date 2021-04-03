@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
-import styles from './styles/hotspotScreen.style'
+import styles from './styles/hotspotScreen.style';
+import Geolocation from '@react-native-community/geolocation';
 import {
     StyleSheet,
     Text,
@@ -8,6 +9,7 @@ import {
     Dimensions,
     Button,
     Alert,
+    StatusBar
 } from 'react-native';
 import MapView, { 
     PROVIDER_GOOGLE, 
@@ -54,7 +56,7 @@ var zones = [
 const FindCoordinates = () => {
     const [data, setData] = useState([]);
     const location = null
-    navigator.geolocation.getCurrentPosition(
+    Geolocation.getCurrentPosition(
         position => {
             let region = {
                 latitude: parseFloat(position.coords.latitude),
@@ -118,7 +120,7 @@ const GetMap = (props) => {
     //console.log(FindCoordinates())
     const [curr_longitude, setLong] = useState(0)
     const [curr_latitude, setLat] = useState(0)
-    navigator.geolocation.getCurrentPosition(
+    Geolocation.getCurrentPosition(
         position => {
             //const location = (position);
             //console.log(location)
@@ -184,6 +186,7 @@ const GetMap = (props) => {
                         />
                     ))
                 }
+                {/*
                 <MapView.Circle
                     center = { zones.[0].midpoint }
                     radius = { 50 }
@@ -191,6 +194,7 @@ const GetMap = (props) => {
                     strokeColor = { '#ff0000' }
                     fillColor = { 'rgba(230,10,10,0.5)' }
                 />
+                */}
             </MapView>
         </View>
         
@@ -201,10 +205,16 @@ const HotspotScreen = () => {
 
 
     return (
+        /*
         <>
             <GetMap name="first" />
+            <StatusBar
+                animated={true}
+                backgroundColor="#ff0000"
+                translucent={true}
+                barStyle="dark-content" />
         </>
-        /*
+        */
         <View style={styles.container}>
             
             <MapView style={styles.map}
@@ -225,7 +235,7 @@ const HotspotScreen = () => {
                 accessibilityLabel="Learn more about this purple button"
             />
         </View>
-        */
+        //*/
     );
 
 }

@@ -5,6 +5,7 @@ import {
     View,
     ActivityIndicator,
     TouchableOpacity,
+    StatusBar,
 } from 'react-native';
 import { fetchTestData } from '../api/helpers';
 import { FlatList, State } from 'react-native-gesture-handler';
@@ -38,6 +39,11 @@ const TestResultsScreen = ({route, navigation}) => {
     adviceAnswer(testSum);
     return (
         <View style={styles.container}>
+            <StatusBar
+                animated={true}
+                backgroundColor="#ff0000"
+                barStyle="light-content" 
+            />
             {/*<View style={{justifyContent: 'flex-end', alignItems: 'center', backgroundColor: '#FF0000', width: '100%', height: 25}}>
                 <Text >
                     Test Placeholder

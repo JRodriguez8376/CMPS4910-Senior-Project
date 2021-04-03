@@ -6,6 +6,7 @@ import {
     View,
     ActivityIndicator,
     TouchableOpacity,
+    StatusBar,
 } from 'react-native';
 import styles from './styles/userInfoScreen.style.js';
 import { retrieveUnsecured } from '../components/tokenAsync';
@@ -46,6 +47,11 @@ const UserInfo = ({navigation}) => {
 
     return (
         <View style={styles.container}>
+            <StatusBar
+                animated={true}
+                backgroundColor="#ff0000"
+                barStyle="light-content" 
+            />
             <View style={styles.userInfo}>
                 <Text >
                     User Info Placeholder

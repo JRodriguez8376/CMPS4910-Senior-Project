@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
         //width: '100%',
         justifyContent: 'flex-start',
         flexDirection: 'column',
-        backgroundColor: '#FBFBFBFB',
+        backgroundColor: '#f2f2f2',
         alignItems: 'stretch'
     },
     formContainer: {

@@ -6,6 +6,7 @@ import {
     View,
     ActivityIndicator,
     TouchableOpacity,
+    StatusBar,
 } from 'react-native';
 import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
 //import { RadioButton } from 'react-native-paper';
@@ -129,6 +130,11 @@ const TestScreen = ({navigation}) => {
     resetArr();
     return (
         <View style={styles.container}>
+            <StatusBar
+                animated={true}
+                backgroundColor="#ff0000"
+                barStyle="light-content" 
+            />
             {/*<View style={{justifyContent: 'flex-end', alignItems: 'center', backgroundColor: '#FF0000', width: '100%', height: 25}}>
                 
             </View>*/}

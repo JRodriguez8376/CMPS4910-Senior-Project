@@ -6,6 +6,7 @@ import {
     View,
     ActivityIndicator,
     TouchableOpacity,
+    StatusBar,
 } from 'react-native';
 import styles from './styles/userNotifyScreen.style.js';
 import { retrieveUnsecured } from '../components/tokenAsync';
@@ -26,6 +27,11 @@ const UserNotify = ({navigation}) => {
 
     return (
         <View style={styles.container}>
+            <StatusBar
+                animated={true}
+                backgroundColor="#ff0000"
+                barStyle="light-content" 
+            />
             <View style={styles.userInfo}>
             </View>
             <View style = {styles.alertOthers}>
