@@ -6,13 +6,19 @@ import {
     View,
     ActivityIndicator,
     TouchableOpacity,
+    NativeModules
 } from 'react-native';
 import styles from './styles/userInfoScreen.style.js';
 import { retrieveUnsecured } from '../components/tokenAsync';
 import { getPostAPIData } from '../api/helpers';
+const {BLEPeripheralModule} = NativeModules;
 const UserInfo = ({navigation}) => {
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState([]);
+
+    const advertise = () => {
+        BLEPeripheralModule.startAdapter("THIS IS NOT WARZONE");
+    }
 
     useEffect(() => {
         /*
@@ -78,6 +84,15 @@ const UserInfo = ({navigation}) => {
                         <Text style={{fontSize: 16, color: 'white'}}>Notify Others</Text>
                     </TouchableOpacity>
                 </View>
+
+                {/** Borrowing this page for the TEST Advertising button for the BLE mode 
+            * DELETE later once we know its working on startup
+            * 
+            */}
+            <TouchableOpacity style ={styles.startAlert}
+                title="Click to start advertising BLE"
+                onPress={advertise}
+            />
             </View>
             
         </View>

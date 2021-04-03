@@ -2,6 +2,7 @@ package pathogen.contacttracing;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 
 import com.facebook.react.PackageList;
@@ -29,6 +30,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 public class MainApplication extends Application implements ReactApplication {
+
   private final ReactModuleRegistryProvider mModuleRegistryProvider = new ReactModuleRegistryProvider(
     new BasePackageList().getPackageList()
   );
@@ -43,6 +45,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       List<ReactPackage> packages = new PackageList(this).getPackages();
       packages.add(new ModuleRegistryAdapter(mModuleRegistryProvider));
+      packages.add(new MyAppPackage());
       return packages;
     }
 
@@ -117,4 +120,5 @@ public class MainApplication extends Application implements ReactApplication {
       }
     }
   }
+
 }

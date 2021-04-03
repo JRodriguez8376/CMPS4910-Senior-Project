@@ -6,10 +6,12 @@ import {
     View,
     ActivityIndicator,
     TouchableOpacity,
+    NativeModules
 } from 'react-native';
 import styles from './styles/userNotifyScreen.style.js';
 import { retrieveUnsecured } from '../components/tokenAsync';
 import { getPostAPIData } from '../api/helpers';
+const {BLEPeripheralModule} = NativeModules;
 
 var howitworksTXT = "The “Notify Other” feature will send a mass notification to all users "
         + "that you have come in possible contact with that they have come in possible contact "
@@ -23,6 +25,8 @@ var howitworksTXT = "The “Notify Other” feature will send a mass notificatio
 const UserNotify = ({navigation}) => {
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState([]);
+
+
 
     return (
         <View style={styles.container}>
@@ -70,8 +74,11 @@ const UserNotify = ({navigation}) => {
                     {howitworksTXT}
                 </Text>
             </View>
-        </View>
 
+            
+        </View>
+    
+    
     );
 }
 
