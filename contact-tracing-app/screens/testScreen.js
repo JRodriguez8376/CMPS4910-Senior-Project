@@ -90,7 +90,7 @@ const setCounter = (index, amount) => {
 };
 
 var radio_props = [
-    {label: 'Yes', value: 1 },
+    {label: 'Yes    ', value: 1 },
     {label: 'No', value: 0 }
 ];
 
@@ -104,6 +104,7 @@ const Item = ({ title, num }) => (
             formHorizontal={true}
             labelHorizontal={true}
             buttonColor={'#FF0000'}
+            selectedButtonColor={'#FF0000'}
             animation={true}
             radio_props={radio_props}
             initial={-1}

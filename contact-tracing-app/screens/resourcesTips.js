@@ -26,11 +26,11 @@ const ResourcesTips = ({navigation}) => {
                 barStyle="light-content" 
             />
             <View style={styles.formContainer}>
-            <Text style={styles.generalText}>{generalText}</Text>   
+                <Text style={styles.generalText}>{generalText}</Text>   
                 <Unorderedlist>
-                    <Text>Be sure to get vaccinated</Text> 
+                    <Text style={{padding: 10, color: 'black',}}>Be sure to get vaccinated</Text> 
                 </Unorderedlist>
-                </View>
+            </View>
         </View>
     );
 }

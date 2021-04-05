@@ -68,13 +68,13 @@ const UserInfo = ({navigation}) => {
                 )}
             </View>
                 <View style = {styles.alertOthers}>
-                    <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+                    <Text style={{fontSize: 18, fontWeight: 'bold', color: 'black',}}>
                         NOTIFY OTHERS
                     </Text>
-                    <Text style={{textAlign: 'center', justifyContent: 'center', alignItems: 'center', fontSize: 16}}>
+                    <Text style={{textAlign: 'center', justifyContent: 'center', alignItems: 'center', fontSize: 16, color: 'black',}}>
                         Notify other users that you have contracted COVID-19.
                     </Text>
-                    <Text style={{textAlign: 'center', justifyContent: 'center', alignItems: 'center', fontSize: 12, fontStyle: 'italic',}}>
+                    <Text style={{textAlign: 'center', justifyContent: 'center', alignItems: 'center', fontSize: 12, fontStyle: 'italic', color: 'black',}}>
                         Click "Notify Others" to begin notifying.
                     </Text>
                     <View style={styles.formElement}>

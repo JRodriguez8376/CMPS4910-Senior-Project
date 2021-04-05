@@ -35,7 +35,7 @@ const UserNotify = ({navigation}) => {
             <View style={styles.userInfo}>
             </View>
             <View style = {styles.alertOthers}>
-                <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+                <Text style={{fontSize: 18, fontWeight: 'bold', color: 'black',}}>
                     Begin Notifying
                 </Text>
                 {/*<Text style={{textAlign: 'center', justifyContent: 'center', alignItems: 'center', fontSize: 16}}>

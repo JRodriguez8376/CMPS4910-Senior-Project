@@ -83,6 +83,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         justifyContent: 'center',
         paddingBottom: 8,
+        color: 'black',
     },
 
 
