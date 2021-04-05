@@ -56,6 +56,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-end',
         paddingVertical: 20,
+        color: 'black',
         //marginTop: 15,
         //backgroundColor: '#00FFFF',
         //borderWidth: 0.5,
@@ -70,6 +71,7 @@ const styles = StyleSheet.create({
         fontSize: 14, 
         fontWeight: 'bold',
         fontStyle: 'italic',
+        color: 'black',
         //borderWidth: 0.5,
         //borderColor: 'blue',
         //textAlign: 'left',
@@ -80,6 +82,7 @@ const styles = StyleSheet.create({
         fontSize: 14, 
         fontStyle: 'italic',
         textAlign: 'left',
+        color: 'black',
     },
     title: {
         fontSize: 15,

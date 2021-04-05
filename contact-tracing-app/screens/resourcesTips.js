@@ -9,7 +9,8 @@ import {
     ImageBackground,
     TouchableOpacity,
     Image,
-    ActivityIndicator
+    ActivityIndicator,
+    StatusBar,
 } from 'react-native';
 import Unorderedlist from 'react-native-unordered-list';
 var generalText = "COVID-19 has significanlty impacted  the world. "
@@ -19,12 +20,17 @@ var generalText = "COVID-19 has significanlty impacted  the world. "
 const ResourcesTips = ({navigation}) => {
     return(
         <View style={styles.container}>
+            <StatusBar
+                animated={true}
+                backgroundColor="#ff0000"
+                barStyle="light-content" 
+            />
             <View style={styles.formContainer}>
-            <Text style={styles.generalText}>{generalText}</Text>   
+                <Text style={styles.generalText}>{generalText}</Text>   
                 <Unorderedlist>
-                    <Text>Be sure to get vaccinated</Text> 
+                    <Text style={{padding: 10, color: 'black',}}>Be sure to get vaccinated</Text> 
                 </Unorderedlist>
-                </View>
+            </View>
         </View>
     );
 }

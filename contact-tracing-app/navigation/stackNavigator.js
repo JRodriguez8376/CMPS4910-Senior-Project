@@ -149,7 +149,8 @@ const Navigation = () => {
                                 name="LoadingScreen"
                                 component={LoadingScreen}
                                 options={{ 
-                                    title: 'My home' 
+                                    title: 'My home',
+                                    headerShown: false,
                                 }}
                             />
                         ) : state.userToken == null ? (

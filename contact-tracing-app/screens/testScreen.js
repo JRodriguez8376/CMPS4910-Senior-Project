@@ -6,6 +6,7 @@ import {
     View,
     ActivityIndicator,
     TouchableOpacity,
+    StatusBar,
 } from 'react-native';
 import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
 //import { RadioButton } from 'react-native-paper';
@@ -89,7 +90,7 @@ const setCounter = (index, amount) => {
 };
 
 var radio_props = [
-    {label: 'Yes', value: 1 },
+    {label: 'Yes    ', value: 1 },
     {label: 'No', value: 0 }
 ];
 
@@ -103,6 +104,7 @@ const Item = ({ title, num }) => (
             formHorizontal={true}
             labelHorizontal={true}
             buttonColor={'#FF0000'}
+            selectedButtonColor={'#FF0000'}
             animation={true}
             radio_props={radio_props}
             initial={-1}
@@ -129,6 +131,11 @@ const TestScreen = ({navigation}) => {
     resetArr();
     return (
         <View style={styles.container}>
+            <StatusBar
+                animated={true}
+                backgroundColor="#ff0000"
+                barStyle="light-content" 
+            />
             {/*<View style={{justifyContent: 'flex-end', alignItems: 'center', backgroundColor: '#FF0000', width: '100%', height: 25}}>
                 
             </View>*/}

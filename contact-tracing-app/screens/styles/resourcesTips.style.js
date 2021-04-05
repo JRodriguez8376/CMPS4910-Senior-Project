@@ -5,7 +5,8 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         flexDirection: 'column',
         backgroundColor: '#FBFBFBFB',
-        alignItems: 'center'
+        alignItems: 'center',
+        color: 'black',
     },
     formContainer: {
         //flex: 1,
@@ -14,14 +15,15 @@ const styles = StyleSheet.create({
         //height: "100%",
         //paddingBottom: 100,
         paddingTop: 50,
-        alignItems: 'stretch'
+        alignItems: 'stretch',
+        color: 'black',
     },
     formElement: {
         //paddingLeft: 40,
         //paddingRight: 40,
         paddingHorizontal: 20,
         paddingVertical: 10,
-        
+        color: 'black',
     },
     backgroundImage: {
         flex: 1,
@@ -52,6 +54,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         justifyContent: 'center',
         paddingBottom: 5,
+        color: 'black',
     },
     tips: {
         fontSize: 20,

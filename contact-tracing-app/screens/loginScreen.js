@@ -8,7 +8,8 @@ import {
     ImageBackground,
     TouchableOpacity,
     Image,
-    ActivityIndicator
+    ActivityIndicator,
+    StatusBar
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { Alert } from 'react-native';
@@ -57,6 +58,10 @@ const LoginScreen = ({navigation}) => {
     
     return (
         <View style={styles.container}>
+            <StatusBar
+                animated={true}
+                backgroundColor="#f2f2f2"
+                barStyle="dark-content" />
             <ImageBackground source={require("../assets/images/login_img.jpg")} style={styles.backgroundImage}>
                 <View style={styles.formContainer}>
                 <KeyboardAwareScrollView>

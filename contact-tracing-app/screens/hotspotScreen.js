@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
-import styles from './styles/hotspotScreen.style'
+import styles from './styles/hotspotScreen.style';
+import Geolocation from '@react-native-community/geolocation';
 import {
     StyleSheet,
     Text,
@@ -8,13 +9,25 @@ import {
     Dimensions,
     Button,
     Alert,
+    StatusBar
 } from 'react-native';
+import MapView from "react-native-map-clustering";
+///*
+import { 
+    PROVIDER_GOOGLE, 
+    AnimatedRegion, 
+    Circle, 
+    Marker,
+} from 'react-native-maps'
+//*/
+/*
 import MapView, { 
     PROVIDER_GOOGLE, 
     AnimatedRegion, 
     Circle, 
     Marker,
 } from 'react-native-maps'
+*/
 
 var CURRENT_aLONG = null
 var CURRENT_LAT = null
@@ -54,7 +67,7 @@ var zones = [
 const FindCoordinates = () => {
     const [data, setData] = useState([]);
     const location = null
-    navigator.geolocation.getCurrentPosition(
+    Geolocation.getCurrentPosition(
         position => {
             let region = {
                 latitude: parseFloat(position.coords.latitude),
@@ -85,7 +98,7 @@ const DisplayHotspots = (props) => {
         <View>
             {
             zones.map((zone, index) => (
-                <MapView.Circle
+                <Circle
                     key={index}
                     center = {zone.midpoint}
                     radius = {50}
@@ -94,7 +107,7 @@ const DisplayHotspots = (props) => {
                     fillColor = { 'rgba(230,10,10,0.5)' }
                 >
                     
-                </MapView.Circle>
+                </Circle>
             ))
             }
             {
@@ -105,7 +118,13 @@ const DisplayHotspots = (props) => {
                         latitude: zone.midpoint.latitude,
                         longitude: zone.midpoint.longitude,
                     }}
-                />
+                >
+                    {/*
+                    <View style={styles.markerRadius}>
+
+                    </View>
+                    */}
+                </Marker>
             ))
             }
         </View>
@@ -118,7 +137,7 @@ const GetMap = (props) => {
     //console.log(FindCoordinates())
     const [curr_longitude, setLong] = useState(0)
     const [curr_latitude, setLat] = useState(0)
-    navigator.geolocation.getCurrentPosition(
+    Geolocation.getCurrentPosition(
         position => {
             //const location = (position);
             //console.log(location)
@@ -135,6 +154,7 @@ const GetMap = (props) => {
         
     );
 
+
     //console.log("Current Longitude: %f", curr_longitude)
     //console.log("Current Latitude: %f", curr_latitude)
 
@@ -143,22 +163,27 @@ const GetMap = (props) => {
         <View style={styles.container}>
             <MapView
                 style={styles.map}
-                showsUserLocation = { true }
+                showsUserLocation ={true}
+                showsMyLocationButton={true}
                 provider={PROVIDER_GOOGLE}
-                showsScale = {true}
-                followsUserLocation = {true}
+                showsScale={true}
+                followsUserLocation={true}
                 initialRegion={{
                     latitude: CSUB_LATITUDE,
                     longitude: CSUB_LONGITUDE,
-                    latitudeDelta: 0.0422,
-                    longitudeDelta: 0.0121,
+                    latitudeDelta: 0.5422,
+                    longitudeDelta: 0.5121,
                 }}
+                
+                /*
                 region={{
                     latitude: curr_latitude,
                     longitude: curr_longitude,
-                    latitudeDelta: 0.01,
-                    longitudeDelta: 0.01,
-                }}>
+                    latitudeDelta: 1.01,
+                    longitudeDelta: 1.01,
+                }}
+                */
+                >
                 {/*
                 <MapView.Marker
                 coordinate={{
@@ -171,19 +196,37 @@ const GetMap = (props) => {
                     </View>
                 </MapView.Marker>
                 */}
+                {
+                    zones.map((zone, index) => (
+                        <Marker
+                            key={index}
+                            coordinate={{
+                                latitude: zone.midpoint.latitude,
+                                longitude: zone.midpoint.longitude,
+                            }}
+                        >
+                            {/*
+                            <View style={styles.markerRadius}>
+
+                            </View>
+                            */}
+                        </Marker>
+                        ))
+                }
                 <DisplayHotspots/>
                 {
                     zones.map((zone, index) => (
                         <Circle
-                        key={index}
+                            key={index}
                             center = {zone.midpoint}
-                            radius = {50}
+                            radius = {100}
                             strokeWidth = { 1 }
-                            strokeColor = { '#ff0000' }
+                            strokeColor = { '#ff00ff' }
                             fillColor = { 'rgba(230,10,10,0.5)' }
                         />
                     ))
                 }
+                {/*
                 <MapView.Circle
                     center = { zones.[0].midpoint }
                     radius = { 50 }
@@ -191,6 +234,7 @@ const GetMap = (props) => {
                     strokeColor = { '#ff0000' }
                     fillColor = { 'rgba(230,10,10,0.5)' }
                 />
+                */}
             </MapView>
         </View>
         
@@ -198,11 +242,19 @@ const GetMap = (props) => {
 }
 
 const HotspotScreen = () => {
-
+    const [statusBarColor, setStatusBarColor] = useState('');
+    StatusBar.setBackgroundColor('#ff00ff00', true)
+    //setStatusBarColor('#ff00ff00')
 
     return (
+        ///*
         <>
-            <GetMap name="first" />
+            <GetMap name="first" /><StatusBar
+                animated={true}
+                backgroundColor='#ff0000'
+                translucent={true}
+                barStyle="light-content" 
+            />
         </>
         /*
         <View style={styles.container}>

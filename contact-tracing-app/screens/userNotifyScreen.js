@@ -6,7 +6,11 @@ import {
     View,
     ActivityIndicator,
     TouchableOpacity,
+<<<<<<< HEAD
     NativeModules
+=======
+    StatusBar,
+>>>>>>> 397066ff132601d4eca41675b652b27b0ad825c9
 } from 'react-native';
 import styles from './styles/userNotifyScreen.style.js';
 import { retrieveUnsecured } from '../components/tokenAsync';
@@ -30,10 +34,15 @@ const UserNotify = ({navigation}) => {
 
     return (
         <View style={styles.container}>
+            <StatusBar
+                animated={true}
+                backgroundColor="#ff0000"
+                barStyle="light-content" 
+            />
             <View style={styles.userInfo}>
             </View>
             <View style = {styles.alertOthers}>
-                <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+                <Text style={{fontSize: 18, fontWeight: 'bold', color: 'black',}}>
                     Begin Notifying
                 </Text>
                 {/*<Text style={{textAlign: 'center', justifyContent: 'center', alignItems: 'center', fontSize: 16}}>
