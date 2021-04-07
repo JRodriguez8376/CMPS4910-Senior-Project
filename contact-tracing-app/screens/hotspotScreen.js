@@ -169,8 +169,8 @@ const GetMap = (props) => {
                 setLong(curr_longitude)
                 //console.log("Current Longitude1: ", position.coords.longitude)
                 //console.log("Current Latitude1: ", position.coords.latitude)
-                console.log("Current Longitude: ", curr_longitude)
-                console.log("Current Latitude: ", curr_latitude)
+                //console.log("Current Longitude: ", curr_longitude)
+                //console.log("Current Latitude: ", curr_latitude)
                 retrieveUnsecured('token')
                 .then(result => {
                     //console.log("Current Longitude2: ", curr_longitude)
@@ -194,8 +194,8 @@ const GetMap = (props) => {
         //CSUB_LONGITUDE = curr_long
     }, []);
     useEffect(() => {
-        console.log("Current latitudeDelta: ", region.latitudeDelta)
-        console.log("Current longitudeDelta: ", region.longitudeDelta)
+        //console.log("Current latitudeDelta: ", region.latitudeDelta)
+        //console.log("Current longitudeDelta: ", region.longitudeDelta)
         if (region.latitudeDelta >= 0.02 && region.longitudeDelta >= 0.02) {
             setZoom(false)
         }
@@ -223,8 +223,8 @@ const GetMap = (props) => {
                         initialRegion={{
                             latitude: curr_lat,
                             longitude: curr_long,
-                            latitudeDelta: 0.05,
-                            longitudeDelta: 10.00,
+                            latitudeDelta: 0.10,
+                            longitudeDelta: 0.10,
                         }}
                         //onUserLocationChange = {location => alert(location.latitude)}
                         onRegionChangeComplete={region => setRegion(region)}
@@ -246,7 +246,7 @@ const GetMap = (props) => {
             </View>
         )
     }
-    //THIS IS THE DEBUG WALL
+    //THIS IS THE DEBUG WALL IF ITS NOT HERE IT WAS PROBABLY HERE AT ONE POINT
     //console.log("Current Longitude: ", curr_long)
     //console.log("Current Latitude:  ", curr_lat)
     //console.log("Current Longitude1: ", curr_longitude)
@@ -275,8 +275,8 @@ const GetMap = (props) => {
                     initialRegion={{
                         latitude: curr_lat,
                         longitude: curr_long,
-                        latitudeDelta: 0.05,
-                        longitudeDelta: 10.00,
+                        latitudeDelta: 0.10,
+                        longitudeDelta: 0.10,
                     }}
                     //onUserLocationChange = {location => alert(location.latitude)}
                     onRegionChangeComplete={region => setRegion(region)}
@@ -309,6 +309,8 @@ const GetMap = (props) => {
                     {
                         GPSList.map((zone, index) => (
                             <Marker
+                                pinColor={"#FF0000"}
+                                //image={require("../assets/images/VirusPin.png")}
                                 key={index}
                                 coordinate={{
                                     latitude: zone.midpoint.latitude,
@@ -360,7 +362,8 @@ const HotspotScreen = () => {
     return (
         ///*
         <>
-            <GetMap name="first" /><StatusBar
+            <GetMap name="first" />
+            <StatusBar
                 animated={true}
                 backgroundColor='#ff0000'
                 translucent={false}
