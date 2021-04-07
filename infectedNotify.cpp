@@ -81,11 +81,15 @@ int main()
 //=============================================================================
         //Returns count of potential_contact users
         C.prepare("sql_potential_contact_count",
-            "SELECT count(*) AS exact_potential_contact_count FROM potential_contact WHERE device_id_1 = $1");
+            "SELECT count(*) AS exact_potential_contact_count FROM potential_contact WHERE device_id_1 = $1 AND compared = 0");
 
         //Returns potential_contact users and time met
         C.prepare("sql_potential_contact_IDs",
-            "SELECT device_id_2, time_met FROM potential_contact WHERE device_id_1 = $1");
+            "SELECT device_id_2, time_met FROM potential_contact WHERE device_id_1 = $1 AND compared = 0");
+        
+        //Updates potential contact compared value
+        C.prepare("sql_update_potential_contact_compared",
+            "UPDATE potential_contact SET compared = 1 WHERE device_id_1 = $1 AND device_id_2 = $2");
 
         //Returns count of a infected users locations
         C.prepare("sql_infected_locations_count",
@@ -103,9 +107,13 @@ int main()
         C.prepare("sql_potential_contact_locations",
             "SELECT time_recorded, latitude, longitude FROM locations WHERE fk_device_id = $1");
 
-        //
+        //Updates potential contact users threat level
         C.prepare("sql_update_threat_level",
-            "UPDATE users SET threat_level = $1 WHERE device_id = $2");
+            "UPDATE users SET threat_level = $1, threat_date = now() WHERE device_id = $2");
+
+        //Returns potential contact users threat level
+        C.prepare("sql_potential_contact_threat_level",
+            "SELECT threat_level FROM users WHERE device_id = $1");
 //=============================================================================
 //Notification Listener
 //=============================================================================
@@ -158,6 +166,7 @@ int main()
                         potential_contact_time_met[index] = c[1].as<string>();
                         cout << "Contact ID: " << potential_contact_id[index]
                             << " Time met: " << potential_contact_time_met[index] << endl;
+                        N.exec_prepared("sql_update_potential_contact_compared", infected, potential_contact_id[index]);
                         index++;
                     }
 
@@ -248,15 +257,20 @@ int main()
                                     << " and user: " << potential_contact_id[j]
                                     << " is " << diffAvg << " feet." << endl;
                                 int threatLevel = 0;
+                                result R9(N.exec_prepared("sql_potential_contact_threat_level", potential_contact_id[j]));
+                                for (result::const_iterator cc = R9.begin(); cc != R9.end(); ++cc)
+                                {
+                                    threatLevel = cc[0].as<int>();
+                                }
                                 if (diffAvg < 7)
                                 {
                                     threatLevel = 3;
                                 }
-                                else if(diffAvg >= 7 && diffAvg < 16)
+                                else if(diffAvg >= 7 && diffAvg < 16 && threatLevel < 3)
                                 {
                                     threatLevel = 2;
                                 }
-                                else
+                                else if(threatLevel < 2)
                                 {
                                     threatLevel = 1;
                                 }
