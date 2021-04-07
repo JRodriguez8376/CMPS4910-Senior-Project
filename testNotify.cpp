@@ -23,8 +23,6 @@ class notifListener : public notification_receiver
     void operator()(string const &message, int be_pid) override
     {
         m_done = true;
-        //PQXX_CHECK_EQUAL( be_pid, conn().backendpid(),
-        //    "Got notification from wrong backend process.");
         cout << "Received notification: " << channel() << " pid = " << be_pid << endl;
         cout << message << "..." << endl;
     }
@@ -58,18 +56,11 @@ int main()
         int notifs = 0;
         for (int i = 0; i < 20; ++i)
         {
-            //PQXX_CHECK_EQUAL(notifs, 0, "Got unexpected notifications.");
             cout << ".";
             notifs = C.await_notification();
             usleep(2000);
         }
         cout << endl;
-
-        //PQXX_CHECK(NL.done(), "No notifications received.");
-        //PQXX_CHECK_EQUAL(notifs, 1, "Got unexpected number of notifications.");
-
-        //nontransaction N(C);
-        //notification_receiver(C, "algorithm");
 
         cout << "Operation done successfully" << endl;
         C.close();

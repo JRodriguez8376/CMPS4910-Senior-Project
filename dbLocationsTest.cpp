@@ -12,6 +12,23 @@ long double distance(long double lat1, long double long1,
                     long double lat2, long double long2);
 long double toRadians(const long double degree);
 
+class notifListener : public notification_reciever
+{
+    bool m_done;
+    public:
+    explicit notifListener(connection &conn, string name) :
+        notification_receiver(conn, name), m_done(false)
+    {}
+    void operator()(string const &, int be_pid) override
+    {
+        m_done = true;
+        PQXX_CHECK_EQUAL( be_pid, conn().backendpid(),
+            "Got notification from wrong backend process.");
+        cout << "Received notification: " << channel() << " pid = " << be_pid << endl;
+    }
+    bool done() const { return m_done; }
+};
+
 int main()
 {
     char *sql_infected_count;
@@ -31,6 +48,14 @@ int main()
             return 1;
         }
 
+        string const notifName{"algorithm"};
+        notifListener NL{C, notifName};
+
+        perform([&C, &NL] {
+            work tx{C};
+            tx.exec0("NOTIFY" + tx.quote_name(NL,channel()));
+            tx.commit();
+        });
         //sql = "SELECT * FROM locations JOIN (SELECT device_id_2 FROM contact WHERE device_id_1 = (SELECT fk_device_id FROM infected) LIMIT 1) as clTest ON fk_device_id = device_id_2 LIMIT 15";
 
         //Returns row count for infected table (Use once table exceeds 100 rows)
@@ -251,6 +276,51 @@ long double distance(long double lat1, long double long1,
     return ans;
 }
 
+//Checks for a received NOTIFY and returns it.
+
+/*
+bool checkNotify(notification &no)
+{
+    PGnotify *notify;
+    PGconsumeInput(connection_);
+    if ((notify = PQnotifies(connection_)) != NULL)
+    {
+        no.channel = notify->relname;
+        no.sending_pid = notify->be_pid;
+        no.payload = notify->extra;
+        PQfreemem(notify);
+        return true;
+    }
+    else
+    {
+        no.channel = "";
+        no.sending_pid = 0;
+        no.payload = "";
+        PQfreemem(notify);
+        return false;
+    }
+}
+
+//Listens to a specified channel using the Postgresql LISTEN-function.
+bool PostgresqlDatabase::listenToChannel(std::string channel) {
+  //look, if we're already listening to the channel in our list
+    if (std::find(channels_.begin(),channels_.end(),channel) == channels_.end() )
+    {
+        std::string query = "LISTEN " + channel;
+        PGresultAutoPtr result = PQexec(connection_,query.c_str());
+        if (PQresultStatus(*result) != PGRES_COMMAND_OK)
+        {
+            ROS_WARN("LISTEN command failed: %s", PQerrorMessage(connection_));
+            return false;
+        }
+        ROS_INFO("Now listening to channel \"%s\"",channel.c_str());
+        channels_.push_back(channel);
+        return true;
+    }
+    ROS_INFO("We are already listening to channel \"%s\" - nothing to be done",channel.c_str());
+    return true;
+}
+*/
 /*
 SELECT * 
 FROM infected
