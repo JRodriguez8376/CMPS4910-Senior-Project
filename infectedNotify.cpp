@@ -167,6 +167,7 @@ int main()
                         cout << "Contact ID: " << potential_contact_id[index]
                             << " Time met: " << potential_contact_time_met[index] << endl;
                         N.exec_prepared("sql_update_potential_contact_compared", infected, potential_contact_id[index]);
+                        N.exec_prepared("sql_update_potential_contact_compared", potential_contact_id[index], infected);
                         index++;
                     }
 
