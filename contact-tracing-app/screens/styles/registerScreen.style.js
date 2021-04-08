@@ -33,9 +33,10 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
     },
     inputView: {
+        //flex: 1,
         height: 50,
-        flexDirection: 'column',
-        justifyContent: 'center',
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
         alignItems: 'stretch',
         backgroundColor: 'white',
         borderColor: 'red',
@@ -48,6 +49,7 @@ const styles = StyleSheet.create({
         shadowOffset: {width: 1, height: 2}
     },
     input: {
+        flex: 1,
         height: 50,
         fontSize: 16,
         borderBottomWidth: 0,
@@ -55,6 +57,16 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
         textAlign: 'left'
 
+    },
+    revealIcon: {
+        justifyContent: 'center',
+        marginLeft: 5,
+        padding: 10,
+        paddingRight: 10,
+        //borderColor: 'red',
+        //borderWidth: 1,
+        borderLeftWidth: 1,
+        borderLeftColor: 'rgb(237, 88, 88)',
     },
     signUpButton: {
         borderRadius: 25,
