@@ -11,7 +11,7 @@ import UserNotify from '../screens/userNotifyScreen';
 import ResourcesTips from '../screens/resourcesTips';
 import { createStackNavigator } from "@react-navigation/stack";
 import Icon from 'react-native-vector-icons/FontAwesome';
-
+import BLE from '../components/BLEModule';
 
 // Thanks to: 
 // https://stackoverflow.com/questions/61025437/how-to-combine-stacknavigator-and-tabnavigator-in-react-navigation-5
@@ -21,6 +21,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 const Tab = createBottomTabNavigator();
 
 const SignedInNavigator = () => {
+    BLE.addBLEStartListener;
     return (
         <Tab.Navigator
             initialRouteName="Test tab"

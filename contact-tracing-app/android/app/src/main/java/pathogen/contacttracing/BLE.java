@@ -4,17 +4,25 @@ import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.mohsenoid.closetome.CloseToMe;
 import com.mohsenoid.closetome.CloseToMeCallback;
 import com.mohsenoid.closetome.model.Beacon;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
 import org.unimodules.interfaces.filesystem.Permission;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
@@ -26,22 +34,24 @@ public class BLE extends ReactContextBaseJavaModule {
     ReactContext reactContext;
     UUID newUUID = UUID.randomUUID();
     Context context;
+    Map<String, Beacon> map;
 
 
     public BLE() {
         Log.d("BLE", "Starting BLE Constructor");
 
     }
-    public BLE(ReactContext reactContext) {
-        Log.d("BLE", "Starting BLE Constructor");
-        this.reactContext = reactContext;
-
-    }
     public BLE(Context context) {
         Log.d("BLE", "Starting BLE Constructor");
         this.context = context;
+        this.userUUID = this.newUUID.toString();
 
     }
+
+    public void setReactContext(ReactContext reactContext) {
+        this.reactContext = reactContext;
+    }
+
     @ReactMethod
     public void setUserUUID(String userUUID) {
         this.userUUID = userUUID;
@@ -51,19 +61,30 @@ public class BLE extends ReactContextBaseJavaModule {
         this.manufacturerUUID = manufacturerUUID;
     }
     @ReactMethod
-    public String getContactInfo() {
+    public String getContactInfo(Promise promise) {
         if(closeToMe.getResults().getValue() == null) {
+            Log.d("BLE", "No info to return");
+            promise.reject("getContactInfo", "No info to return");
             return "No info";
         }
-        return closeToMe.getResults().getValue().toString();
+        map = closeToMe.getResults().getValue();
+        JSONObject jsonObject = new JSONObject(map);
+        promise.resolve(jsonObject);
+        Log.d("BLE", map.toString());
+        Log.d("BLE", "JSON DATA: " + jsonObject.toString());
+        return map.toString();
     }
     @ReactMethod
     public void BLEInit() {
         if(userUUID == null || manufacturerUUID == null) {
             Log.d("BLE", "Missing UUID! userUUID:" + userUUID + "manufacturerUUID: "
                     + manufacturerUUID);
-            userUUID = "0fc96cd5-8292-46e6-ab13-5b55c1003825";
-            manufacturerUUID = "0fc96cd5-8292-46e6-ab13-5b55c1003824";
+            if(userUUID == null) {
+                userUUID = "0fc96cd5-8292-46e6-ab13-5b55c1003825";
+            }
+            if(manufacturerUUID == null) {
+                manufacturerUUID = "0fc96cd5-8292-46e6-ab13-5b55c1003824";
+            }
         }
         Log.d("BLE", "Starting BLE Init");
         closeToMe = new CloseToMe
@@ -73,6 +94,7 @@ public class BLE extends ReactContextBaseJavaModule {
                 .setVisibilityTimeoutMs(5_000)
                 .build();
         Log.d("BLE", "CloseToMeObject built");
+
     }
     @ReactMethod
     public void start() {
@@ -105,8 +127,15 @@ public class BLE extends ReactContextBaseJavaModule {
                         });
 
         Log.d("BLE", "BLE start() finished");
+        WritableMap data = Arguments.createMap();
+        data.putString("userUUID", userUUID);
+        sendEvent("BLEStartDone", data);
     }
 
+    private void sendEvent(String eventName, @Nullable WritableMap params) {
+        reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                .emit(eventName, params);
+    }
     @NonNull
     @Override
     public String getName() {

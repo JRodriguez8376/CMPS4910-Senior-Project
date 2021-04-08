@@ -18,12 +18,16 @@ const UserInfo = ({navigation}) => {
     const [data, setData] = useState([]);
 
     const advertise = () => {
-
         BLE.start();
-
     }
     const update = () => {
-        console.log(BLE.getContactInfo());
+        try {
+            const updateData = await BLE.getContactInfo();
+            console.log("BLE data update: ", updateData );
+        } catch(err) {
+            console.error(err)
+        }
+        
     }
 
 
