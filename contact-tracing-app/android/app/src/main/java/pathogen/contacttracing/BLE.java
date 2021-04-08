@@ -68,10 +68,13 @@ public class BLE extends ReactContextBaseJavaModule {
             return;
         }
         map = closeToMe.getResults().getValue();
-        JSONObject jsonObject = new JSONObject(map);
-        promise.resolve(jsonObject);
+        WritableMap mapData = new WritableNativeMap();
+        for(Map.Entry<String, Beacon> entry : map.entrySet()) {
+            mapData.putString(entry.getKey(), String.valueOf(entry.getValue()));
+        }
+        promise.resolve(mapData);
         Log.d("BLE", map.toString());
-        Log.d("BLE", "JSON DATA: " + jsonObject.toString());
+        Log.d("BLE", "JSON DATA: " + mapData.toString());
         return;
     }
     @ReactMethod
