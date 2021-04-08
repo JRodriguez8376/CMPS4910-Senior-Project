@@ -10,13 +10,14 @@ import {
     Image,
     ActivityIndicator,
     StatusBar,
-    ScrollView
+    ScrollView,
+    PermissionsAndroid
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { Alert } from 'react-native';
 import AuthContext from '../context/authContext';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-
+import {requestFineLPermission, requestCoarseLPermission} from '../components/permissions.js';
 /*
 validate = (text) => {
     console.log(text);
@@ -63,6 +64,8 @@ const LoginScreen = ({navigation}) => {
                 ]
             );
         } else {
+            requestCoarseLPermission();
+            requestFineLPermission();
             signIn({ email, password })
         }
     }
@@ -81,8 +84,10 @@ const LoginScreen = ({navigation}) => {
                 enableAutomaticScroll={true}
                 keyboardShouldPersistTaps='handled'
             >
+                
                 <ScrollView>
                     <View style={styles.formContainer}>
+                        
                         <Text style={styles.name}>Covid Tracing App</Text>
                         <Image source={require("../assets/images/doge.jpg")} style={styles.logo} />
                         <View style={styles.formElement}>
