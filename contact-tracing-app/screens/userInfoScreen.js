@@ -12,11 +12,8 @@ import {
 import styles from './styles/userInfoScreen.style.js';
 import { retrieveUnsecured } from '../components/tokenAsync';
 import { getPostAPIData } from '../api/helpers';
-<<<<<<< HEAD
 const { BLE } = NativeModules;
-=======
 
->>>>>>> 1fdd6abf3e50e6cb17b249b6ae33f675219e58f8
 const UserInfo = ({navigation}) => {
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState([]);
@@ -24,7 +21,7 @@ const UserInfo = ({navigation}) => {
     const advertise = () => {
         BLE.start();
     }
-    const update = () => {
+    const update = async () => {
         try {
             const updateData = await BLE.getContactInfo();
             console.log("BLE data update: ", updateData );

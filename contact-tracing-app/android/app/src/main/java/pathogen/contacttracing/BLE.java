@@ -61,18 +61,18 @@ public class BLE extends ReactContextBaseJavaModule {
         this.manufacturerUUID = manufacturerUUID;
     }
     @ReactMethod
-    public String getContactInfo(Promise promise) {
+    public void getContactInfo(Promise promise) {
         if(closeToMe.getResults().getValue() == null) {
             Log.d("BLE", "No info to return");
             promise.reject("getContactInfo", "No info to return");
-            return "No info";
+            return;
         }
         map = closeToMe.getResults().getValue();
         JSONObject jsonObject = new JSONObject(map);
         promise.resolve(jsonObject);
         Log.d("BLE", map.toString());
         Log.d("BLE", "JSON DATA: " + jsonObject.toString());
-        return map.toString();
+        return;
     }
     @ReactMethod
     public void BLEInit() {
@@ -129,6 +129,7 @@ public class BLE extends ReactContextBaseJavaModule {
         Log.d("BLE", "BLE start() finished");
         WritableMap data = Arguments.createMap();
         data.putString("userUUID", userUUID);
+        Log.d("BLE", data.toString());
         sendEvent("BLEStartDone", data);
     }
 
