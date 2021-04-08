@@ -30,6 +30,7 @@ const SignedInNavigator = () => {
                 activeBackgroundColor: '#ff0000',
                 inactiveTintColor: '#ff0000',
                 inactiveBackgroundColor: '#ffffff',
+                keyboardHidesTabBar: true,
             }}
         >
             <Tab.Screen
