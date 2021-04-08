@@ -6,16 +6,12 @@ import {
     View,
     ActivityIndicator,
     TouchableOpacity,
-<<<<<<< HEAD
-    NativeModules
-=======
     StatusBar,
->>>>>>> 397066ff132601d4eca41675b652b27b0ad825c9
+    NativeModules
 } from 'react-native';
 import styles from './styles/userNotifyScreen.style.js';
 import { retrieveUnsecured } from '../components/tokenAsync';
 import { getPostAPIData } from '../api/helpers';
-const {BLEPeripheralModule} = NativeModules;
 
 var howitworksTXT = "The “Notify Other” feature will send a mass notification to all users "
         + "that you have come in possible contact with that they have come in possible contact "
@@ -42,7 +38,7 @@ const UserNotify = ({navigation}) => {
             <View style={styles.userInfo}>
             </View>
             <View style = {styles.alertOthers}>
-                <Text style={{fontSize: 18, fontWeight: 'bold', color: 'black',}}>
+            <Text style={{fontSize: 18, fontWeight: 'bold', color: 'black',}}>
                     Begin Notifying
                 </Text>
                 {/*<Text style={{textAlign: 'center', justifyContent: 'center', alignItems: 'center', fontSize: 16}}>

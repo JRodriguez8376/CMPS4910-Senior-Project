@@ -13,11 +13,16 @@ import com.swmansion.gesturehandler.react.RNGestureHandlerEnabledRootView;
 import expo.modules.splashscreen.singletons.SplashScreen;
 import expo.modules.splashscreen.SplashScreenImageResizeMode;
 public class MainActivity extends ReactActivity {
+    public static BLE ble;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(null);
         // SplashScreen.show(...) has to be called after super.onCreate(...)
         // Below line is handled by '@expo/configure-splash-screen' command and it's discouraged to modify it manually
+
+        ble = new BLE(this);
+        ble.BLEInit();
+
         SplashScreen.show(this, SplashScreenImageResizeMode.CONTAIN, ReactRootView.class, false);
     }
 

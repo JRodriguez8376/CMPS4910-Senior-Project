@@ -17,7 +17,8 @@ public class MyAppPackage implements ReactPackage {
     public List<NativeModule> createNativeModules(@NonNull ReactApplicationContext reactContext) {
 
         List<NativeModule> modules = new ArrayList<>();
-        modules.add(new BLEPeripheralModule(reactContext));
+
+        modules.add(MainActivity.ble);
         //modules.add(new Services(reactContext));
         return modules;
     }

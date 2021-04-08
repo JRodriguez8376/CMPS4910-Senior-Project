@@ -12,14 +12,20 @@ import {
 import styles from './styles/userInfoScreen.style.js';
 import { retrieveUnsecured } from '../components/tokenAsync';
 import { getPostAPIData } from '../api/helpers';
-const {BLEPeripheralModule} = NativeModules;
+const { BLE } = NativeModules;
 const UserInfo = ({navigation}) => {
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState([]);
 
     const advertise = () => {
-        BLEPeripheralModule.startAdapter("THIS IS NOT WARZONE");
+
+        BLE.start();
+
     }
+    const update = () => {
+        console.log(BLE.getContactInfo());
+    }
+
 
     useEffect(() => {
         /*
@@ -95,13 +101,24 @@ const UserInfo = ({navigation}) => {
             * DELETE later once we know its working on startup
             * 
             */}
+            
+            </View>
             <TouchableOpacity style ={styles.startAlert}
                 title="Click to start advertising BLE"
-                onPress={advertise}
-            />
-            </View>
-            
+                onPress={advertise}    
+            >
+                <Text style={{fontSize:16, color:'white'}}>Start BLE</Text>
+
+                </TouchableOpacity>
+                <TouchableOpacity style ={styles.startAlert}
+                title="Click to start advertising BLE"
+                onPress={update}    
+            >
+                <Text style={{fontSize:16, color:'white'}}>Update Console</Text>
+
+                </TouchableOpacity>
         </View>
+        
 
     );
 }

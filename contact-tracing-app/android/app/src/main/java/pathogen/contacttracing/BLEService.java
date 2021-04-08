@@ -7,8 +7,10 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+/**
+ * Class that will run the BLE module to keep it running as a service to keep it from closing
+ */
 public class BLEService extends Service {
-    BLEPeripheralModule blePeripheralModule;
 
     @Nullable
     @Override
@@ -18,8 +20,7 @@ public class BLEService extends Service {
 
     @Override
     public void onCreate() {
-       blePeripheralModule = new BLEPeripheralModule();
-        Log.d("SERVICE", "BLE Service Created: Advertising/Peripheral");
+
     }
 
     public BLEService() {
@@ -29,7 +30,6 @@ public class BLEService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        blePeripheralModule.startAdvertising();
         return super.onStartCommand(intent, flags, startId);
 
     }
