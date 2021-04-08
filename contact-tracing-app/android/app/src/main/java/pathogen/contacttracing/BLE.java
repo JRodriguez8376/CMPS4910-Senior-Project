@@ -62,8 +62,8 @@ public class BLE extends ReactContextBaseJavaModule {
         if(userUUID == null || manufacturerUUID == null) {
             Log.d("BLE", "Missing UUID! userUUID:" + userUUID + "manufacturerUUID: "
                     + manufacturerUUID);
-            userUUID = newUUID.toString();
-            manufacturerUUID = "0fc96cd5-8292-46e6-ab13-5b55c1003825";
+            userUUID = "0fc96cd5-8292-46e6-ab13-5b55c1003825";
+            manufacturerUUID = "0fc96cd5-8292-46e6-ab13-5b55c1003824";
         }
         Log.d("BLE", "Starting BLE Init");
         closeToMe = new CloseToMe
