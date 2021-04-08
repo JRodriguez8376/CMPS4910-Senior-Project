@@ -21,11 +21,11 @@ const styles = StyleSheet.create({
         alignItems: 'stretch'
     },
     formElement: {
+        //flex: 1,
         //paddingLeft: 40,
         //paddingRight: 40,
         paddingHorizontal: 20,
         paddingVertical: 10,
-        
     },
     backgroundImage: {
         flex: 1,
@@ -56,7 +56,6 @@ const styles = StyleSheet.create({
         borderColor: 'gray',
         paddingLeft: 10,
         textAlign: 'left'
-
     },
     revealIcon: {
         justifyContent: 'center',
