@@ -77,7 +77,7 @@ hotspotRouter.post('/newlocation', validateToken, (req, res) => {
 
 var refreshTime = 0;
 var coords = [];
-const miles_in_ft = 26400;
+const miles_in_ft = 264000;
 const contact_radius = 3.3;
 //Return hotspot data
 //If < 15 mins, return JSON data matching the points given within 5 miles
