@@ -71,7 +71,7 @@ public class BLE extends ReactContextBaseJavaModule {
         WritableMap mapData = Arguments.createMap();
         for(Map.Entry<String, Beacon> entry : map.entrySet()) {
             Log.d("BLE", "MAP DATA: " + entry.toString());
-            mapData.putString(entry.getKey(), entry.getValue().getUserUuid());
+            mapData.putString(entry.getValue().getUserUuid(), String.valueOf(entry.getValue().isVisible()));
         }
         promise.resolve(mapData);
         Log.d("BLE", map.toString());
