@@ -1,29 +1,50 @@
 # Ignoring these files
 
+.DS_Store
+
+
+
 node_server/.env
 node_server/client.js
-node_server/node_modules/*
+node_modules/
 database/*
 README.md
 
-contact-tracing-app/node_modules/**/*
-contact-tracing-app/expo/*
-contact-tracing-app/npm-debug.*
+
 *.jks
 *.p8
 *.p12
 *.key
 *.mobileprovision
-*.orig.*
+.orig.
 contact-tracing-app/web-build/
 *.code-workspace
 # macOS
-.DS_Store
+
+
+#contact-tracing-app 
 contact-tracing-app/.expo/web/cache/development/babel-loader/001402d6b324f16690d2210416e26082.json
 contact-tracing-app/.expo/web/cache/development/babel-loader/006f935b5cb38d81724a656ab4c21dab.json
-*.json
+.json
+
+contact-tracing-app/node_modules/**/
+contact-tracing-app/expo/*
+contact-tracing-app/npm-debug.*
 contact-tracing-app/assets/images/login_img2.png
 contact-tracing-app/assets/images/login_img2.jpg
 contact-tracing-app/assets/images/login_img5.jpg
 contact-tracing-app/assets/images/login_background.jpg
 contact-tracing-app/screens/testScreen copy.js
+
+build/
+.idea
+
+
+.gradle
+local.properties
+*.iml
+
+/buck-out/
+.buckd/
+*.keystore
+!debug.keystore
