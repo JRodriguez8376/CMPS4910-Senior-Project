@@ -44,7 +44,6 @@ const TestStartScreen = ({navigation}) => {
             <StatusBar
                 animated={true}
                 backgroundColor="#ff0000"
-                translucent={true}
                 barStyle="light-content" 
             />
             <View style={styles.infoBox}>
