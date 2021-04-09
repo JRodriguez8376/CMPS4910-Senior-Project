@@ -9,12 +9,14 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         flexDirection: 'column',
         backgroundColor: '#FBFBFBFB',
-        alignItems: 'center'
+        alignItems: 'center',
+        color: 'black',
     },
     userInfo: {
         justifyContent: 'flex-start',
         alignItems: 'center',
         margin: 10,
+        color: 'black',
     },
     alertOthers: {
         justifyContent: 'center',

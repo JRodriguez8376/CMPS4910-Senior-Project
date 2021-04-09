@@ -1,4 +1,18 @@
 # Ignoring these files
+.expo
+__generated__
+web-build
+# Ignoring these files
+
+.DS_Store
+
+
+
+.DS_Store
+.expo
+__generated__
+web-build
+
 
 .DS_Store
 
@@ -18,7 +32,7 @@ README.md
 *.mobileprovision
 .orig.
 contact-tracing-app/web-build/
-*.code-workspace
+.code-workspace
 # macOS
 
 
@@ -29,6 +43,7 @@ contact-tracing-app/.expo/web/cache/development/babel-loader/006f935b5cb38d81724
 
 contact-tracing-app/node_modules/**/
 contact-tracing-app/expo/*
+contact-tracing-app/expo/
 contact-tracing-app/npm-debug.*
 contact-tracing-app/assets/images/login_img2.png
 contact-tracing-app/assets/images/login_img2.jpg

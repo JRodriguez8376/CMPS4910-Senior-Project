@@ -6,13 +6,31 @@ import {
     View,
     ActivityIndicator,
     TouchableOpacity,
+    NativeModules,
+    StatusBar,
 } from 'react-native';
 import styles from './styles/userInfoScreen.style.js';
 import { retrieveUnsecured } from '../components/tokenAsync';
 import { getPostAPIData } from '../api/helpers';
+const { BLE } = NativeModules;
+
 const UserInfo = ({navigation}) => {
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState([]);
+
+    const advertise = () => {
+        BLE.start();
+    }
+    const update = async () => {
+        try {
+            const updateData = await BLE.getContactInfo();
+            console.log("BLE data update: ", updateData );
+        } catch(err) {
+            console.error(err)
+        }
+        
+    }
+
 
     useEffect(() => {
         /*
@@ -46,6 +64,11 @@ const UserInfo = ({navigation}) => {
 
     return (
         <View style={styles.container}>
+            <StatusBar
+                animated={true}
+                backgroundColor="#ff0000"
+                barStyle="light-content" 
+            />
             <View style={styles.userInfo}>
                 <Text >
                     User Info Placeholder
@@ -62,13 +85,13 @@ const UserInfo = ({navigation}) => {
                 )}
             </View>
                 <View style = {styles.alertOthers}>
-                    <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+                    <Text style={{fontSize: 18, fontWeight: 'bold', color: 'black',}}>
                         NOTIFY OTHERS
                     </Text>
-                    <Text style={{textAlign: 'center', justifyContent: 'center', alignItems: 'center', fontSize: 16}}>
+                    <Text style={{textAlign: 'center', justifyContent: 'center', alignItems: 'center', fontSize: 16, color: 'black',}}>
                         Notify other users that you have contracted COVID-19.
                     </Text>
-                    <Text style={{textAlign: 'center', justifyContent: 'center', alignItems: 'center', fontSize: 12, fontStyle: 'italic',}}>
+                    <Text style={{textAlign: 'center', justifyContent: 'center', alignItems: 'center', fontSize: 12, fontStyle: 'italic', color: 'black',}}>
                         Click "Notify Others" to begin notifying.
                     </Text>
                     <View style={styles.formElement}>
@@ -78,9 +101,29 @@ const UserInfo = ({navigation}) => {
                         <Text style={{fontSize: 16, color: 'white'}}>Notify Others</Text>
                     </TouchableOpacity>
                 </View>
-            </View>
+
+                {/** Borrowing this page for the TEST Advertising button for the BLE mode 
+            * DELETE later once we know its working on startup
+            * 
+            */}
             
+            </View>
+            <TouchableOpacity style ={styles.startAlert}
+                title="Click to start advertising BLE"
+                onPress={advertise}    
+            >
+                <Text style={{fontSize:16, color:'white'}}>Start BLE</Text>
+
+                </TouchableOpacity>
+                <TouchableOpacity style ={styles.startAlert}
+                title="Click to start advertising BLE"
+                onPress={update}    
+            >
+                <Text style={{fontSize:16, color:'white'}}>Update Console</Text>
+
+                </TouchableOpacity>
         </View>
+        
 
     );
 }

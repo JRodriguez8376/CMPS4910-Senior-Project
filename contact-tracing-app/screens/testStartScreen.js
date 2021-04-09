@@ -5,6 +5,7 @@ import {
     View,
     ActivityIndicator,
     TouchableOpacity,
+    StatusBar,
 } from 'react-native';
 import { fetchTestData } from '../api/helpers';
 import { FlatList, State } from 'react-native-gesture-handler';
@@ -40,6 +41,12 @@ const adviceAnswer = (amount) => {
 const TestStartScreen = ({navigation}) => {
     return (
         <View style={styles.container}>
+            <StatusBar
+                animated={true}
+                backgroundColor="#ff0000"
+                translucent={true}
+                barStyle="light-content" 
+            />
             <View style={styles.infoBox}>
                 <Text style={styles.infoText}>{infoText}</Text>
                 <Text style={styles.infoText1}>{infoTextBot}</Text>

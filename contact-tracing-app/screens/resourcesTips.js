@@ -45,6 +45,11 @@ const ResourcesTips = ({navigation}) => {
     return(
         <ScrollView>
         <View style={styles.container}>
+            <StatusBar
+                animated={true}
+                backgroundColor="#ff0000"
+                barStyle="light-content" 
+            />
             <View style={styles.formContainer}>
                 
                 <View style={styles.textBox}>

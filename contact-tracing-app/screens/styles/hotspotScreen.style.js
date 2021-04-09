@@ -19,8 +19,11 @@ const styles = StyleSheet.create({
     */
     
     map: {
-        width: Dimensions.get('window').width,
-        height: Dimensions.get('window').height-75,
+        flex: 1,
+        //width: Dimensions.get('window').width,
+        //height: Dimensions.get('window').height-50,
+        borderWidth: 3,
+        borderColor: 'blue',
 
     },
     userRadius: {
@@ -42,10 +45,38 @@ const styles = StyleSheet.create({
         borderRadius: 20 / 2,
         overflow: 'hidden',
         backgroundColor: '#007Aff',
-        
-        
     },
-
+    markerRadius: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: 50,
+        width: 50,
+        backgroundColor: 'rgba(0, 122, 255, 0.1)',
+        borderColor: 'rgba(0, 122, 255, 0.3)',
+        borderWidth: 1,
+        borderRadius: 50 / 2,
+        overflow: 'hidden',
+    },
+    markerMarker: {
+        height: 20,
+        width: 20,
+        borderWidth: 3, 
+        borderColor: 'white',
+        borderRadius: 20 / 2,
+        overflow: 'hidden',
+        backgroundColor: '#007Aff',
+    },
+    circleRadius: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: 50,
+        width: 50,
+        backgroundColor: 'rgba(0, 255, 122, 0.1)',
+        borderColor: 'rgba(0, 255, 122, 0.3)',
+        borderWidth: 1,
+        borderRadius: 50 / 2,
+        overflow: 'hidden',
+    },
     formContainer: {
         flex: 1,
         justifyContent: 'center',
