@@ -211,5 +211,5 @@ authRouter.post('/verificationNotification', token.validateToken, (req, res) => 
             res.sendStatus(400);
     })
 });
-        
+
 module.exports = authRouter;

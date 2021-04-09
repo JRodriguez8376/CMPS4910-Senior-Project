@@ -30,7 +30,7 @@ hotspotRouter.post('/newcontact', validateToken, (req, res) => {
     const uuid_2 = req.body.contacted_uuid;
     conn.db.one("SELECT device_id from users WHERE bt_uuid = $1", [uuid_1])
     .then(result => {
-        conn.db.one("SELECT device_id from users where bt_uuid = $1", [uuid_2])
+        conn.db.one("SELECT device_id from users WHERE bt_uuid = $1", [uuid_2])
         .then(result2 => {
             conn.db.none("INSERT into potential_contact(device_id_1, device_id_2, latitude, \
                 longitude, time_met) VALUES($1, $2, $3, $4, $5)", [result.device_id, result2.device_id,
