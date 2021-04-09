@@ -17,7 +17,20 @@ userInfoRouter.all('/user', validateToken, (req, res) => {
             }
         })
 });
-
+userInfoRouter.post('/updatebt', validateToken, (req, res) => {
+    const email = req.body.email;
+    const bt_uuid = req.body.bt_uuid;
+    console.log(bt_uuid);
+    console.log(email);
+    conn.db.none("UPDATE users SET bt_uuid = $1 WHERE email = $2", [bt_uuid, email])
+    .then(() => {
+        console.log("Update of new BT UUID complete! for user with email: ", email);
+        res.sendStatus(200);
+    }).catch(error => {
+        res.sendStatus(400);
+        console.error("Update failed in /updatebt: ", error);
+    });
+});
 userInfoRouter.post('/sendstatus', validateToken, (req, res) => {
     conn.db.none("INSERT into has(fk_status_id, fk_has_device_id) VALUES($1, $2)",
         [req.body.status_id, req.body.device_id])
