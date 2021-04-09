@@ -254,7 +254,7 @@ const GetMap = (props) => {
 
     //console.log("Current Latitude: %f", CURRENT_LAT)
     //console.log(`Current GPSList: ${GPSList}`)
-    //console.log("GPSList: ", JSON.stringify(GPSList))
+    console.log("GPSList: ", JSON.stringify(GPSList))
     //console.log("Current ZoomLvl: ", zoomLvl)
     //console.log("Current latitudeDelta: ", region.latitudeDelta)
     return (
@@ -355,7 +355,16 @@ const GetMap = (props) => {
 }
 
 const HotspotScreen = () => {
-    const [statusBarColor, setStatusBarColor] = useState('');
+    const [statusBar, setStatusBar] = useState({
+        animated: true,
+        backgroundColor: '#ff000000',
+        translucent: false,
+        barStyle: "light-content", 
+    });
+    const animated = true
+    const backgroundColor = '#ff0000'
+    const translucent = false
+    const barStyle = "light-content"
     //StatusBar.setBackgroundColor('#ff00ff00', true)
     //setStatusBarColor('#ff00ff00')
 
@@ -364,10 +373,10 @@ const HotspotScreen = () => {
         <>
             <GetMap name="first" />
             <StatusBar
-                animated={true}
-                backgroundColor='#ff0000'
-                translucent={false}
-                barStyle="light-content" 
+                animated={animated}
+                backgroundColor={backgroundColor}
+                translucent={translucent}
+                barStyle={barStyle}
             />
         </>
         /*
