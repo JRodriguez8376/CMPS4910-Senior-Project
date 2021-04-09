@@ -46,6 +46,6 @@
     <service android:name="pathogen.contacttracing.BLEService"/>
   <meta-data 
       android:name="com.google.android.geo.API_KEY"
-      android:value="AIzaSyANiBTR_BcwT_bdHVpSr8qccN7HhfIfPvs"/>
+      android:value="YOUR API KEY HERE"/>
   </application>
 </manifest>
