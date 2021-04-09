@@ -4,7 +4,7 @@ const conn = require('../database/conn');
 const { validateToken } = require('./token.js');
 userInfoRouter.all('/user', validateToken, (req, res) => {
     console.log(req.body);
-    conn.db.oneOrNone('SELECT * FROM users where device_id = $1', req.body.id)
+    conn.db.oneOrNone('SELECT * FROM users where email = $1', req.body.email)
         .then(result => {
             if (result.length == 0) {
                 //If no user was found, do this
