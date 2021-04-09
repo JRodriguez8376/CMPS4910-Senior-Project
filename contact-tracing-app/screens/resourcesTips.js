@@ -10,7 +10,8 @@ import {
     TouchableOpacity,
     Image,
     ActivityIndicator,
-    ScrollView
+    ScrollView,
+    StatusBar,
 } from 'react-native';
 import Unorderedlist from 'react-native-unordered-list';
 var generalText = "COVID-19 has significanlty impacted  the world. "
