@@ -19,7 +19,6 @@ public class MyAppPackage implements ReactPackage {
         List<NativeModule> modules = new ArrayList<>();
         MainActivity.ble.setReactContext(reactContext);
         modules.add(MainActivity.ble);
-        //modules.add(new Services(reactContext));
         return modules;
     }
 

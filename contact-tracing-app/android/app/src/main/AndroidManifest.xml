@@ -43,8 +43,8 @@
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity"/>
-    <service android:name="pathogen.contacttracing.BLEService"/>
-  <meta-data 
+
+    <meta-data
       android:name="com.google.android.geo.API_KEY"
       android:value="YOUR API KEY HERE"/>
   </application>
