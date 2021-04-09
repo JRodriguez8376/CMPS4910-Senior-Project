@@ -12,8 +12,9 @@ import {
 
 const LoadingScreen = () => {
     return (
-        <View>
-            <Text> This is a loading screen</Text>
+        <View style={{flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: '#f2f2f2'}}>
+            <Image source={require("../assets/images/covid.png")} />
+            <Text>Loading...</Text>
         </View>
     );
 }
