@@ -99,6 +99,10 @@ int main()
         C.prepare("sql_infected_locations",
             "SELECT time_recorded, latitude, longitude FROM locations WHERE fk_device_id = $1");
 
+        //Deletes infected users locations
+        C.prepare("sql_delete_infected_locations",
+            "DELETE FROM locations WHERE fk_device_id = $1");
+
         //Returns count of a potential_contact users locations
         C.prepare("sql_potential_contact_locations_count",
             "SELECT count(*) AS exact_potential_contact_locations_count FROM locations WHERE fk_device_id = $1");
@@ -106,6 +110,10 @@ int main()
         //Returns a potential_contact users locations
         C.prepare("sql_potential_contact_locations",
             "SELECT time_recorded, latitude, longitude FROM locations WHERE fk_device_id = $1");
+
+        //Deletes potential contact users locations
+        //C.prepare("sql_delete_pc_locations",
+        //    "DELETE FROM locations WHERE fk_device_id = $1 AND time_recorded::DATE BETWEEN '$2' AND ('$2'::DATE + INTERVAL '15 minutes')");
 
         //Updates potential contact users threat level
         C.prepare("sql_update_threat_level",
@@ -143,9 +151,9 @@ int main()
 //=============================================================================
 //SQL Query
 //=============================================================================
+                nontransaction N(C);
                 if (infected != 0)
                 {   
-                    nontransaction N(C);
                     //Finds potential_contact users count
                     result R3(N.exec_prepared("sql_potential_contact_count", infected));
                     for (result::const_iterator c = R3.begin(); c != R3.end(); ++c)
@@ -276,10 +284,12 @@ int main()
                                     threatLevel = 1;
                                 }
                                 N.exec_prepared("sql_update_threat_level", threatLevel, potential_contact_id[j]);
+                                //N.exec_prepared("sql_delete_pc_locations", potential_contact_id[j], timestamp);
                             }
                         }
                     }
                 }
+                N.exec_prepared("sql_delete_infected_locations", infected);
                 NL.nextID();
                 infected = 0;
             }
