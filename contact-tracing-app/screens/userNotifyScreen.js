@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import styles from './styles/userNotifyScreen.style.js';
 import { retrieveUnsecured } from '../components/tokenAsync';
-import { getPostAPIData } from '../api/helpers';
+import { getPostAPIData, postAPIData } from '../api/helpers';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 var howitworksTXT = "The “Notify Other” feature will send a mass notification to all users "
@@ -70,16 +70,23 @@ const UserNotify = ({navigation}) => {
             retrieveUnsecured('email')
                 .then(email => {
                     retrieveUnsecured('token')
-                        .then(result => {
+                        .then(token => {
+                            getPostAPIData('/api/user/verification', { 
+                                "email": email, 
+                                "password": password 
+                            }, token)
+                            .then(result => console.log(result))
                             console.log("Email: ", email)
                             console.log("Password: ", password)
-                            console.log("Token: ", result)
+                            //console.log("Token: ", token)
                         })
                         .catch(error => {
+                            console.log("Catch Token Error")
                             console.error(error);
                         });
                 })
                 .catch(error => {
+                    console.log("Catch EmailError")
                     console.error(error);
                 });
             setInputText(["Password", "gray"])
