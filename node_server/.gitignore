@@ -1,8 +1,8 @@
 # Ignoring these files
 
 
-node_server/routes-test/
-node_server/node_modules/*
+/routes-test/
+/node_modules/*
 README.md
 
 *.code-workspace

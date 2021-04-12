@@ -9,14 +9,12 @@ const { validateToken } = require('./token');
 
 //Return Hotspot Data matching the given latitude, longitude
 hotspotRouter.post('/locations', validateToken, (req, res) => {
-    conn.db.many("SELECT * from potential_contact")
+    conn.db.manyOrNone("SELECT * from potential_contact")
         .then(result => {
             if (result && result.length != 0) {
                 res.status(200).json(getHotspotCoords(req.body.latitude, req.body.longitude, result));
             } else {
-                res.status(204).json({
-                    message: "No location data to return"
-                });
+                res.sendStatus(204);
             }
         }).catch(error => {
             res.status(400).json({
@@ -28,37 +26,38 @@ hotspotRouter.post('/locations', validateToken, (req, res) => {
 //Add new Contact to contact table
 
 hotspotRouter.post('/newcontact', validateToken, (req, res) => {
-    conn.db.none("INSERT into potential_contact(device_id_1, device_id_2, latitude, \
-        longitude, time_met) VALUES($1, $2, $3, $4, $5)", [req.body.device_id, req.body.device_id_2,
-    req.body.latitude, req.body.longitude, req.body.time_recorded])
-        .then(() => {
-            console.log("/newcontact successful");
-            conn.db.none("INSERT into locations(fk_device_id, latitude, longitude, time_recorded) \
-            VALUES($1, $2, $3, $4)", [req.body.device_id, req.body.latitude,
-            req.body.longitude, req.body.time_recorded])
+    const uuid_1 = req.body.user_uuid;
+    const uuid_2 = req.body.contacted_uuid;
+    conn.db.one("SELECT device_id from users WHERE bt_uuid = $1", [uuid_1])
+    .then(result => {
+        conn.db.one("SELECT device_id from users WHERE bt_uuid = $1", [uuid_2])
+        .then(result2 => {
+            conn.db.none("INSERT into potential_contact(device_id_1, device_id_2, latitude, \
+                longitude, time_met) VALUES($1, $2, $3, $4, $5)", [result.device_id, result2.device_id,
+                req.body.latitude, req.body.longitude, req.body.time_recorded])
                 .then(() => {
-                    res.status(200).json({
-                        message: "Accepted data input in /newcontact route"
-                    });
-                    console.log("/newlocation in /newcontact successful");
-                })
-                .catch(error => {
+                    console.log("/newcontact successful");
+                    res.sendStatus(200);
+                }).catch(error => {
                     res.status(400).json({
-                        message: "Rejected data input in /newcontact route"
+                        message: " rejected data input in /newcontact route"
                     });
-                    console.error("Error occurred in /newlocation /newcontact query | \n", error);
+                    console.error("Error occurred in /newcontact query | \n", error);
                 })
-        })
-        .catch(error => {
-            res.status(400).json({
-                message: " rejected data input in /newcontact route"
-            });
-            console.error("Error occurred in /newcontact query | \n", error);
-        })
+        }).catch(error => {
+            console.error("Error in searching user uuid_2: ", error);
+        });
+        
+    }).catch(error => {
+        console.error("Error in searching user uuid_1: ", error);
+    });
 });
+
 
 //Add new location into locations table
 hotspotRouter.post('/newlocation', validateToken, (req, res) => {
+
+
     conn.db.none("INSERT into locations(fk_device_id, latitude, longitude, time_recorded) \
         VALUES($1, $2, $3, $4)", [req.body.device_id, req.body.latitude,
     req.body.longitude, req.body.time_recorded])
@@ -113,8 +112,6 @@ const getHotspotCoords = (latitude, longitude, contact_point) => {
         }
         return areas;
     }
-
-
 }
 //Calculate new hotspots
 const hotspotCalc = (contact_point) => {
@@ -142,13 +139,15 @@ const hotspotCalc = (contact_point) => {
             point.radius = newRadius(hotspot_json[i].coordinates[0], point.midpoint);
             points.push(point);
         } else {
+    
             continue;
         }
+        
     }
     let update = true;
     let iter = 0;
     //Merge overlapping hotspots into new hotspots, remove old hotspots from list if merge occured
-    while (update) {
+    while (update && points.length > 1) {
         let point = {
             midpoint: {},
             radius: null,
@@ -179,7 +178,6 @@ const hotspotCalc = (contact_point) => {
         }
         iter++;
     }
-
     return (points);
 
 

@@ -42,14 +42,38 @@ authRouter.post('/signup', (req, res, next) => {
                     })
                     console.log("User already exists");
                 } else {
-                    //Hash signup password into database, create new user with hashed password
+                    //Hash signup password into database, create new user with hashed password, send refresh token
                     bcrypt.hash(req.body.password, saltRounds).then((hash) => {
-                        res.status(200).json({
-                            hash,
-                            message: 'hashed'
-                        });
                         user.signUp(req.body.email, hash, req.body.bday, req.body.user_type);
-                    })
+                        conn.db.oneOrNone(user.userExists, req.body.email)
+                        .then(result => {
+                            if(result.length == 0) {
+                                res.sendStatus(403);
+
+                            } else {
+                                const user_token_info = { email: req.body.email };
+                                console.log("User Token Info", user_token_info);
+                                
+                                console.log("User signing up");
+                                const accessToken = token.generateToken(user_token_info);
+                                const refreshToken = token.generateRefreshToken(user_token_info);
+                                const device_id = result.device_id;
+                                conn.db.none("UPDATE users SET token = $1 where device_id = $2", [refreshToken, device_id])
+                                .then(
+                                    res.status(200).json({
+                                        message: "Signed Up",
+                                        
+                                        accessToken: accessToken,
+                                        refreshToken: refreshToken
+                                    })
+                                ).catch(err => {
+                                    console.log("Refresh Token", refreshToken);
+                                    console.error("Error in signup/update: ", err);
+                                    res.status(400).json("Error in signing up");
+                                });
+                            }
+                        })
+                    });
                 }
             })
             .catch(error => {
@@ -155,7 +179,7 @@ authRouter.delete('/logout', (req, res) => {
     const refreshToken = req.body.token;
     const user = req.body.email;
 
-    conn.db.oneOrNone("SELECT from users WHERE email = $1 and token = $2", [user, refreshToken])
+    conn.db.oneOrNone("SELECT * from users WHERE email = $1 and token = $2", [user, refreshToken])
     .then(result => {
         if(result) {
             conn.db.none("UPDATE users set token = $1 WHERE token = $2", [null, refreshToken]);
@@ -168,6 +192,23 @@ authRouter.delete('/logout', (req, res) => {
     }).catch(error => {
         res.sendStatus(400);
         console.error(`Error in logout route USERID: ${user}, refreshToken: ${refreshToken} ERROR: ${error}`);
+    })
+});
+authRouter.post('/verificationNotification', token.validateToken, (req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
+
+    conn.db.oneOrNone("SELECT * from users where email = $1 AND passwrd = $2")
+    .then(result => {
+        if(result != null && result.length != 0) {
+            console.log("Verifying Notification alert!");
+            conn.db.none("INSERT into infected(fk_device_id, fk_is_infected,) VALUES($1, $2)",
+                [result.device_id, 1]);
+        }
+        res.sendStatus(200);
+    }).catch(error => {
+            console.error(error);
+            res.sendStatus(400);
     })
 });
 
