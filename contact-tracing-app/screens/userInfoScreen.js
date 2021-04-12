@@ -12,6 +12,7 @@ import {
 import styles from './styles/userInfoScreen.style.js';
 import { retrieveUnsecured } from '../components/tokenAsync';
 import { getPostAPIData } from '../api/helpers';
+import Icon from 'react-native-vector-icons/FontAwesome';
 const { BLE } = NativeModules;
 
 const UserInfo = ({navigation}) => {
@@ -62,6 +63,20 @@ const UserInfo = ({navigation}) => {
 
     }, []);
 
+    //Set Bell Icon in top right of Header that navigates to Notification Screen (userNotificationScreen.js)
+    React.useLayoutEffect(() => {
+        navigation.setOptions({
+        headerRight: () => (
+            <TouchableOpacity style={{paddingHorizontal: 20, paddingVertical: 13}}
+                //onPress={() => console.log("Bell Touched")}
+                onPress={() => navigation.push('UserNotification')}
+            >
+                <Icon name="bell-o" size={22} color={"white"} />
+            </TouchableOpacity>
+        ),
+        });
+    }, [navigation]);
+
     return (
         <View style={styles.container}>
             <StatusBar
@@ -84,30 +99,28 @@ const UserInfo = ({navigation}) => {
 
                 )}
             </View>
-                <View style = {styles.alertOthers}>
-                    <Text style={{fontSize: 18, fontWeight: 'bold', color: 'black',}}>
-                        NOTIFY OTHERS
-                    </Text>
-                    <Text style={{textAlign: 'center', justifyContent: 'center', alignItems: 'center', fontSize: 16, color: 'black',}}>
-                        Notify other users that you have contracted COVID-19.
-                    </Text>
-                    <Text style={{textAlign: 'center', justifyContent: 'center', alignItems: 'center', fontSize: 12, fontStyle: 'italic', color: 'black',}}>
-                        Click "Notify Others" to begin notifying.
-                    </Text>
-                    <View style={styles.formElement}>
-                        <TouchableOpacity style={styles.startAlert}
-                            onPress={() => navigation.navigate('UserNotify')}
-                        >
-                        <Text style={{fontSize: 16, color: 'white'}}>Notify Others</Text>
-                    </TouchableOpacity>
+            <View style = {styles.alertOthers}>
+                <Text style={{fontSize: 18, fontWeight: 'bold', color: 'black',}}>
+                    NOTIFY OTHERS
+                </Text>
+                <Text style={{textAlign: 'center', justifyContent: 'center', alignItems: 'center', fontSize: 16, color: 'black',}}>
+                    Notify other users that you have contracted COVID-19.
+                </Text>
+                <Text style={{textAlign: 'center', justifyContent: 'center', alignItems: 'center', fontSize: 12, fontStyle: 'italic', color: 'black',}}>
+                    Click "Notify Others" to begin notifying.
+                </Text>
+                <View style={styles.formElement}>
+                    <TouchableOpacity style={styles.startAlert}
+                        onPress={() => navigation.navigate('UserNotify')}
+                    >
+                    <Text style={{fontSize: 16, color: 'white'}}>Notify Others</Text>
+                </TouchableOpacity>
                 </View>
-
-                {/** Borrowing this page for the TEST Advertising button for the BLE mode 
+            </View>
+            {/** Borrowing this page for the TEST Advertising button for the BLE mode 
             * DELETE later once we know its working on startup
             * 
             */}
-            
-            </View>
             <TouchableOpacity style ={styles.startAlert}
                 title="Click to start advertising BLE"
                 onPress={advertise}    
