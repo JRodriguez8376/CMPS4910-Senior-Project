@@ -1,4 +1,5 @@
 import React from "react";
+import { TouchableOpacity } from 'react-native';
 import {
     createBottomTabNavigator
 } from '@react-navigation/bottom-tabs';
@@ -8,6 +9,7 @@ import TestScreen from '../screens/testScreen';
 import TestResultsScreen from '../screens/testResultsScreen';
 import UserInfo from '../screens/userInfoScreen';
 import UserNotify from '../screens/userNotifyScreen';
+import UserNotification from '../screens/userNotificationScreen';
 import ResourcesTips from '../screens/resourcesTips';
 import { createStackNavigator } from "@react-navigation/stack";
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -155,7 +157,7 @@ const UserTabs = () => {
                     backgroundColor: '#ff0000',
                 },
                 headerTintColor: 'white',
-                headerLeft: null,
+                //headerLeft: null,
                 headerTitleAlign: 'center',
                 //headerTintColor: '#fff',
             }}
@@ -174,6 +176,14 @@ const UserTabs = () => {
                 component={UserNotify}
                 options={{
                     title: 'Notify Others',
+                    headerShown: true,
+                }}
+            />
+            <Stack.Screen
+                name="UserNotification"
+                component={UserNotification}
+                options={{
+                    title: 'Notifications',
                     headerShown: true,
                 }}
             />

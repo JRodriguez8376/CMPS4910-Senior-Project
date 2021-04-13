@@ -69,34 +69,6 @@ var zones = [
     }
 ]
 
-const FindCoordinates = () => {
-    const [data, setData] = useState([]);
-    const location = null
-    Geolocation.getCurrentPosition(
-        position => {
-            let region = {
-                latitude: parseFloat(position.coords.latitude),
-                longitude: parseFloat(position.coords.longitude),
-                latitudeDelta: 5,
-                longitudeDelta: 5,
-            };
-            print(region)
-            const location = (position);
-            console.log(location)
-            CURRENT_LONG = location.coords.longitude
-            //CURRENT_LAT = location.coords.latitude
-            //console.log("Current Longitude: %f", location.coords.longitude)
-            //console.log("Current Latitude: %f", location.coords.latitude)
-        },
-        error => Alert.alert(error.message),
-        { enableHighAccuracy: true, timeout: 30000, maximumAge: 1000 }
-        
-        
-    );
-    console.log(location)
-    return location
-};
-
 const DisplayHotspots = (props) => {
 
     return (
@@ -323,7 +295,7 @@ const GetMap = (props) => {
                                 </View>
                                 */}
                             </Marker>
-                            ))
+                        ))
                     }
                     {/*<DisplayHotspots/>*/}
                     {

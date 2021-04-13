@@ -4,19 +4,23 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-start',
         flexDirection: 'column',
-        backgroundColor: '#FBFBFBFB',
         alignItems: 'center',
+        backgroundColor: '#FBFBFBFB',
         color: 'black',
+        marginTop: 5,
+        //paddingTop: 50,
+        //backgroundColor: 'cyan',
     },
     formContainer: {
-        //flex: 1,
+        flex: 1,
         justifyContent: 'flex-start',
-        flexDirection: 'column',
+        alignItems: 'center',
+        //flexDirection: 'column',
         //height: "100%",
-        //paddingBottom: 100,
-        paddingTop: 50,
-        alignItems: 'stretch',
+        paddingHorizontal: 10,
+        //paddingTop: 50,
         color: 'black',
+        //backgroundColor: 'purple'
     },
     formElement: {
         //paddingLeft: 40,
@@ -73,14 +77,14 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     textBox: {
-        //flex: 1,
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#e6e6e6',
         //height: 250,
         width: '95%',
         margin: 0,
-        marginTop: -48,
+        marginTop: 0,
         marginHorizontal: 0,
         padding: 0,
         borderRadius: 10,
@@ -95,7 +99,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         fontSize: 14,
-       //fontWeight: 'bold',
+        //fontWeight: 'bold',
         margin: 10,
         color: 'black',
         textAlign: 'left',
@@ -105,15 +109,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         fontSize: 18,
         fontWeight: 'bold',
-        margin: 10,
+        margin: 5,
+        marginTop: 20,
         color: 'black',
-        textAlign: 'left',
+        textAlign: 'center',
     },
     unorderedText1: {
         justifyContent: 'center',
         alignItems: 'center',
         fontSize: 18,
-        margin: 10,
+        //margin: 10,
         color: 'black',
         textAlign: 'left',
     },
@@ -121,7 +126,8 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-end',
         paddingVertical: 20,
-        marginTop: 50
+        marginTop: 50,
+        color: 'black'
         },
     disclaimerTitleText: {
         justifyContent: 'flex-start',
@@ -131,14 +137,16 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,  
         fontSize: 14, 
         fontWeight: 'bold',
-        fontStyle: 'italic'
+        fontStyle: 'italic',
+        color: 'black'
     },
     disclaimerText: {
         marginHorizontal: 10, 
         paddingHorizontal: 10, 
         fontSize: 14, 
         fontStyle: 'italic',
-        textAlign: 'left'
+        textAlign: 'left',
+        color: 'black'
     },
 });
 export default styles;

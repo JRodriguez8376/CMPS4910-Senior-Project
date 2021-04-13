@@ -18,6 +18,43 @@ const styles = StyleSheet.create({
         margin: 10,
         color: 'black',
     },
+    shadownotificationBox: {
+        //
+        margin: 5,
+        padding: 2,
+        borderRadius: 5,
+        shadowOffset: { width: 10, height: 10 },
+        shadowColor: 'black',
+        shadowOpacity: 1,
+        elevation: 3,
+        // background color must be set
+        backgroundColor : "#0000" // invisible color
+    },
+    notificationBox: {
+        flexDirection: "row",
+        justifyContent: 'flex-start',
+        alignItems: 'stretch',
+        //margin: 10,
+        padding: 10,
+        borderRadius: 5,
+        backgroundColor : "white"
+    },
+    notificationText: {
+        flex: 1,
+        color: 'black',
+        fontSize: 16,
+        //backgroundColor : "purple"
+    },
+    notificationTime: {
+        //flex: 1,
+        paddingLeft: 10,
+        justifyContent: 'flex-start',
+        alignItems: "stretch",
+        color: 'black',
+        fontStyle: 'italic',
+        fontSize: 16,
+        //backgroundColor : "aqua"
+    },
     alertOthers: {
         justifyContent: 'center',
         alignItems: 'center',
