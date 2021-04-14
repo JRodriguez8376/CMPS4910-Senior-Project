@@ -15,7 +15,7 @@ const requestCoarseLPermission = async () => {
             }
         );
     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log("You can use Location!");
+        console.log("Coarse Location Enabled");
     } else {
         console.log("Permission denied");
     }
@@ -37,7 +37,7 @@ const requestFineLPermission = async () => {
             }
         );
     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log("You can use Location!");
+        console.log("Fine Location Enabled");
     } else {
         console.log("Permission denied");
     }

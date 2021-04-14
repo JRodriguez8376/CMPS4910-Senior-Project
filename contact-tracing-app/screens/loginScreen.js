@@ -13,10 +13,12 @@ import {
     ScrollView,
     PermissionsAndroid
 } from 'react-native';
+import { saveUnsecured, retrieveUnsecured, removeUnsecured } from '../components/tokenAsync';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { Alert } from 'react-native';
 import AuthContext from '../context/authContext';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import {getPostAPIData} from '../api/helpers';
 import {requestFineLPermission, requestCoarseLPermission} from '../components/permissions.js';
 /*
 validate = (text) => {
@@ -66,7 +68,33 @@ const LoginScreen = ({navigation}) => {
         } else {
             requestCoarseLPermission();
             requestFineLPermission();
-            signIn({ email, password })
+            getPostAPIData('/api/auth/login', {email:email, password:password})
+            .then(result => {
+                //Save token information for later
+                if (result != null) {
+                    saveUnsecured('token', result.accessToken);
+                    saveUnsecured('refresh', result.refreshToken);
+                    saveUnsecured('email', email);
+                    let token = result.accessToken;
+                    signIn(token);
+                } else {
+                    Alert.alert(
+                        "Invalid Login information!",
+                        "No user can be found for those credentials!",
+                        [
+                            {
+                                text: "Ok"
+                            }
+                        ]
+                    );
+                }
+            }).catch((error) => {
+                console.error('Login error: ', error);
+            });
+
+
+            //Call fetch function here, pass token to signIn if exists. Refactor sign-in page
+            
         }
     }
     

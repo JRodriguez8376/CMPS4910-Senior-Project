@@ -15,6 +15,9 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 //import Virus from '../assets/images/virus.svg';
 import AuthContext from '../context/authContext';
 import { Alert } from 'react-native';
+import {getPostAPIData} from '../api/helpers';
+import {requestFineLPermission, requestCoarseLPermission} from '../components/permissions.js';
+import { saveUnsecured, retrieveUnsecured, removeUnsecured } from '../components/tokenAsync';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 const IconDisplay = ({pass}) => {
@@ -77,8 +80,32 @@ const RegisterScreen = ({navigation}) => {
                 ]
             );
         
-        } else {
-            signUp({ email, password});
+        } else { 
+            requestCoarseLPermission();
+            requestFineLPermission();
+            getPostAPIData('/api/auth/signup', {email:email, password:password})
+            .then(result => {
+                //Save token information for later
+                if (result != null) {
+                    saveUnsecured('token', result.accessToken);
+                    saveUnsecured('refresh', result.refreshToken);
+                    saveUnsecured('email', email);
+                    let token = result.accessToken;
+                    signUp(token);
+                } else {
+                    Alert.alert(
+                        "Invalid SignUp information!",
+                        "A user account cannot be created with that information",
+                        [
+                            {
+                                text: "Ok"
+                            }
+                        ]
+                    );
+                }
+            }).catch((error) => {
+                console.error('Signup error: ', error);
+            });
         }
         
     }

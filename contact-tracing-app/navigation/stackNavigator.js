@@ -12,7 +12,6 @@ import LoadingScreen from '../screens/loadingScreen';
 import AuthContext from '../context/authContext';
 
 import { saveUnsecured } from '../components/tokenAsync';
-import { api } from '../api/constants';
 import { getPostAPIData } from '../api/helpers';
 
 let savedID = {};
@@ -75,24 +74,13 @@ const Navigation = () => {
         () => (
             {
                 signIn: async data => {
-                    //send sign in data here                    
-                    getPostAPIData('/api/auth/login', data)
-                        .then(result => {
-                            //console.log(result);
-                            //Save token information for later
-                            if (result != null) {
-                                saveUnsecured('token', result.accessToken);
-                                saveUnsecured('refresh', result.refreshToken);
-                                saveUnsecured('email', data.email);
-                                accessToken = result.accessToken;
-                                dispatch({ type: 'SIGN_IN', token: accessToken });
-                            } else {
-                                dispatch({ type: 'SIGN_IN', token: null });
-                            }
-                            
-                        }).catch((error) => {
-                            console.error('Login error: ', error);
-                        });
+                    //send sign in data here                  
+                    if(data != null) {
+                        dispatch({ type: 'SIGN_IN', token: accessToken });
+                    } else {
+                        dispatch({type: 'SIGN_IN', token: null})
+                    }
+                    
                 },
                 
                 signOut: async data => {
@@ -108,25 +96,11 @@ const Navigation = () => {
                 },
                 // TO DO: Sign up creates new token
                 signUp: async data => {
-                    getPostAPIData('/api/auth/signup', data)
-                        .then(result => {
-                            //console.log(result);
-                            //Save token information for later
-                            if (result != null) {
-                                saveUnsecured('token', result.accessToken);
-                                saveUnsecured('refresh', result.refreshToken);
-                                saveUnsecured('email', data.email);
-                                accessToken = result.accessToken;
+                            if (data != null) {
                                 dispatch({ type: 'SIGN_UP', token: accessToken });
                             } else {
                                 dispatch({ type: 'SIGN_UP', token: null });
                             }
-                        
-                        }).catch((error) => {
-                            console.error('Sign Up error: ', error);
-                        });
-                        
-                    //dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
                 },
             }),
         []

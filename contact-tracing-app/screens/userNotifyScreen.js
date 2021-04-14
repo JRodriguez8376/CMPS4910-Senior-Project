@@ -71,14 +71,10 @@ const UserNotify = ({navigation}) => {
                 .then(email => {
                     retrieveUnsecured('token')
                         .then(token => {
-                            getPostAPIData('/api/user/verification', { 
+                            postAPIData('/api/user/verification', { 
                                 "email": email, 
                                 "password": password 
                             }, token)
-                            .then(result => console.log(result))
-                            console.log("Email: ", email)
-                            console.log("Password: ", password)
-                            //console.log("Token: ", token)
                         })
                         .catch(error => {
                             console.log("Catch Token Error")
