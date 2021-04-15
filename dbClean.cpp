@@ -9,7 +9,7 @@ int main()
 {
     try
     {
-        connection C("dbname = contacttracing user = contacttracing password = cmps4910 hostaddr = 178.128.150.158 port = 5432");
+        connection C("dbname =  user =  password =  hostaddr =  port = ");
         if (C.is_open())
         {
             cout << "Opened database successfully: " << C.dbname() << endl;
