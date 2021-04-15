@@ -1,7 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
-
+import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import SignedInNavigator from './tabNavigator';
@@ -13,9 +13,10 @@ import AuthContext from '../context/authContext';
 
 import { saveUnsecured } from '../components/tokenAsync';
 import { getPostAPIData } from '../api/helpers';
+import { Alert } from 'react-native';
 
-let savedID = {};
-let accessToken = {};
+
+
 const Stack = createStackNavigator();
 const Navigation = () => {
     const [state, dispatch] = React.useReducer(
@@ -69,6 +70,20 @@ const Navigation = () => {
         };
         bootstrapAsync();
 
+        messaging().onNotificationOpenedApp(remoteMessage => {
+            console.log("Notification caused app to be opened from background state", remoteMessage.notification);
+            
+        });
+        messaging()
+        .getInitialNotification()
+        .then(remoteMessage => {
+            if(remoteMessage) {
+                console.log('Notification caused app to open from quit state:', remoteMessage.notification);
+            }
+        });
+        messaging().onMessage(async remoteMessage => {
+            Alert.alert(remoteMessage.notification.title, remoteMessage.notification.body );
+        });
     }, []);
     const authContext = React.useMemo(
         () => (
@@ -76,7 +91,7 @@ const Navigation = () => {
                 signIn: async data => {
                     //send sign in data here                  
                     if(data != null) {
-                        dispatch({ type: 'SIGN_IN', token: accessToken });
+                        dispatch({ type: 'SIGN_IN', token: data });
                     } else {
                         dispatch({type: 'SIGN_IN', token: null})
                     }
@@ -97,7 +112,7 @@ const Navigation = () => {
                 // TO DO: Sign up creates new token
                 signUp: async data => {
                             if (data != null) {
-                                dispatch({ type: 'SIGN_UP', token: accessToken });
+                                dispatch({ type: 'SIGN_UP', token: data });
                             } else {
                                 dispatch({ type: 'SIGN_UP', token: null });
                             }

@@ -1,5 +1,5 @@
 apply plugin: "com.android.application"
-
+apply plugin: 'com.google.gms.google-services'  // Google Services plugin
 import com.android.build.OutputFile
 
 /**
@@ -220,6 +220,13 @@ dependencies {
     implementation 'androidx.core:core-ktx:+'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    //BOM for firebase platform
+    implementation platform('com.google.firebase:firebase-bom:27.0.0')
+    //Firebase dependencies
+    implementation 'com.google.firebase:firebase-messaging'
+    implementation 'com.google.firebase:firebase-analytics'
+
     /*
     implementation(project(':react-native-maps')){
         exclude group: 'com.google.android.gms', module: 'play-services-base'
