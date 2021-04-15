@@ -4,8 +4,7 @@ const app = express();
 const cors = require('cors');
 const port = process.env.PORT || 3000;
 
-
-
+const firebase = require('./firebase/messages');
 const api = require('./routes');
 const test = require('./routes-test');
 
@@ -25,7 +24,7 @@ app.use(
 );
 //API routes
 app.use('/api', api);
-
+firebase.startListener();
 
 // Test routes folder
 app.use('/test', test);

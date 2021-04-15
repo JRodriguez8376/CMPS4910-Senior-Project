@@ -30,12 +30,16 @@ const validateUser = (user) => {
 //Signup route for authentication
 authRouter.post('/signup', (req, res, next) => {
 
+    const email = req.body.email;
+    const password = req.body.password;
+    const fb_token = req.body.fb_token;
+    const bday = req.body.bday;
     //Check if inputs are valid
     if (validateUser(req.body)) {
         //Use pg-promise querying to query db, uses promises for async operations
-        conn.db.oneOrNone(user.userExists, req.body.email)
+        conn.db.oneOrNone('SELECT * FROM users where email = $1', email)
             .then(result => {
-                if ( result && result.length != 0) {
+                if (result && result.length != 0) {
                     //If a user was found, do this
                     res.status(403).json({
                         message: "User exists"
@@ -43,37 +47,28 @@ authRouter.post('/signup', (req, res, next) => {
                     console.log("User already exists");
                 } else {
                     //Hash signup password into database, create new user with hashed password, send refresh token
-                    bcrypt.hash(req.body.password, saltRounds).then((hash) => {
-                        user.signUp(req.body.email, hash, req.body.bday, req.body.user_type);
-                        conn.db.oneOrNone(user.userExists, req.body.email)
-                        .then(result => {
-                            if(result.length == 0) {
-                                res.sendStatus(403);
-
-                            } else {
-                                const user_token_info = { email: req.body.email };
-                                console.log("User Token Info", user_token_info);
-                                
-                                console.log("User signing up");
-                                const accessToken = token.generateToken(user_token_info);
-                                const refreshToken = token.generateRefreshToken(user_token_info);
-                                const device_id = result.device_id;
-                                conn.db.none("UPDATE users SET token = $1 where device_id = $2", [refreshToken, device_id])
-                                .then(
+                    bcrypt.hash(password, saltRounds)
+                        .then((hash) => {
+                            const user_token_info = { email: email };
+                            const accessToken = token.generateToken(user_token_info);
+                            const refreshToken = token.generateRefreshToken(user_token_info);
+                            console.log("User signing up");
+                            conn.db.none('INSERT into users(email, passwrd, b_day, fb_token, token) VALUES($1, $2, $3, $4, $5)',
+                                [email, hash, bday, fb_token, refreshToken])
+                                .then(() => {
+                                    console.log("Signup insertion Sucessful");
                                     res.status(200).json({
                                         message: "Signed Up",
-                                        
+
                                         accessToken: accessToken,
                                         refreshToken: refreshToken
                                     })
-                                ).catch(err => {
-                                    console.log("Refresh Token", refreshToken);
-                                    console.error("Error in signup/update: ", err);
+                                })
+                                .catch(error => {
+                                    console.error("Error occurred during Signup insertion, users.js | ERROR:\n", error);
                                     res.status(400).json("Error in signing up");
-                                });
-                            }
-                        })
-                    });
+                                })
+                        });
                 }
             })
             .catch(error => {
@@ -88,9 +83,12 @@ authRouter.post('/signup', (req, res, next) => {
 //Login Route for Authentication
 authRouter.post('/login', (req, res, next) => {
 
+    const email = req.body.email;
+    const password = req.body.password;
+    const fb_token = req.body.fb_token;
     if (validateUser(req.body)) {
         //Async querying db
-        conn.db.oneOrNone(user.userExists, req.body.email)
+        conn.db.oneOrNone('SELECT * FROM users where email = $1', email)
             .then(result => {
                 if (result.length == 0) {
                     //If no user was found, do this
@@ -101,32 +99,31 @@ authRouter.post('/login', (req, res, next) => {
                 } else {
                     //If a user exists, compare hash password in database using bcrypt compare
                     bcrypt
-                        .compare(req.body.password, result.passwrd)
+                        .compare(password, result.passwrd)
                         .then(answer => {
                             //If matched, send response and login information
                             if (answer) {
-                                const user_token_info = { email: req.body.email };
+                                const user_token_info = { email: email };
                                 console.log("User Token Info", user_token_info);
-                                
+
                                 console.log("User logging in");
                                 //Signing JSON web tokens for authentication
                                 const accessToken = token.generateToken(user_token_info);
                                 const refreshToken = token.generateRefreshToken(user_token_info);
                                 const device_id = result.device_id;
-                                conn.db.none("UPDATE users SET token = $1 where device_id = $2", [refreshToken, device_id])
-                                .then(
-                                    res.status(200).json({
-                                        answer,
-                                        message: "Logged in",
-                                        
-                                        accessToken: accessToken,
-                                        refreshToken: refreshToken
-                                    })
-                                ).catch(err => {
-                                    console.log("Refresh Token", refreshToken);
-                                    console.error("Error in login/update: ", err);
-                                    res.status(400).json("Error in logging in");
-                                });
+                                conn.db.none("UPDATE users SET token = $1, fb_token = $2 where device_id = $3", [refreshToken, fb_token, device_id])
+                                    .then(
+                                        res.status(200).json({
+                                            answer,
+                                            message: "Logged in",
+
+                                            accessToken: accessToken,
+                                            refreshToken: refreshToken
+                                        })
+                                    ).catch(err => {
+                                        console.log("Refresh Token", refreshToken);
+                                        console.error("Error in login/update: ", err);
+                                    });
                             } else {
                                 //Else state it does not log in user
                                 res.status(401).json({
@@ -149,67 +146,62 @@ authRouter.post('/login', (req, res, next) => {
 authRouter.post('/refresh', (req, res) => {
     const refreshToken = req.body.token;
     conn.db.oneOrNone("SELECT * FROM users where token = $1", refreshToken)
-    .then(result => {
-        if(!result) {
-            return res.sendStatus(401);
-        }else if(result.length == 0) {
-            console.error("User witht that token does not exist");
-            return res.sendStatus(401);
-        } else if(result.token != refreshToken) {
-            console.error("Token does not match user");
-            return res.sendStatus(403);
-        } else {
-            jwt.verify(refreshToken, refresh_token_secret, (err) => {
-                if(err) {
-                    return res.sendStatus(403);
-                }
-                const accessToken = token.generateToken({email: result.email});
-                console.log(`Generating new Access token for User ${result.device_id} new token ${accessToken}`);
-                return res.status(200).json({accesstoken: accessToken});
-            });
-        }
+        .then(result => {
+            if (!result) {
+                return res.sendStatus(401);
+            } else if (result.length == 0) {
+                console.error("User with that token does not exist");
+                return res.sendStatus(401);
+            } else if (result.token != refreshToken) {
+                console.error("Token does not match user");
+                return res.sendStatus(403);
+            } else {
+                jwt.verify(refreshToken, refresh_token_secret, (err) => {
+                    if (err) {
+                        return res.sendStatus(403);
+                    }
+                    const accessToken = token.generateToken({ email: result.email });
+                    console.log(`Generating new Access token for User ${result.device_id} new token ${accessToken}`);
+                    return res.status(200).json({ accesstoken: accessToken });
+                });
+            }
 
-    }).catch(error => {
-        console.error("/Refresh, ERR: ", error);
-    });
+        }).catch(error => {
+            res.status(401).json({ message: "Error in refreshing token" });
+            console.error("/Refresh, ERR: ", error);
+        });
 
 });
+
+
 authRouter.delete('/logout', (req, res) => {
     //Check if refresh token exists in DB, delete it
     const refreshToken = req.body.token;
     const user = req.body.email;
 
     conn.db.oneOrNone("SELECT * from users WHERE email = $1 and token = $2", [user, refreshToken])
-    .then(result => {
-        if(result) {
-            conn.db.none("UPDATE users set token = $1 WHERE token = $2", [null, refreshToken]);
-            console.log(`/logout, deleting  ${user}'s REFRESH_TOKEN: ${refreshToken}`);
-            res.sendStatus(200);
-        } else {
-            console.log("Mismatch between device_id and token, ignoring update in /logout");
-            res.sendStatus(400);
-        }
-    }).catch(error => {
-        res.sendStatus(400);
-        console.error(`Error in logout route USERID: ${user}, refreshToken: ${refreshToken} ERROR: ${error}`);
-    })
-});
-authRouter.post('/verificationNotification', token.validateToken, (req, res) => {
-    const email = req.body.email;
-    const password = req.body.password;
+        .then(result => {
+            if (result) {
 
-    conn.db.oneOrNone("SELECT * from users where email = $1 AND passwrd = $2")
-    .then(result => {
-        if(result != null && result.length != 0) {
-            console.log("Verifying Notification alert!");
-            conn.db.none("INSERT into infected(fk_device_id, fk_is_infected,) VALUES($1, $2)",
-                [result.device_id, 1]);
-        }
-        res.sendStatus(200);
-    }).catch(error => {
-            console.error(error);
+                conn.db.none("UPDATE users SET token = $1, bt_uuid = $1, fb_token = $1 WHERE token = $2",
+                    [null, refreshToken])
+                    .then(result => {
+                        console.log(`/logout, deleting  ${user}'s REFRESH_TOKEN: ${refreshToken}`);
+                        res.sendStatus(200);
+                    }).catch(err => {
+                        console.error("Error in delete: ", err);
+                        res.sendStatus(400);
+                    })
+
+
+            } else {
+                console.log("Mismatch between device_id and token, ignoring update in /logout");
+                res.sendStatus(400);
+            }
+        }).catch(error => {
             res.sendStatus(400);
-    })
+            console.error(`Error in logout route USERID: ${user}, refreshToken: ${refreshToken} ERROR: ${error}`);
+        })
 });
 
 module.exports = authRouter;

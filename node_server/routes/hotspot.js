@@ -9,7 +9,7 @@ const { validateToken } = require('./token');
 
 //Return Hotspot Data matching the given latitude, longitude
 hotspotRouter.post('/locations', validateToken, (req, res) => {
-    conn.db.manyOrNone("SELECT * from potential_contact")
+    conn.db.manyOrNone("SELECT * from hotspots")
         .then(result => {
             if (result && result.length != 0) {
                 res.status(200).json(getHotspotCoords(req.body.latitude, req.body.longitude, result));

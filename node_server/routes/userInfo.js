@@ -2,6 +2,7 @@ const express = require('express');
 const userInfoRouter = express.Router();
 const conn = require('../database/conn');
 const { validateToken } = require('./token.js');
+const bcrypt = require('bcrypt');
 userInfoRouter.all('/user', validateToken, (req, res) => {
     console.log(req.body);
     conn.db.oneOrNone('SELECT * FROM users where email = $1', req.body.email)
@@ -47,7 +48,45 @@ userInfoRouter.post('/sendstatus', validateToken, (req, res) => {
             });
         });
 });
+userInfoRouter.post('/verification', validateToken, (req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
 
+    conn.db.oneOrNone("SELECT device_id, passwrd from users where email = $1", [email])
+    .then(result => {
+        if(result != null) {
+            bcrypt
+            .compare(password, result.passwrd)
+            .then(answer => {
+                    if(answer) {
+                        console.log("Verifying Notification alert!", result.device_id, " ", result.passwrd);
+                        conn.db.none("INSERT into infected(fk_device_id, fk_is_infected) VALUES($1, $2)",
+                            [result.device_id, 1])
+                            .then(() => {
+                                res.status(200).json({
+                                    message: "Verified!"
+                                })
+                            }).catch(error => {
+                                console.error("Error during insertion", error);
+                                
+                            })
+                    } else {
+                        res.sendStatus(400);
+                    }
+            }).catch(error => {
+                console.error(error);
+                
+            })
+        }
+        if(result == null) {
+            res.sendStatus(400);
+            console.error("User does not exist in /verification");
+        }
+    }).catch(error => {
+        res.sendStatus(400);
+        console.error("User does not exist in /verification", error);
+    });
+});
 userInfoRouter.get('/', (req, res, next) => {
 
     res.json({
