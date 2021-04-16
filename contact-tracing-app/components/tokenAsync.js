@@ -43,9 +43,10 @@ const retrieveUnsecured = async (key) => {
         console.log("Error in retrieving Access Token");
     }
 }
+
 export {
     saveTokenAsync,
     retrieveTokenAsync,
     saveUnsecured,
-    retrieveUnsecured
+    retrieveUnsecured,
 };

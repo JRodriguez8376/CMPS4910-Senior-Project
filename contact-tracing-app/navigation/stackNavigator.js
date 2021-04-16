@@ -1,7 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
-
+import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import SignedInNavigator from './tabNavigator';
@@ -12,11 +12,11 @@ import LoadingScreen from '../screens/loadingScreen';
 import AuthContext from '../context/authContext';
 
 import { saveUnsecured } from '../components/tokenAsync';
-import { api } from '../api/constants';
 import { getPostAPIData } from '../api/helpers';
+import { Alert } from 'react-native';
 
-let savedID = {};
-let accessToken = {};
+
+
 const Stack = createStackNavigator();
 const Navigation = () => {
     const [state, dispatch] = React.useReducer(
@@ -34,7 +34,14 @@ const Navigation = () => {
                         isSignout: false,
                         userToken: action.token,
                     };
+                case 'SIGN_UP':
+                        return {
+                            ...prevState,
+                            isSignout: false,
+                            userToken: action.token,
+                        };
                 case 'SIGN_OUT':
+                    console.log("cocur");
                     return {
                         ...prevState,
                         isSignout: true,
@@ -63,51 +70,52 @@ const Navigation = () => {
         };
         bootstrapAsync();
 
+        messaging().onNotificationOpenedApp(remoteMessage => {
+            console.log("Notification caused app to be opened from background state", remoteMessage.notification);
+            
+        });
+        messaging()
+        .getInitialNotification()
+        .then(remoteMessage => {
+            if(remoteMessage) {
+                console.log('Notification caused app to open from quit state:', remoteMessage.notification);
+            }
+        });
+        messaging().onMessage(async remoteMessage => {
+            Alert.alert(remoteMessage.notification.title, remoteMessage.notification.body );
+        });
     }, []);
     const authContext = React.useMemo(
         () => (
             {
                 signIn: async data => {
-                    //send sign in data here                    
-                    getPostAPIData('/api/auth/login', data)
-                        .then(result => {
-                            //console.log(result);
-                            //Save token information for later
-                            if (result != null) {
-                                saveUnsecured('token', result.accessToken);
-                                saveUnsecured('id', data.id);
-                                accessToken = result.accessToken;
-                                dispatch({ type: 'SIGN_IN', token: accessToken });
-                            } else {
-                                dispatch({ type: 'SIGN_IN', token: null });
-                            }
-                            
-                        }).catch((error) => {
-                            console.error('Login error: ', error);
-                        });
+                    //send sign in data here                  
+                    if(data != null) {
+                        dispatch({ type: 'SIGN_IN', token: data });
+                    } else {
+                        dispatch({type: 'SIGN_IN', token: null})
+                    }
+                    
                 },
-                //TO DO: Sign out relinquishes token
-                signOut: () => dispatch({ type: 'SIGN_OUT' }),
+                
+                signOut: async data => {
+                    //Send refresh token to database to relinquish
+                    getPostAPIData('/api/auth/logout', data)
+                        .then(result => {
+                            saveUnsecured('refresh', null);
+                            dispatch({ type: 'SIGN_OUT', token: null });
+                    }).catch((error) => {
+                        console.error('Logout error: ', error);
+                    });
+                    
+                },
                 // TO DO: Sign up creates new token
                 signUp: async data => {
-                    getPostAPIData('/api/auth/signup', data)
-                        .then(result => {
-                            //console.log(result);
-                            //Save token information for later
-                            //if (result != null) {
-                                saveUnsecured('token', result.accessToken);
-                                saveUnsecured('id', data.id);
-                                accessToken = result.accessToken;
-                                dispatch({ type: 'SIGN_IN', token: accessToken });
-                            //} else {
-                            //    dispatch({ type: 'SIGN_IN', token: null });
-                            //}
-                        
-                        }).catch((error) => {
-                            console.error('Sign Up error: ', error);
-                        });
-                        
-                    //dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
+                            if (data != null) {
+                                dispatch({ type: 'SIGN_UP', token: data });
+                            } else {
+                                dispatch({ type: 'SIGN_UP', token: null });
+                            }
                 },
             }),
         []
@@ -116,12 +124,23 @@ const Navigation = () => {
     return (
         <AuthContext.Provider value={authContext}>
             <NavigationContainer>
-                <Stack.Navigator>
+                <Stack.Navigator
+                    screenOptions={{
+                        headerStyle: {
+                            backgroundColor: '#ff0000',
+                        },
+                        //headerTintColor: '#fff',
+                    }}
+                >
                     {
                         state.isLoading ? (
                             <Stack.Screen
                                 name="LoadingScreen"
                                 component={LoadingScreen}
+                                options={{ 
+                                    title: 'My home',
+                                    headerShown: false,
+                                }}
                             />
                         ) : state.userToken == null ? (
                             // No authenticated token

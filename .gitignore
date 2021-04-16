@@ -1,13 +1,13 @@
 # Ignoring these files
-
+.expo
+__generated__
+web-build
 .DS_Store
 
-
-
+# Backend file ignores
+node_server/firebase/serviceAccount.json
 node_server/.env
-node_server/client.js
 node_modules/
-database/*
 README.md
 
 
@@ -15,7 +15,7 @@ README.md
 *.p8
 *.p12
 *.key
-.mobileprovision
+*.mobileprovision
 .orig.
 contact-tracing-app/web-build/
 .code-workspace
@@ -23,31 +23,30 @@ contact-tracing-app/web-build/
 
 
 #contact-tracing-app 
+.expo
 contact-tracing-app/.expo/web/cache/development/babel-loader/001402d6b324f16690d2210416e26082.json
 contact-tracing-app/.expo/web/cache/development/babel-loader/006f935b5cb38d81724a656ab4c21dab.json
 .json
 
-contact-tracing-app/node_modules/**/
+contact-tracing-app/expo/*
 contact-tracing-app/expo/
-contact-tracing-app/npm-debug.
+contact-tracing-app/npm-debug.*
 contact-tracing-app/assets/images/login_img2.png
 contact-tracing-app/assets/images/login_img2.jpg
 contact-tracing-app/assets/images/login_img5.jpg
 contact-tracing-app/assets/images/login_background.jpg
 contact-tracing-app/screens/testScreen copy.js
 
+
+#Build ignores
 build/
 .idea
-
-
 .gradle
 local.properties
 *.iml
-
 /buck-out/
 .buckd/
 *.keystore
 !debug.keystore
-__generated__
-.expo
-web-build
+contact-tracing-app/android/app/google-services.json
+
