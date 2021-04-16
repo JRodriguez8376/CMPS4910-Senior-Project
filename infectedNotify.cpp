@@ -31,9 +31,6 @@ class notifListener : public notification_receiver
     void operator()(string const &message, int be_pid) override
     {
         m_done = true;
-        //cout << endl << "Received notification: " << channel()
-        //    << " pid = " << be_pid << endl;
-        //cout << message << " ..." << endl;
         buffID[buffCount] = stoi(message);
         buffCount++;
     }
@@ -65,7 +62,7 @@ int main()
 {
     try
     {
-        connection C("dbname = contacttracing user = contacttracing password = cmps4910 hostaddr = 178.128.150.158 port = 5432");
+        connection C("dbname =  user =  password =  hostaddr =  port = ");
         if (C.is_open())
         {
             cout << "Opened database successfully: " << C.dbname() << endl;
@@ -91,21 +88,21 @@ int main()
         C.prepare("sql_update_potential_contact_compared",
             "UPDATE potential_contact SET compared = 1 WHERE device_id_1 = $1 AND device_id_2 = $2");
 
-        //Returns count of a infected users locations
-        C.prepare("sql_infected_locations_count",
-            "SELECT count(*) AS exact_infected_locations_count FROM locations WHERE fk_device_id = $1");
-
         //Returns infected users locations
         C.prepare("sql_infected_locations",
-            "SELECT time_recorded, latitude, longitude FROM locations WHERE fk_device_id = $1");
+            "SELECT time_recorded, latitude, longitude FROM locations WHERE fk_device_id = $1 AND fk_device_id_2 = $2 AND time_recorded::DATE BETWEEN $3 AND ($3::DATE + INTERVAL '15 minutes')");
 
-        //Returns count of a potential_contact users locations
-        C.prepare("sql_potential_contact_locations_count",
-            "SELECT count(*) AS exact_potential_contact_locations_count FROM locations WHERE fk_device_id = $1");
+        //Deletes infected users locations
+        C.prepare("sql_delete_infected_locations",
+            "DELETE FROM locations WHERE fk_device_id = $1");
 
-        //Returns a potential_contact users locations
+        //Returns potential_contact users locations
         C.prepare("sql_potential_contact_locations",
-            "SELECT time_recorded, latitude, longitude FROM locations WHERE fk_device_id = $1");
+            "SELECT time_recorded, latitude, longitude FROM locations WHERE fk_device_id = $1 AND fk_device_id_2 = $2 AND time_recorded::DATE BETWEEN $3 AND ($3::DATE + INTERVAL '15 minutes')");
+
+        //Deletes potential contact users locations
+        C.prepare("sql_delete_pc_locations",
+            "DELETE FROM locations WHERE fk_device_id = $1 AND fk_device_id = $2 AND time_recorded::DATE BETWEEN $3 AND ($3::DATE + INTERVAL '15 minutes')");
 
         //Updates potential contact users threat level
         C.prepare("sql_update_threat_level",
@@ -139,14 +136,13 @@ int main()
                 cout << "counter: " << NL.getCount() << endl
                 << "Buff count: " << NL.getBuffCount() << endl;
                 infected = NL.getID();
-                //cout << "Infected ID: " << infected << endl;
 //=============================================================================
 //SQL Query
 //=============================================================================
+                nontransaction N(C);
                 if (infected != 0)
                 {   
-                    nontransaction N(C);
-                    //Finds potential_contact users count
+                    //Finds # of potential_contact users
                     result R3(N.exec_prepared("sql_potential_contact_count", infected));
                     for (result::const_iterator c = R3.begin(); c != R3.end(); ++c)
                     {
@@ -167,20 +163,17 @@ int main()
                         cout << "Contact ID: " << potential_contact_id[index]
                             << " Time met: " << potential_contact_time_met[index] << endl;
                         N.exec_prepared("sql_update_potential_contact_compared", infected, potential_contact_id[index]);
+                        N.exec_prepared("sql_update_potential_contact_compared", potential_contact_id[index], infected);
                         index++;
                     }
 
-                    //Deals with infected user locations
-                    index = 0;
-                    int infected_locations_count = 0;
-                    result R5(N.exec_prepared("sql_infected_locations_count", infected));
-                    for (result::const_iterator c = R5.begin(); c != R5.end(); ++c)
+                    for (int i = 0; i < potential_contact_count; i++)
                     {
-                        infected_locations_count = c[0].as<int>();
-                        cout << "User " << infected << " has " << infected_locations_count << " coordinates" << endl;
-                        string infected_time_recorded[infected_locations_count];
-                        long double infected_locations[infected_locations_count][2];
-                        result R6(N.exec_prepared("sql_infected_locations", infected));
+                        //Grabs infected locations
+                        index = 0;
+                        string infected_time_recorded[15];
+                        long double infected_locations[15][2];
+                        result R6(N.exec_prepared("sql_infected_locations", infected, potential_contact_id[i], potential_contact_time_met[i]));
                         for (result::const_iterator cc = R6.begin(); cc != R6.end(); ++cc)
                         {
                             infected_time_recorded[index] = cc[0].as<string>();
@@ -189,96 +182,60 @@ int main()
                             index++;
                         }
 
-                        //Deals with potential_contact users locations
+                        //Grabs potential_contact locations
                         index = 0;
-                        int potential_contact_locations_count = 0;
-                        for (int j = 0; j < potential_contact_count; j++)
+                        string potential_contact_time_recorded[15];
+                        long double potential_contact_locations[15][2];
+                        result R8(N.exec_prepared("sql_potential_contact_locations", potential_contact_id[i], infected, potential_contact_time_met[i]));
+                        for (result::const_iterator cc = R8.begin(); cc != R8.end(); ++cc)
                         {
-                            result R7(N.exec_prepared("sql_potential_contact_locations_count", potential_contact_id[j]));
-                            for (result::const_iterator c = R7.begin(); c != R7.end(); ++c)
-                            {
-                                index = 0;
-                                potential_contact_locations_count = c[0].as<int>();
-                                string potential_contact_time_recorded[potential_contact_locations_count];
-                                long double potential_contact_locations[potential_contact_locations_count][2];
-                                result R8(N.exec_prepared("sql_potential_contact_locations", potential_contact_id[j]));
-                                for (result::const_iterator cc = R8.begin(); cc != R8.end(); ++cc)
-                                {
-                                    potential_contact_time_recorded[index] = cc[0].as<string>();
-                                    potential_contact_locations[index][0] = cc[1].as<long double>();
-                                    potential_contact_locations[index][1] = cc[2].as<long double>();
-                                    index++;
-                                }
+                            potential_contact_time_recorded[index] = cc[0].as<string>();
+                            potential_contact_locations[index][0] = cc[1].as<long double>();
+                            potential_contact_locations[index][1] = cc[2].as<long double>();
+                            index++;
+                        }
 //=============================================================================
 //Infected and Potential Contact Distance Comparison
 //=============================================================================
-                                int loop1 = 0;
-                                int loop2 = 0;
-                                int start1 = 0;
-                                int start2 = 0;
-                                bool found1 = false;
-                                bool found2 = false;
-                                bool bothFound = false;
-                                string timestamp = potential_contact_time_met[j];
-                                while(!bothFound)
-                                {
-                                    if (timestamp == infected_time_recorded[loop1] && found1 == false)
-                                    {
-                                        start1 = loop1;
-                                        found1 = true;
-                                    }
-                                    else if (found1 == false)
-                                    {
-                                        loop1++;
-                                    }
-                                    if (timestamp == potential_contact_time_recorded[loop2] && found2 == false)
-                                    {
-                                        start2 = loop2;
-                                        found2 = true;
-                                    }
-                                    else if (found2 == false)
-                                    {
-                                        loop2++;
-                                    }
-                                    if (found1 == true && found2 == true)
-                                        bothFound = true;
-                                }
-                                int diffAvg = 0;
-                                for(int k = start1, l = start2; k < start1 + 15; k++, l++)
-                                {
-                                    long double diff = distance(infected_locations[k][0],
-                                                        infected_locations[k][1],
-                                                        potential_contact_locations[l][0],
-                                                        potential_contact_locations[l][1]);
-                                    diffAvg += diff;
-                                }
-                                diffAvg /= 15;
-                                cout << "Average distance between user: " << infected
-                                    << " and user: " << potential_contact_id[j]
-                                    << " is " << diffAvg << " feet." << endl;
-                                int threatLevel = 0;
-                                result R9(N.exec_prepared("sql_potential_contact_threat_level", potential_contact_id[j]));
-                                for (result::const_iterator cc = R9.begin(); cc != R9.end(); ++cc)
-                                {
-                                    threatLevel = cc[0].as<int>();
-                                }
-                                if (diffAvg < 7)
-                                {
-                                    threatLevel = 3;
-                                }
-                                else if(diffAvg >= 7 && diffAvg < 16 && threatLevel < 3)
-                                {
-                                    threatLevel = 2;
-                                }
-                                else if(threatLevel < 2)
-                                {
-                                    threatLevel = 1;
-                                }
-                                N.exec_prepared("sql_update_threat_level", threatLevel, potential_contact_id[j]);
-                            }
+                        int diffAvg = 0;
+                        for(int j = 0; j < 15; j++)
+                        {
+                            long double diff = distance(infected_locations[j][0],
+                                                infected_locations[j][1],
+                                                potential_contact_locations[j][0],
+                                                potential_contact_locations[j][1]);
+                            diffAvg += diff;
                         }
+                        diffAvg /= 15;
+                        cout << "Average distance between user: " << infected
+                            << " and user: " << potential_contact_id[i]
+                            << " is " << diffAvg << " feet." << endl;
+//=============================================================================
+//Threat Level
+//=============================================================================
+                        int threatLevel = 0;
+                        result R9(N.exec_prepared("sql_potential_contact_threat_level", potential_contact_id[i]));
+                        for (result::const_iterator cc = R9.begin(); cc != R9.end(); ++cc)
+                        {
+                            threatLevel = cc[0].as<int>();
+                        }
+                        if (diffAvg < 7)
+                        {
+                            threatLevel = 3;
+                        }
+                        else if(diffAvg >= 7 && diffAvg < 16 && threatLevel < 3)
+                        {
+                            threatLevel = 2;
+                        }
+                        else if(threatLevel < 2)
+                        {
+                            threatLevel = 1;
+                        }
+                        N.exec_prepared("sql_update_threat_level", threatLevel, potential_contact_id[i]);
+                        N.exec_prepared("sql_delete_pc_locations", potential_contact_id[i], infected, potential_contact_time_met[i]);
                     }
                 }
+                N.exec_prepared("sql_delete_infected_locations", infected);
                 NL.nextID();
                 infected = 0;
             }
