@@ -4,12 +4,10 @@ import AuthContext from '../../context/authContext';
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        //height: '70%',
-        //width: '100%',
         justifyContent: 'flex-start',
         flexDirection: 'column',
         backgroundColor: '#FBFBFBFB',
-        alignItems: 'center',
+        alignItems: 'stretch',
         color: 'black',
     },
     userInfo: {
@@ -20,6 +18,7 @@ const styles = StyleSheet.create({
     },
     shadownotificationBox: {
         //
+        flex: 1,
         margin: 5,
         padding: 2,
         borderRadius: 5,
@@ -31,30 +30,41 @@ const styles = StyleSheet.create({
         backgroundColor : "#0000" // invisible color
     },
     notificationBox: {
+        flex: 1,
         flexDirection: "row",
         justifyContent: 'flex-start',
         alignItems: 'stretch',
         //margin: 10,
         padding: 10,
+        paddingHorizontal: 10, 
         borderRadius: 5,
         backgroundColor : "white"
     },
     notificationText: {
         flex: 1,
         color: 'black',
+        alignItems: "flex-start",
         fontSize: 16,
         //backgroundColor : "purple"
     },
     notificationTime: {
         //flex: 1,
-        paddingLeft: 10,
+        paddingLeft: 5,
         justifyContent: 'flex-start',
-        alignItems: "stretch",
+        alignItems: "flex-end",
         color: 'black',
         fontStyle: 'italic',
-        fontSize: 16,
+        fontSize: 14,
         //backgroundColor : "aqua"
     },
+    emptyNotificationsText: {
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        textAlign: 'center',
+        padding: 20,
+        paddingTop: 40,
+        //backgroundColor: 'cyan'
+    },  
     alertOthers: {
         justifyContent: 'center',
         alignItems: 'center',
