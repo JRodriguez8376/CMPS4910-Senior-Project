@@ -22,14 +22,20 @@ var disclaimerTxt = "The self-evaluation test is designed to give "
 
 var answer = "";
 const adviceAnswer = (amount) => {
-    if (amount < 1) {
-        answer = "You are clear or did not answer enough questions.";
+    if (amount == 0) {
+        answer = "No risk of COVID-19.";
     }
-    else if (0 < amount && amount < 4) {
-        answer = "You may want to go see a doctor or get a COVID-19 test."
+    else if (amount < 6) {
+        answer = "Symptoms appear mild. If symptoms persist for more than 48 hours, "
+            + "reevaluate yourself or see a doctor.";
+    }
+    else if (6 < amount && amount < 10) {
+        answer = "Symptoms are higher than normal. Recommend to follow CDC COVID-19 guidelines. "
+        + "If symptoms persist for more than 48 hours, "
+        + "reevaluate yourself or see a doctor.";
     }
     else {
-        answer = "Else, You may want to go see a doctor or get a COVID-19 test."
+        answer = "You have a high probability of having COVID-19. You may want to go see a doctor or get a COVID-19 test.";
     }
 };
 
