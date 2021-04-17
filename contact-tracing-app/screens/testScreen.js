@@ -28,35 +28,71 @@ const QuestionData = [
     {
         id: 1,
         num: 1,
-        title: "This is question 1?",
+        title: "Fever or chills",
+        val: 1,
     },
     {
         id: 2,
         num: 2,
-        title: "This is question 2?",
+        title: "Cough",
+        val: 4,
     },
     {
         id: 3,
         num: 3,
-        title: "This is question 3?",
+        title: "Shortness of breath or difficulty breathing",
+        val: 10,
     },
     {
         id: 4,
         num: 4,
-        title: "This is question 4?",
+        title: "Fatigue",
+        val: 4,
     },
     {
         id: 5,
         num: 5,
-        title: "This is question 5?",
+        title: "Muscle or body aches",
+        val: 1,
     },
     {
         id: 6,
         num: 6,
-        title: "This is question 6?",
+        title: "Headache",
+        val: 1,
+    },
+    {
+        id: 7,
+        num: 7,
+        title: "New loss of taste or smell",
+        val: 10,
+    },
+    {
+        id: 8,
+        num: 8,
+        title: "Sore throat",
+        val: 2,
+    },
+    {
+        id: 9,
+        num: 9,
+        title: "Congestion or runny nose",
+        val: 1,
+    },
+    {
+        id: 10,
+        num: 10,
+        title: "Nausea or vomitting",
+        val: 1,
+    },
+    {
+        id: 11,
+        num: 11,
+        title: "Diarrhea",
+        val: 1,
     },
 ];
-var yesArr = [0, 0, 0, 0, 0, 0];
+var yesArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 
 const SampleArr = [
@@ -70,15 +106,21 @@ const globalVar = {
     counter
 };
 const sumArr = () => {
-    counter = yesArr.reduce((a,b) => a + b, 0)
+    //counter = yesArr.reduce((a,b) => a + b, 0)
+    for (var i = 0; i < 11; i++) {
+        if (yesArr[i] == 1) {
+            counter += QuestionData[i].val;
+        }
+    }
     //console.log(yesArr);
-    //console.log("sumArr(): counter: %d", counter);
+    console.log("sumArr(): counter: %d", counter);
     return counter;
 };
 const resetArr = () => {
     for (var i = 0; i < yesArr.length; i++) {
         yesArr[i] = 0;
     }
+    counter = 0;
 };
 const setCounter = (index, amount) => {
     let num = Object.values(index);
@@ -99,7 +141,7 @@ const Item = ({ title, num }) => (
         <View style={{position: 'absolute', left: 10, top: 10,}}>
             <Icon name="question-circle-o" size={30} color="#F00" /> 
         </View>
-        <Text style={styles.title}>Question {title} </Text>
+        <Text style={styles.title}>{title} </Text>
         <RadioForm
             formHorizontal={true}
             labelHorizontal={true}
@@ -139,11 +181,17 @@ const TestScreen = ({navigation}) => {
             {/*<View style={{justifyContent: 'flex-end', alignItems: 'center', backgroundColor: '#FF0000', width: '100%', height: 25}}>
                 
             </View>*/}
+            
             <View style={styles.questionCard}>
                 <FlatList
                     data={QuestionData}
                     renderItem={renderItem}
                     keyExtractor={item => item.id.toString()}
+                    ListHeaderComponent={
+                        <View style={styles.items}>
+                            <Text style={styles.titleHeader}>Have you experienced any of the following symptoms in the past 48 hours?</Text>
+                        </View>
+                    }
                     ListFooterComponent={
                         <View style={styles.showResults}>
                             <TouchableOpacity style={styles.resultsButton}

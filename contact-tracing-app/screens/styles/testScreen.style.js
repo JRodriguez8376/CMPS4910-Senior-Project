@@ -83,6 +83,16 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         justifyContent: 'center',
         paddingBottom: 8,
+        paddingHorizontal: 15,
+        color: 'black',
+    },
+    titleHeader: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        justifyContent: 'center',
+        paddingBottom: 8,
+        paddingHorizontal: 15,
         color: 'black',
     },
 
