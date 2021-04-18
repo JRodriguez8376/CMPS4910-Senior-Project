@@ -11,7 +11,7 @@ import LoadingScreen from '../screens/loadingScreen';
 
 import AuthContext from '../context/authContext';
 
-import { saveUnsecured } from '../components/tokenAsync';
+import { clearAllKeys } from '../components/tokenAsync';
 import { getPostAPIData } from '../api/helpers';
 import { Alert } from 'react-native';
 
@@ -100,13 +100,14 @@ const Navigation = () => {
                 
                 signOut: async data => {
                     //Send refresh token to database to relinquish
-                    getPostAPIData('/api/auth/logout', data)
+                        clearAllKeys()
                         .then(result => {
-                            saveUnsecured('refresh', null);
-                            dispatch({ type: 'SIGN_OUT', token: null });
-                    }).catch((error) => {
-                        console.error('Logout error: ', error);
-                    });
+                            console.log("Cleared keys!");
+                        }).catch(error => {
+                            console.log("Error in clearing keys in SIGNOUT")
+                        })
+                        dispatch({type: 'SIGN_OUT'})
+
                     
                 },
                 // TO DO: Sign up creates new token
