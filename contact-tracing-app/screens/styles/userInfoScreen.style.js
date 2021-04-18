@@ -1,5 +1,8 @@
+import { Dimensions } from 'react-native';
 import {StyleSheet} from 'react-native';
 import AuthContext from '../../context/authContext';
+
+const {height, width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     container: {
@@ -66,7 +69,64 @@ const styles = StyleSheet.create({
         //paddingRight: 40,
         paddingHorizontal: 20,
         paddingVertical: 10,
+    },
+    userProfile: {
+        justifyContent: 'center',
+        backgroundColor: '#e6e6e6',
+        width: '95%',
+        margin: 10,
+        marginHorizontal: 0,
+        padding: 5,
+        borderRadius: 10,
+        borderColor: '#616161',
+        borderWidth: 2,
+        shadowOffset: { width: 4, height: 4 },
+        shadowColor: 'black',
+        shadowOpacity: 1,
+        elevation: 4,
+    },
+    userProfileTitle: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingBottom: 20
+    },
+    userProfileItems: {
+        marginHorizontal: 10,
+
+        alignItems: 'flex-start',
+        alignContent: 'center',
+        flexDirection: 'row'
+    },
+    userProfileItemText: {
+
+        alignContent: 'center',
+        alignSelf: 'flex-start',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+        fontSize: 18,
+        color: 'black',
+        paddingRight:20
         
     },
+    threatBox: {
+        alignSelf: 'center',
+        alignItems: 'flex-start',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 1,
+        borderColor: '#111111',
+        borderWidth: 3
+    },
+    userProfileBody: {
+        alignContent:'center',
+        alignSelf: 'center',
+        alignItems: 'flex-start',
+        marginHorizontal: 20
+    },
+    threatText: {
+        fontStyle: 'italic',
+        fontSize: 14,
+        color: 'black'
+    }
 });
 export default styles;
