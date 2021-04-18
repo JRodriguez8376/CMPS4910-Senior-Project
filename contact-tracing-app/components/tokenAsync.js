@@ -43,10 +43,18 @@ const retrieveUnsecured = async (key) => {
         console.log("Error in retrieving Access Token");
     }
 }
-
+const clearAllKeys = async () => {
+    const keys = ['token', 'email', 'refresh', 'fbToken'];
+    try {
+        return(await AsyncStorage.multiRemove(keys));
+    } catch(err) {
+        console.log("Error in clearing keys");
+    }
+}
 export {
     saveTokenAsync,
     retrieveTokenAsync,
     saveUnsecured,
     retrieveUnsecured,
+    clearAllKeys
 };
