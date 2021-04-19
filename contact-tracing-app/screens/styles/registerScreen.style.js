@@ -140,11 +140,6 @@ const styles = StyleSheet.create({
         height: 150,
         resizeMode: 'contain',
         alignSelf: 'center',
-        margin: 30,
-        //padding: 30,
-        borderRadius: 10,
-        borderColor: 'white',
-        borderWidth: 2
     }
 });
 export default styles;

@@ -127,7 +127,7 @@ const RegisterScreen = ({ navigation }) => {
                     <ScrollView>
                         <View style={styles.formContainer}>
                             <Text style={styles.name}>Covid Tracing App</Text>
-                            <Image source={require("../assets/images/doge.jpg")} style={styles.logo} />
+                            <Image source={require("../assets/images/covid_launch.png")} style={styles.logo} />
                             <View style={styles.formElement}>
                                 <View style={styles.inputView}>
                                     <TextInput style={styles.input}
