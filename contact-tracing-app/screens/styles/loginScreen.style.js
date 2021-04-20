@@ -143,15 +143,12 @@ const styles = StyleSheet.create({
         paddingBottom: 5,
     },
     logo: {
-        width: 150,
-        height: 150,
+        width: 200,
+        height: 200,
         resizeMode: 'contain',
         alignSelf: 'center',
-        margin: 30,
+        
         //padding: 30,
-        borderRadius: 10,
-        borderColor: 'white',
-        borderWidth: 2
     }
 });
 export default styles;
