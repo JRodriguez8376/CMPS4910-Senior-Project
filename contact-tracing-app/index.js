@@ -19,3 +19,36 @@ const intervalId = BackgroundTimer.setInterval(() => {
 }, 900000);
 BackgroundTimer.clearInterval(intervalId);
 
+const AppState = () => {
+    const appState = useRef(AppState.currentState);
+    const [appStateVisible, setAppStateVisible] = useState(appState.current);
+
+    useEffect(() => {
+        AppState.addEventListener("change", _handlAppChange);
+
+        return () => {
+            AppState.removeEventListener("change", _handleAppStateChange);
+        };
+   },   []);
+
+   const _handleAppStateChange = (nextAppState) => {
+       if (appState.current.match(/inactive|background/) && nextAppState == "active") {
+           console.log("App is in foreground");
+           ble.start();
+       }
+   }
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+
