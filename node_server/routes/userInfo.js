@@ -4,7 +4,6 @@ const conn = require('../database/conn');
 const { validateToken } = require('./token.js');
 const bcrypt = require('bcrypt');
 userInfoRouter.all('/user', validateToken, (req, res) => {
-    console.log(req.body);
     conn.db.oneOrNone('SELECT * FROM users where email = $1', req.body.email)
         .then(result => {
             if (result.length == 0) {
@@ -18,15 +17,41 @@ userInfoRouter.all('/user', validateToken, (req, res) => {
             }
         })
 });
+userInfoRouter.post('/info', validateToken, (req, res) => {
+    const email = req.body.email;
+    conn.db.oneOrNone('SELECT * FROM user_info where email = $1', [email])
+    .then(result => {
+        if(!result) {
+            res.sendStatus(404);
+            return;
+        }
+        res.status(200).json(result);
+    }).catch(error => {
+        res.sendStatus(400);
+        console.error("Failed in /info ERROR: ", error);
+    })
+});
+userInfoRouter.post('/status', validateToken, (req, res) => {
+    const email = req.body.email;
+    conn.db.oneOrNone('SELECT * FROM user_info where email = $1', [email])
+    .then(result => {
+        if(!result) {
+            res.sendStatus(404);
+            return;
+        }
+        res.status(200).json(result);
+    }).catch(error => {
+        res.sendStatus(400);
+        console.error("Failed in /info ERROR: ", error);
+    })
+})
 userInfoRouter.post('/updatebt', validateToken, (req, res) => {
     const email = req.body.email;
     const bt_uuid = req.body.bt_uuid;
-    console.log(bt_uuid);
-    console.log(email);
     conn.db.none("UPDATE users SET bt_uuid = $1 WHERE email = $2", [bt_uuid, email])
     .then(() => {
         console.log("Update of new BT UUID complete! for user with email: ", email);
-        res.sendStatus(200);
+        res.status(200).json({message: "/updatebt complete"});
     }).catch(error => {
         res.sendStatus(400);
         console.error("Update failed in /updatebt: ", error);
@@ -85,6 +110,22 @@ userInfoRouter.post('/verification', validateToken, (req, res) => {
     }).catch(error => {
         res.sendStatus(400);
         console.error("User does not exist in /verification", error);
+    });
+});
+userInfoRouter.post('/notification', validateToken, (req, res) => {
+
+    const email = req.body.email;
+    conn.db.manyOrNone("SELECT notifications_id, date_time_recieved from user_notifications WHERE email = $1", [email])
+    .then(result => {
+        for(i = 0; i < result.length; i++) {
+            result[i].date_time_recieved = new Date(result[i].date_time_recieved).getTime();
+
+        }
+        res.status(200).json(result);
+        console.log("Sent notification data");
+    }).catch(error => {
+        res.sendStatus(400);
+        console.log("Failed to get notifications, error:", error);
     });
 });
 userInfoRouter.get('/', (req, res, next) => {
