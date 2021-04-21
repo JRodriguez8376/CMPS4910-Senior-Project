@@ -1,0 +1,1 @@
+insert into HAS(fk_device_id, fk_status_id) VALUES(571, 11);
