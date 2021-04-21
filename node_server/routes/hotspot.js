@@ -26,15 +26,19 @@ hotspotRouter.post('/locations', validateToken, (req, res) => {
 //Add new Contact to contact table
 
 hotspotRouter.post('/newcontact', validateToken, (req, res) => {
-    const uuid_1 = req.body.user_uuid;
-    const uuid_2 = req.body.contacted_uuid;
-    conn.db.one("SELECT device_id from users WHERE bt_uuid = $1", [uuid_1])
-    .then(result => {
-        conn.db.one("SELECT device_id from users WHERE bt_uuid = $1", [uuid_2])
-        .then(result2 => {
+ const uuid_1 = req.body.uuid_1;
+    const uuid_2 = req.body.uuid_2;
+    const latitude = req.body.latitude;
+    const longitude = req.body.longitude;
+    let newDate = new Date(req.body.time_met);
+    time_recorded = newDate.toISOString();
+    //console.log("Time: ", time_recorded);
+
+    conn.db.one('SELECT device_id_1, device_id_2 FROM bluetooth_contact WHERE bt_uuid_1 = $1 AND bt_uuid_2 = $2', [uuid_1, uuid_2])
+        .then(result => {
             conn.db.none("INSERT into potential_contact(device_id_1, device_id_2, latitude, \
-                longitude, time_met) VALUES($1, $2, $3, $4, $5)", [result.device_id, result2.device_id,
-                req.body.latitude, req.body.longitude, req.body.time_recorded])
+            longitude, time_met) VALUES($1, $2, $3, $4, $5)", [result.device_id_1, result.device_id_2,
+                latitude, longitude, time_recorded])
                 .then(() => {
                     console.log("/newcontact successful");
                     res.sendStatus(200);
@@ -42,36 +46,47 @@ hotspotRouter.post('/newcontact', validateToken, (req, res) => {
                     res.status(400).json({
                         message: " rejected data input in /newcontact route"
                     });
-                    console.error("Error occurred in /newcontact query | \n", error);
+                    console.error("Error occurred in /newcontact | \n", error);
                 })
         }).catch(error => {
-            console.error("Error in searching user uuid_2: ", error);
-        });
-        
-    }).catch(error => {
-        console.error("Error in searching user uuid_1: ", error);
-    });
+            res.status(401).json({
+                message: "No info can be matched in /newcontact"
+            });
+            console.error("Error occurred in query in /newcontact");
+        })
+
 });
 
 
 //Add new location into locations table
 hotspotRouter.post('/newlocation', validateToken, (req, res) => {
 
+    const uuid_1 = req.body.uuid_1;
+    const uuid_2 = req.body.uuid_2;
+    const latitude = req.body.latitude;
+    const longitude = req.body.longitude;
+    let newDate = new Date(req.body.time_met);
+    time_recorded = newDate.toISOString();
 
-    conn.db.none("INSERT into locations(fk_device_id, latitude, longitude, time_recorded) \
-        VALUES($1, $2, $3, $4)", [req.body.device_id, req.body.latitude,
-    req.body.longitude, req.body.time_recorded])
-        .then(() => {
-            console.log("/newlocation successful");
-            res.status(200).json({
-                message: "Accepted data input in /newlocation route"
+    conn.db.one('SELECT device_id_1, device_id_2 FROM bluetooth_contact WHERE bt_uuid_1 = $1 AND bt_uuid_2 = $2', [uuid_1, uuid_2])
+        .then(result => {
+            conn.db.none("INSERT into locations(fk_device_id_1, fk_device_id_2, latitude, \
+            longitude, time_recorded) VALUES($1, $2, $3, $4, $5)", [result.device_id_1, result.device_id_2,
+                latitude, longitude, time_recorded])
+                .then(() => {
+                    console.log("/newcontact successful");
+                    res.sendStatus(200);
+                }).catch(error => {
+                    res.status(400).json({
+                        message: " rejected data input in /newlocation route"
+                    });
+                    console.error("Error occurred in /newlocation | \n", error);
+                })
+        }).catch(error => {
+            res.status(401).json({
+                message: "No info can be matched in /newlocation"
             });
-        })
-        .catch(error => {
-            console.error("Error occurred in /newlocation query | \n", error);
-            res.status(400).json({
-                message: " rejected data input in /newlocation route"
-            });
+            console.error("Error occurred in query in /newlocation");
         })
 });
 
@@ -126,62 +141,14 @@ const hotspotCalc = (contact_point) => {
             radius: null,
             density: null
         };
-        if (distance(hotspot_json[i].coordinates[0], hotspot_json[i].coordinates[1]) < contact_radius) {
 
-            point.density += 2;
-            point.midpoint = calcMidpoint(hotspot_json[i].coordinates);
-            point.radius = 3.3;
-            points.push(point);
-        } else if (distance(hotspot_json[i].coordinates[0], hotspot_json[i].coordinates[1]) < contact_radius * 2) {
-
-            point.density += 1;
-            point.midpoint = calcMidpoint(hotspot_json[i].coordinates);
-            point.radius = newRadius(hotspot_json[i].coordinates[0], point.midpoint);
-            points.push(point);
-        } else {
-    
-            continue;
-        }
-        
+        point.density += 2;
+        point.midpoint = calcMidpoint(hotspot_json[i].coordinates);
+        point.radius = 3.3;
+        points.push(point);
     }
-    let update = true;
-    let iter = 0;
-    //Merge overlapping hotspots into new hotspots, remove old hotspots from list if merge occured
-    while (update && points.length > 1) {
-        let point = {
-            midpoint: {},
-            radius: null,
-            density: null
-        };
-        if (update && iter+1 == points.length) {
-            //reset iterator if it reached the end of the list and updates still are being applied
-            iter = 0;
-        }
-
-        update = false;
-        if (distance(points[iter].midpoint, points[iter + 1].midpoint) < contact_radius) {
-            //They're within each other's circle
-            point.density += 2;
-            point.midpoint = calcMidpoint([points[iter].midpoint, points[iter + 1].midpoint]);
-            point.radius = points[iter].radius;
-            points.splice(iter, 1);
-            points.push(point);
-            update = true;
-        } else if (distance(points[iter].midpoint, points[iter + 1].midpoint) < contact_radius * 2) {
-            //Their circle radius is within each other
-            point.density += 1;
-            point.midpoint = calcMidpoint([points[iter].midpoint, points[iter + 1].midpoint]);
-            point.radius = newRadius(point[iter].midpoint, point.midpoint, 2);
-            points.splice(iter, 1);
-            points.push(point);
-            update = true;
-        }
-        iter++;
-    }
-    return (points);
-
-
 }
+    
 
 //Midpoint Function of n points
 const calcMidpoint = (coordinates) => {
@@ -258,9 +225,8 @@ const makeHotspotJSON = (contact_point_arr) => {
                 hotspots.coordinates.push(c2);
                 hotspot_json.push(hotspots);
 
-                //Remove points from list
-                let removed = contact_point_arr.splice(i, 1);
-                removed = contact_point_arr.splice(j - 1, 1);
+                //Remove point from list
+                contact_point_arr.splice(j, 1);
                 break;
             }
         }

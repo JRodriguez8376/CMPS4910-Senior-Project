@@ -174,7 +174,7 @@ authRouter.post('/refresh', (req, res) => {
 });
 
 
-authRouter.delete('/logout', (req, res) => {
+authRouter.post('/logout', (req, res) => {
     //Check if refresh token exists in DB, delete it
     const refreshToken = req.body.token;
     const user = req.body.email;
@@ -185,18 +185,18 @@ authRouter.delete('/logout', (req, res) => {
 
                 conn.db.none("UPDATE users SET token = $1, bt_uuid = $1, fb_token = $1 WHERE token = $2",
                     [null, refreshToken])
-                    .then(result => {
+                    .then(() => {
                         console.log(`/logout, deleting  ${user}'s REFRESH_TOKEN: ${refreshToken}`);
-                        res.sendStatus(200);
+                        res.status(200).json({message: "Logged out"});
                     }).catch(err => {
                         console.error("Error in delete: ", err);
-                        res.sendStatus(400);
+                        
                     })
 
 
             } else {
                 console.log("Mismatch between device_id and token, ignoring update in /logout");
-                res.sendStatus(400);
+                
             }
         }).catch(error => {
             res.sendStatus(400);
