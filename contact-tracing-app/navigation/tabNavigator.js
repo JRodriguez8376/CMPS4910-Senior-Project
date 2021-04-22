@@ -14,6 +14,12 @@ import ResourcesTips from '../screens/resourcesTips';
 import { createStackNavigator } from "@react-navigation/stack";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {addBLEStartListener, removeBLEStartListener} from '../components/BLEModule';
+import BackgroundTimer from 'react-native-background-timer';
+import {addNewContact, updateContactList} from '../components/contact';
+import {NativeModules} from 'react-native';
+const {BLE} = NativeModules;
+
+//import updateContactList from './components/contact';
 
 // Thanks to: 
 // https://stackoverflow.com/questions/61025437/how-to-combine-stacknavigator-and-tabnavigator-in-react-navigation-5
@@ -41,7 +47,7 @@ const SignedInNavigator = () => {
         })
         console.log('tic');
     }, 10000);
-    
+
     addBLEStartListener();
     return (
         <Tab.Navigator

@@ -4,9 +4,9 @@ import App from './App';
 import BackgroundTimer from 'react-native-background-timer';
 import React, { useRef, useState, useEffect } from "react";
 import { AppState, Stylesheet, Text, View } from "react-native";
-import {addNewContact, updateContactList} from './components/contact'
+import {addNewContact, updateContactList} from './components/contact';
 import { NativeModules } from 'react-native';
-const {BLE} = NativeModules
+const {BLE} = NativeModules;
 
 
 // registerRootComponent calls AppRegistry.registerComponent('main', () => App);
