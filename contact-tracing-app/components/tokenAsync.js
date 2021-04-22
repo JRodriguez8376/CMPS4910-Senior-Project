@@ -30,7 +30,7 @@ const saveUnsecured = async (key, value) => {
             value
         );
     } catch (error) {
-        console.log("Error in saving Access Token: ", error);
+        console.log("Error in saving KEY: " + key + " Token: ", error);
     }
 }
 
@@ -39,6 +39,13 @@ const retrieveUnsecured = async (key) => {
         return(await AsyncStorage.getItem(key)
         );
 
+    } catch (error) {
+        console.log("Error in retrieving Access Token");
+    }
+}
+const retrieveMulti = async (keys) => {
+    try {
+        return(await AsyncStorage.multiGet(keys));
     } catch (error) {
         console.log("Error in retrieving Access Token");
     }
@@ -56,5 +63,6 @@ export {
     retrieveTokenAsync,
     saveUnsecured,
     retrieveUnsecured,
-    clearAllKeys
+    clearAllKeys,
+    retrieveMulti
 };
