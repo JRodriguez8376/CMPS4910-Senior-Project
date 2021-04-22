@@ -121,7 +121,7 @@ const Navigation = () => {
                         }).catch(error => {
                             console.log("Error in clearing keys in SIGNOUT")
                         })
-                    dispatch({ type: 'SIGN_OUT' })
+                    dispatch({ type: 'SIGN_OUT', token: null })
 
 
                 },
