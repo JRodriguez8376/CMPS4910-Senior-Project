@@ -11,14 +11,16 @@ import LoadingScreen from '../screens/loadingScreen';
 
 import AuthContext from '../context/authContext';
 
-import { clearAllKeys } from '../components/tokenAsync';
+import { clearAllKeys, retrieveMulti, retrieveUnsecured, saveUnsecured } from '../components/tokenAsync';
 import { getPostAPIData } from '../api/helpers';
 import { Alert } from 'react-native';
-
+import { NativeModules } from 'react-native';
+import { saveUUID } from '../components/BLEModule';
 
 
 const Stack = createStackNavigator();
 const Navigation = () => {
+    saveUUID();
     const [state, dispatch] = React.useReducer(
         (prevState, action) => {
             switch (action.type) {
@@ -35,11 +37,11 @@ const Navigation = () => {
                         userToken: action.token,
                     };
                 case 'SIGN_UP':
-                        return {
-                            ...prevState,
-                            isSignout: false,
-                            userToken: action.token,
-                        };
+                    return {
+                        ...prevState,
+                        isSignout: false,
+                        userToken: action.token,
+                    };
                 case 'SIGN_OUT':
                     console.log("cocur");
                     return {
@@ -60,29 +62,42 @@ const Navigation = () => {
         const bootstrapAsync = async () => {
             let userToken;
             try {
-                userToken = await AsyncStorage.getItem('userToken');
+                userToken = await AsyncStorage.getItem('token');
 
             } catch (e) {
-                //restore failed token later once I know what I am doing fully
+                console.log("Error in restoring token: RESTORE_TOKEN", e);
             }
             //Validate token here
+            retrieveMulti(['email', 'bt_uuid', 'token'])
+            .then(keys => {
+                console.log("keys: ", keys);
+                let email = keys[0][1];
+                let bt_uuid = keys[1][1];
+                let token = keys[2][1];
+                getPostAPIData('/api/user/updatebt', {email: email, bt_uuid: bt_uuid }, token)
+                .then(result => {
+                    console.log("Updated bt UUID");
+                })
+            }).catch(error => {
+                console.log("Failed to retrieve key");
+            });
             dispatch({ type: 'RESTORE_TOKEN', token: userToken });
         };
         bootstrapAsync();
 
         messaging().onNotificationOpenedApp(remoteMessage => {
             console.log("Notification caused app to be opened from background state", remoteMessage.notification);
-            
+
         });
         messaging()
-        .getInitialNotification()
-        .then(remoteMessage => {
-            if(remoteMessage) {
-                console.log('Notification caused app to open from quit state:', remoteMessage.notification);
-            }
-        });
+            .getInitialNotification()
+            .then(remoteMessage => {
+                if (remoteMessage) {
+                    console.log('Notification caused app to open from quit state:', remoteMessage.notification);
+                }
+            });
         messaging().onMessage(async remoteMessage => {
-            Alert.alert(remoteMessage.notification.title, remoteMessage.notification.body );
+            Alert.alert(remoteMessage.notification.title, remoteMessage.notification.body);
         });
     }, []);
     const authContext = React.useMemo(
@@ -90,33 +105,33 @@ const Navigation = () => {
             {
                 signIn: async data => {
                     //send sign in data here                  
-                    if(data != null) {
+                    if (data != null) {
                         dispatch({ type: 'SIGN_IN', token: data });
                     } else {
-                        dispatch({type: 'SIGN_IN', token: null})
+                        dispatch({ type: 'SIGN_IN', token: null })
                     }
-                    
+
                 },
-                
+
                 signOut: async data => {
                     //Send refresh token to database to relinquish
-                        clearAllKeys()
+                    clearAllKeys()
                         .then(result => {
                             console.log("Cleared keys!");
                         }).catch(error => {
                             console.log("Error in clearing keys in SIGNOUT")
                         })
-                        dispatch({type: 'SIGN_OUT'})
+                    dispatch({ type: 'SIGN_OUT' })
 
-                    
+
                 },
                 // TO DO: Sign up creates new token
                 signUp: async data => {
-                            if (data != null) {
-                                dispatch({ type: 'SIGN_UP', token: data });
-                            } else {
-                                dispatch({ type: 'SIGN_UP', token: null });
-                            }
+                    if (data != null) {
+                        dispatch({ type: 'SIGN_UP', token: data });
+                    } else {
+                        dispatch({ type: 'SIGN_UP', token: null });
+                    }
                 },
             }),
         []
@@ -138,7 +153,7 @@ const Navigation = () => {
                             <Stack.Screen
                                 name="LoadingScreen"
                                 component={LoadingScreen}
-                                options={{ 
+                                options={{
                                     title: 'My home',
                                     headerShown: false,
                                 }}
@@ -146,31 +161,31 @@ const Navigation = () => {
                         ) : state.userToken == null ? (
                             // No authenticated token
                             <>
-                            <Stack.Screen
-                                name="Login"
-                                component={LoginScreen}
-                                options={{
-                                    headerShown: false
-                                }}
-                            />
-                            <Stack.Screen
-                                name="Register"
-                                component={RegisterScreen}
-                                options={{
-                                    headerShown: false
-                                }}
-                            />
+                                <Stack.Screen
+                                    name="Login"
+                                    component={LoginScreen}
+                                    options={{
+                                        headerShown: false
+                                    }}
+                                />
+                                <Stack.Screen
+                                    name="Register"
+                                    component={RegisterScreen}
+                                    options={{
+                                        headerShown: false
+                                    }}
+                                />
 
                             </>
                         ) : (
-                                    <Stack.Screen
-                                        name="SignedIn"
-                                        component={SignedInNavigator}
-                                        options={{
-                                            headerShown: false
-                                        }}
-                                    />
-                                )
+                            <Stack.Screen
+                                name="SignedIn"
+                                component={SignedInNavigator}
+                                options={{
+                                    headerShown: false
+                                }}
+                            />
+                        )
                     }
                 </Stack.Navigator>
             </NavigationContainer>
