@@ -67,10 +67,22 @@ public class BLE extends ReactContextBaseJavaModule {
         WritableMap mapData = Arguments.createMap();
         for (Map.Entry<String, Beacon> entry : map.entrySet()) {
             Log.d("BLE", "MAP DATA: " + entry.toString());
-            mapData.putString(entry.getValue().getUserUuid(), String.valueOf(entry.getValue().isVisible()));
+            if(entry.getValue().isVisible()) {
+                mapData.putString(entry.getValue().getUserUuid(), String.valueOf(entry.getValue().getLastSeen()));
+            }
         }
         promise.resolve(mapData);
         Log.d("BLE", map.toString());
+
+        return;
+    }
+    @ReactMethod
+    public void getTestContactInfo(Promise promise) {
+        map = closeToMe.getResults().getValue();
+        WritableMap mapData = Arguments.createMap();
+        mapData.putString("00dccab1-2a01-4ce6-86fb-de2638c4dab9", "1619006764");
+        mapData.putString("46a4366f-775b-4f9a-b642-3dafbc50c2cd", "1618006767");
+        promise.resolve(mapData);
 
         return;
     }
@@ -146,6 +158,15 @@ public class BLE extends ReactContextBaseJavaModule {
         return ("BLE");
     }
 
+    @ReactMethod
+    public void getUserUUID(Promise promise) {
+        if(userUUID == null) {
+            promise.reject("getUserUUID", "No info to return");
+        }
+        promise.resolve(userUUID);
+    }
+
+
     public boolean checkBLE() {
         if (closeToMe.isBluetoothEnabled().getValue()) {
             return true;
@@ -181,4 +202,5 @@ public class BLE extends ReactContextBaseJavaModule {
         }
     }
 }
+
 

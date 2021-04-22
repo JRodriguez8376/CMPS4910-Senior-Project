@@ -23,6 +23,25 @@ import {addBLEStartListener, removeBLEStartListener} from '../components/BLEModu
 const Tab = createBottomTabNavigator();
 
 const SignedInNavigator = () => {
+    //bakcground geolocation
+    const intervalId = BackgroundTimer.setInterval(() => {
+        //BLE.checkBLE();
+        //If New data from BLE.getContactInfo(), 
+        updateContactList();
+        
+        BLE.getTestContactInfo()
+        .then(results => {
+            let keys = Object.keys(results)
+            for(var i = 0; i < keys.length; i++) {
+                let value = results[keys[i]];
+                //console.log(`VALUE ${value} AT KEY: ${keys[i]}`)
+                addNewContact(keys[i], value*1000)
+            }
+            //console.log(keys[0], "_", keys[1]);
+        })
+        console.log('tic');
+    }, 10000);
+    
     addBLEStartListener();
     return (
         <Tab.Navigator
