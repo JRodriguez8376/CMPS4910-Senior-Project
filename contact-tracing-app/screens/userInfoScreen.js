@@ -322,4 +322,26 @@ const UserInfo = ({ navigation }) => {
     );
 }
 
+/*function geoFindMe() {
+                const status = document.querySelector('#status');
+                
+                function success(position) {
+                    const latitude = position.coords.latitiude;
+                    const longitude = position.coords.longitude;
+                    status.textContent = '';
+                }
+            
+                function error() {
+                    status.textContent = 'Unable to retrieve location';
+                }
+                if(!navigator.geolocation) {
+                    status.textContent = 'Geolocation is not supported';
+                } else {
+                    status.textContent = 'locating...';
+                    navigator.geolocation.getCurrentPosition(success, error);
+                }
+            }*/
+
+
+
 export default UserInfo;
