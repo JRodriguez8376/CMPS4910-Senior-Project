@@ -16,6 +16,7 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.mohsenoid.closetome.CloseToMe;
 import com.mohsenoid.closetome.CloseToMeCallback;
 import com.mohsenoid.closetome.model.Beacon;
+import com.facebook.react.bridge.WritableNativeMap;
 
 import java.util.Map;
 import java.util.UUID;
@@ -64,9 +65,10 @@ public class BLE extends ReactContextBaseJavaModule {
             return;
         }
         map = closeToMe.getResults().getValue();
-        WritableMap mapData = Arguments.createMap();
+        WritableMap mapData = new WritableNativeMap();
         for (Map.Entry<String, Beacon> entry : map.entrySet()) {
             Log.d("BLE", "MAP DATA: " + entry.toString());
+            Log.d("BLE", "MAP ID: " + entry.getValue().getUserUuid());
             if(entry.getValue().isVisible()) {
                 mapData.putString(entry.getValue().getUserUuid(), String.valueOf(entry.getValue().getLastSeen()));
             }

@@ -13,19 +13,23 @@ const startContacting = () => {
         BLE.start();
         updateContactList();
         
-        BLE.getTestContactInfo()
+        BLE.getContactInfo()
         .then(results => {
+            console.log("THIS IS RESULTS:");
+            console.log(results);
             let keys = Object.keys(results)
             for(var i = 0; i < keys.length; i++) {
                 let value = results[keys[i]];
                 //console.log(`VALUE ${value} AT KEY: ${keys[i]}`)
-                addNewContact(keys[i], value*1000)
+                addNewContact(keys[i], value)
             }
             //console.log(keys[0], "_", keys[1]);
         }).catch(error => {
             console.log("getContactInfo recieved no info!");
+            console.log(error);
         })
         console.log('tic');
+        updateContactList();
     }, 10000);
 }
 

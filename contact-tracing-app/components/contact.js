@@ -24,6 +24,7 @@ const updateContactList = () => {
         .then(result => {
             //Already a list of people to contact
             contact_point = JSON.parse(result);
+            if(contact_point == null) { contact_point = []};
             console.log("Getting list: ", contact_point);
         }).catch(error => {
             //No list in that key spot
@@ -34,8 +35,9 @@ const updateContactList = () => {
 //Adds new contact and sends to server if new contact, otherwise checks time comparison
 //if > 15 mins, send to server, if < 15 mins do nothing
 const addNewContact = (id, time) => {
-
+    console.log("ID: " + id + " Time: " + time);
     let iterator = searchJSON(contact_point, id);
+    if (iterator == -2) {return}
     if (iterator != -1) {
         if (Math.abs(contact_point[iterator].time_met - time) >= 900000) {
             console.log("Time value: ", Math.abs(contact_point[iterator].time_met - time))
@@ -66,6 +68,7 @@ const addNewContact = (id, time) => {
 }
 //Checks if contact id exists at that spot
 const searchJSON = (json, value) => {
+    if (json == null) {return -2};
     for (let i = 0; i < json.length; i++) {
         if (json[i].id != null && json[i].id == value) {
             //console.log("Existing Value: ", json[i].id);
