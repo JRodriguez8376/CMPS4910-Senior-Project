@@ -17,42 +17,4 @@ messaging().setBackgroundMessageHandler(async remoteMessage => {
 })
 registerRootComponent(App);
 
-const intervalId = BackgroundTimer.setInterval(() => {
-    //BLE.checkBLE();
-    //If New data from BLE.getContactInfo(), 
-    updateContactList();
-    
-    BLE.getTestContactInfo()
-    .then(results => {
-        let keys = Object.keys(results)
-        for(var i = 0; i < keys.length; i++) {
-            let value = results[keys[i]];
-            //console.log(`VALUE ${value} AT KEY: ${keys[i]}`)
-            addNewContact(keys[i], value*1000)
-        }
-        //console.log(keys[0], "_", keys[1]);
-    })
-    console.log('tic');
-}, 10000);
-
-
-/*const AppStateboi = () => {
-    const appState = useRef(AppState.currentState);
-    const [appStateVisible, setAppStateVisible] = useState(appState.current);
-
-    useEffect(() => {
-        AppState.addEventListener("change", _handlAppChange);
-
-        return () => {
-            AppState.removeEventListener("change", _handleAppStateChange);
-        };
-    }, []);
-
-    const _handleAppStateChange = (nextAppState) => {
-        if (appState.current.match(/inactive|background/) && nextAppState == "active") {
-            console.log("App is in foreground");
-            ble.start();
-        }
-    }
-}*/
 
