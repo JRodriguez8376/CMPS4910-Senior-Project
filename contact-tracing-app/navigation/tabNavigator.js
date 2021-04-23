@@ -33,9 +33,10 @@ const SignedInNavigator = () => {
     const intervalId = BackgroundTimer.setInterval(() => {
         //BLE.checkBLE();
         //If New data from BLE.getContactInfo(), 
+        BLE.start();
         updateContactList();
         
-        BLE.getTestContactInfo()
+        BLE.getContactInfo()
         .then(results => {
             let keys = Object.keys(results)
             for(var i = 0; i < keys.length; i++) {
@@ -44,6 +45,8 @@ const SignedInNavigator = () => {
                 addNewContact(keys[i], value*1000)
             }
             //console.log(keys[0], "_", keys[1]);
+        }).catch(error => {
+            console.log("getContactInfo recieved no info!");
         })
         console.log('tic');
     }, 10000);

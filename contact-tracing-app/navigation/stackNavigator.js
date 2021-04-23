@@ -106,6 +106,19 @@ const Navigation = () => {
                 signIn: async data => {
                     //send sign in data here                  
                     if (data != null) {
+                        retrieveMulti(['bt_uuid', 'email'])
+                        .then(result => {
+                            let email = keys[1][0];
+                            let bt_uuid = keys[0][1];
+                            getPostAPIData('/api/user/updatebt', {email: email, bt_uuid: bt_uuid }, token)
+                            .then(result => {
+                                console.log("Updated bt UUID");
+                            }).catch(error => {
+                                console.log("Failed to update BT in SIGN_IN DISPATCH");
+                            })
+                        }).catch(err => {
+                            console.log("Failed to retrieve keys in SIGN_IN DISPATCH")
+                        })
                         dispatch({ type: 'SIGN_IN', token: data });
                     } else {
                         dispatch({ type: 'SIGN_IN', token: null })

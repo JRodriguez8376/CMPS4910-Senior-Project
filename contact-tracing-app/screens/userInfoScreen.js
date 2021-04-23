@@ -293,7 +293,7 @@ const UserInfo = ({ navigation }) => {
             {/** Borrowing this page for the TEST Advertising button for the BLE mode 
             * DELETE later once we know its working on startup
             * 
-            */}
+            
             <TouchableOpacity style={styles.startAlert}
                 onPress={advertise}
             >
@@ -307,7 +307,7 @@ const UserInfo = ({ navigation }) => {
 
             </TouchableOpacity>
 
-
+            */}
             <TouchableOpacity style={styles.startAlert}
                 title="Logout"
                 onPress={logoutButton}
