@@ -120,7 +120,7 @@ const locationHandler = (id, time) => {
             .then(token => {
                 retrieveUnsecured('bt_uuid')
                     .then(result => {
-                        getPostAPIData('/hotspot/newcontact',
+                        getPostAPIData('api/hotspot/newcontact',
                             { uuid_1: result, uuid_2: id, latitude: location.latitude, longitude: location.longitude, time_met: time },
                             token
                         ).then(result => {
@@ -145,7 +145,7 @@ const locationHandler = (id, time) => {
                 .then(token => {
                     retrieveUnsecured('bt_uuid')
                         .then(result => {
-                            getPostAPIData('/hotspot/newlocation',
+                            getPostAPIData('api/hotspot/newlocation',
                                 { uuid_1: result, uuid_2: id, latitude: location.latitude, longitude: location.longitude, time_met: Date.now() },
                                 token
                             ).then(result => {
