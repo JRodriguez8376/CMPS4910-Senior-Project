@@ -15,20 +15,20 @@ const startContacting = () => {
         
         BLE.getContactInfo()
         .then(results => {
-            console.log("THIS IS RESULTS:");
-            console.log(results);
+            //console.log("THIS IS RESULTS:");
+            //console.log(results);
             let keys = Object.keys(results)
             for(var i = 0; i < keys.length; i++) {
                 let value = results[keys[i]];
-                //console.log(`VALUE ${value} AT KEY: ${keys[i]}`)
+                console.log(`Recieved and Processing BLE UserUUID: ${keys[i]} with Timestamp: ${new Date (value)}`)
                 addNewContact(keys[i], value)
             }
             //console.log(keys[0], "_", keys[1]);
         }).catch(error => {
-            console.log("getContactInfo recieved no info!");
-            console.log(error);
+            //console.log("getContactInfo recieved no info!");
+            //console.log(error);
         })
-        console.log('tic');
+        //console.log('tic');
         updateContactList();
     }, 10000);
 }

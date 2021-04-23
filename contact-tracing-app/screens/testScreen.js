@@ -112,8 +112,8 @@ const sumArr = () => {
             counter += QuestionData[i].val;
         }
     }
-    //console.log(yesArr);
-    console.log("sumArr(): counter: %d", counter);
+    ////console.log(yesArr);
+    //console.log("sumArr(): counter: %d", counter);
     return counter;
 };
 const resetArr = () => {
@@ -125,10 +125,10 @@ const resetArr = () => {
 const setCounter = (index, amount) => {
     let num = Object.values(index);
     yesArr[num-1] = amount;
-    //console.log(amount);
-    //console.log(index);
-    //console.log(num);
-    //console.log(yesArr);
+    ////console.log(amount);
+    ////console.log(index);
+    ////console.log(num);
+    ////console.log(yesArr);
 };
 
 var radio_props = [

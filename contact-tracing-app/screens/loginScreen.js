@@ -23,16 +23,16 @@ import messaging from '@react-native-firebase/messaging';
 import { requestFineLPermission, requestCoarseLPermission } from '../components/permissions.js';
 /*
 validate = (text) => {
-    console.log(text);
+    //console.log(text);
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (reg.test(text) === false) {
-        console.log("Email is Not Correct");
+        //console.log("Email is Not Correct");
         this.setState({ email: text })
         return false;
     }
     else {
         this.setState({ email: text })
-        console.log("Email is Correct");
+        //console.log("Email is Correct");
     }
 }
 */
@@ -74,7 +74,7 @@ const LoginScreen = ({ navigation }) => {
             .then(bt_uuid => {
             retrieveUnsecured('fbToken')
                 .then(result => {
-                    console.log(result);
+                    //console.log(result);
                     getPostAPIData('/api/auth/login', { email: email, password: password, fb_token: result })
                         .then(result => {
                             //Save token information for later
@@ -87,7 +87,7 @@ const LoginScreen = ({ navigation }) => {
                                 .then(success => {
                                     signIn(token);
                                 }).catch(error => {
-                                    console.log("Failed to updated BT in LoginScreen");
+                                    //console.log("Failed to updated BT in LoginScreen");
                                 });
                             } else {
                                 Alert.alert(
@@ -101,13 +101,13 @@ const LoginScreen = ({ navigation }) => {
                                 );
                             }
                         }).catch((error) => {
-                            console.error('Login error: ', error);
+                            //console.error('Login error: ', error);
                         });
                 }).catch((error) => {
-                    console.error("Failed to retrieve Firebase token", error);
+                    //console.error("Failed to retrieve Firebase token", error);
                 });
             }).catch(error => {
-                console.log("failed to get BT uuid");
+                //console.log("failed to get BT uuid");
             }) 
         }
     }
@@ -115,7 +115,7 @@ const LoginScreen = ({ navigation }) => {
         messaging()
             .getToken()
             .then(token => {
-                console.log("Getting Firebase Token: ", token);
+                //console.log("Getting Firebase Token: ", token);
                 return saveUnsecured('fbToken', token);
             });
 

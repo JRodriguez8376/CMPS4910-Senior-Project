@@ -44,7 +44,7 @@ const Navigation = () => {
                         userToken: action.token,
                     };
                 case 'SIGN_OUT':
-                    console.log("cocur");
+                    //console.log("cocur");
                     return {
                         ...prevState,
                         isSignout: true,
@@ -66,7 +66,7 @@ const Navigation = () => {
                 userToken = await AsyncStorage.getItem('token');
 
             } catch (e) {
-                console.log("Error in restoring token: RESTORE_TOKEN", e);
+                //console.log("Error in restoring token: RESTORE_TOKEN", e);
             }
             dispatch({ type: 'RESTORE_TOKEN', token: null});
             //Validate token here
@@ -75,14 +75,14 @@ const Navigation = () => {
         bootstrapAsync();
 
         messaging().onNotificationOpenedApp(remoteMessage => {
-            console.log("Notification caused app to be opened from background state", remoteMessage.notification);
+            //console.log("Notification caused app to be opened from background state", remoteMessage.notification);
 
         });
         messaging()
             .getInitialNotification()
             .then(remoteMessage => {
                 if (remoteMessage) {
-                    console.log('Notification caused app to open from quit state:', remoteMessage.notification);
+                    //console.log('Notification caused app to open from quit state:', remoteMessage.notification);
                 }
             });
         messaging().onMessage(async remoteMessage => {
@@ -106,9 +106,9 @@ const Navigation = () => {
                     //Send refresh token to database to relinquish
                     clearAllKeys()
                         .then(result => {
-                            console.log("Cleared keys!");
+                            //console.log("Cleared keys!");
                         }).catch(error => {
-                            console.log("Error in clearing keys in SIGNOUT")
+                            //console.log("Error in clearing keys in SIGNOUT")
                         })
                         stopContacting();
                     dispatch({ type: 'SIGN_OUT', token: null })

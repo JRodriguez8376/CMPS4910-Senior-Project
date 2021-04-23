@@ -9,7 +9,7 @@ const saveTokenAsync = async (accessToken) => {
             accessToken
         );
     } catch (error) {
-        console.log("Error in saving Access Token: ", error);
+        //console.log("Error in saving Access Token: ", error);
     }
 }
 
@@ -19,18 +19,18 @@ const retrieveTokenAsync = async () => {
             SecureStore.getItemAsync('token')
         );
     } catch (error) {
-        console.log("Error in retrieving Access Token");
+        //console.log("Error in retrieving Access Token");
     }
 }
 const saveUnsecured = async (key, value) => {
     try {
-        console.log(`Saving:${key} : ${value}`);
+        //console.log(`Saving:${key} : ${value}`);
         await AsyncStorage.setItem(
             key,
             value
         );
     } catch (error) {
-        console.log("Error in saving KEY: " + key + " Token: ", error);
+        //console.log("Error in saving KEY: " + key + " Token: ", error);
     }
 }
 
@@ -40,14 +40,14 @@ const retrieveUnsecured = async (key) => {
         );
 
     } catch (error) {
-        console.log("Error in retrieving Access Token");
+        //console.log("Error in retrieving Access Token");
     }
 }
 const retrieveMulti = async (keys) => {
     try {
         return(await AsyncStorage.multiGet(keys));
     } catch (error) {
-        console.log("Error in retrieving Access Token");
+        //console.log("Error in retrieving Access Token");
     }
 }
 const clearAllKeys = async () => {
@@ -55,7 +55,7 @@ const clearAllKeys = async () => {
     try {
         return(await AsyncStorage.multiRemove(keys));
     } catch(err) {
-        console.log("Error in clearing keys");
+        //console.log("Error in clearing keys");
     }
 }
 export {

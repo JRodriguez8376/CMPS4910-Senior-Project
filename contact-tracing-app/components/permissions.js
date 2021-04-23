@@ -15,12 +15,12 @@ const requestCoarseLPermission = async () => {
             }
         );
     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log("Coarse Location Enabled");
+        //console.log("Coarse Location Enabled");
     } else {
-        console.log("Permission denied");
+        //console.log("Permission denied");
     }
     } catch (err) {
-        console.warn(err);
+        //console.warn(err);
     }
 }
 const requestFineLPermission = async () => {
@@ -37,12 +37,12 @@ const requestFineLPermission = async () => {
             }
         );
     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log("Fine Location Enabled");
+        //console.log("Fine Location Enabled");
     } else {
-        console.log("Permission denied");
+        //console.log("Permission denied");
     }
     } catch (err) {
-        console.warn(err);
+        //console.warn(err);
     }
 }
 

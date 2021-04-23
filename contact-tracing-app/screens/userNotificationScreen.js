@@ -55,7 +55,7 @@ const NOTIFICATION2 = "You have been in possible contact with someone who has co
 const TimeDisplay = ({timeOfNotif}) => {
     var dateCurrent = Date.now()
     var dateDifference = Math.round((dateCurrent - timeOfNotif) / 1000) //Remove milliseconds
-    //console.log("dateCurrent: ", dateCurrent)
+    ////console.log("dateCurrent: ", dateCurrent)
     //Converts to Seconds
     if (dateDifference < 60) {
         return (
@@ -96,9 +96,9 @@ const UserNotification = ({navigation}) => {
     const [timeStamps, setTimeStamp] = useState([]);
 
     const PostNotifications = () => {
-        //console.log("timeStamps: ", timeStamps)
+        ////console.log("timeStamps: ", timeStamps)
         if (Object.keys(timeStamps) == 0) {
-            //console.log("EMPTY OBJECT")
+            ////console.log("EMPTY OBJECT")
             return (
                 <Text style={styles.emptyNotificationsText}>
                     You currently have not recieved any notifications.
@@ -133,27 +133,27 @@ const UserNotification = ({navigation}) => {
             .then(email => {
                 retrieveUnsecured('token')
                     .then(token => {
-                        //console.log("Retrieving: ", result);
-                        //console.log("id is", id);
+                        ////console.log("Retrieving: ", result);
+                        ////console.log("id is", id);
                         //Send API request with ID and bearer token
                         getPostAPIData('/api/user/notification', { "email": email }, token)
                             //If completed, setData to screen and take off loading screen
                             .then(result => setTimeStamp(result))
                             .then(() => setLoading(false))
                             .catch(error => {
-                                console.error(error);
+                                //console.error(error);
                             });
                     })
                     .catch(error => {
-                        console.error(error);
+                        //console.error(error);
                     });
             })
             .catch(error => {
-                console.error("Error in promise object retrieveTokenAsync():::", error);
+                //console.error("Error in promise object retrieveTokenAsync():::", error);
             });
     }, []);
 
-    //console.log("Time Stamps: ", timeStamps)
+    ////console.log("Time Stamps: ", timeStamps)
 
     return (
         <View style={styles.container}>

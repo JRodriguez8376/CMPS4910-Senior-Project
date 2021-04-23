@@ -85,7 +85,7 @@ const RegisterScreen = ({ navigation }) => {
             requestFineLPermission();
             retrieveUnsecured('fbToken')
                 .then(result => {
-                    console.log(result);
+                    //console.log(result);
                     getPostAPIData('/api/auth/signup', { email: email, password: password, fb_token: result })
                         .then(result => {
                             //Save token information for later
@@ -107,10 +107,10 @@ const RegisterScreen = ({ navigation }) => {
                                 );
                             }
                         }).catch((error) => {
-                            console.error('Signup error: ', error);
+                            //console.error('Signup error: ', error);
                         });
                 }).catch((error) => {
-                    console.error("Failed to retrieve Firebase token", error);
+                    //console.error("Failed to retrieve Firebase token", error);
                 });
         }
 

@@ -39,21 +39,21 @@ const IconDisplay = ({pass}) => {
 
 /*
 const sendNotify = ({pass}) => {
-    console.log("Notify Button Pressed ")
+    //console.log("Notify Button Pressed ")
     retrieveUnsecured('email')
         .then(email => {
             retrieveUnsecured('token')
                 .then(result => {
-                    console.log("Email: ", email)
-                    console.log("Password: ", pass)
-                    console.log("Token: ", result)
+                    //console.log("Email: ", email)
+                    //console.log("Password: ", pass)
+                    //console.log("Token: ", result)
                 })
                 .catch(error => {
-                    console.error(error);
+                    //console.error(error);
                 });
         })
         .catch(error => {
-            console.error(error);
+            //console.error(error);
         });
 }
 */
@@ -65,7 +65,7 @@ const UserNotify = ({navigation}) => {
     const [passReveal, setReveal] = useState(true);
     
     const sendNotify = () => {
-        console.log("Notify Button Pressed ")
+        //console.log("Notify Button Pressed ")
         if (password != "") {
             retrieveUnsecured('email')
                 .then(email => {
@@ -77,13 +77,13 @@ const UserNotify = ({navigation}) => {
                             }, token)
                         })
                         .catch(error => {
-                            console.log("Catch Token Error")
-                            console.error(error);
+                            //console.log("Catch Token Error")
+                            //console.error(error);
                         });
                 })
                 .catch(error => {
-                    console.log("Catch EmailError")
-                    console.error(error);
+                    //console.log("Catch EmailError")
+                    //console.error(error);
                 });
             setInputText(["Password", "gray"])
         }

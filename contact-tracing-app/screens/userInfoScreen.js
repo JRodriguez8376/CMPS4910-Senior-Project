@@ -134,26 +134,26 @@ const ProfileData = () => {
             .then(email => {
                 retrieveUnsecured('token')
                     .then(result => {
-                        //console.log("Retrieving: ", result);
-                        //console.log("id is", id);
+                        ////console.log("Retrieving: ", result);
+                        ////console.log("id is", id);
                         //Send API request with ID and bearer token
                         getPostAPIData('/api/user/info', { "email": email }, result)
                             //If completed, setData to screen and take off loading screen
                             .then(result => {
                                 setData(result);
-                                console.log(data);
+                                //console.log(data);
                             })
                             .then(() => setLoading(false))
                             .catch(error => {
-                                console.error(error);
+                                //console.error(error);
                             });
                     })
                     .catch(error => {
-                        console.error(error);
+                        //console.error(error);
                     });
             })
             .catch(error => {
-                console.error("Error in promise object retrieveTokenAsync():::", error);
+                //console.error("Error in promise object retrieveTokenAsync():::", error);
             });
     }, []);
 
@@ -193,9 +193,9 @@ const UserInfo = ({ navigation }) => {
     const update = async () => {
         try {
             const updateData = await BLE.getContactInfo();
-            console.log("BLE data update: ", updateData);
+            //console.log("BLE data update: ", updateData);
         } catch (err) {
-            console.error(err)
+            //console.error(err)
         }
     }
 
@@ -205,13 +205,13 @@ const UserInfo = ({ navigation }) => {
             .then(refreshToken => {
                 retrieveUnsecured('email')
                     .then(email => {
-                        console.log("INFO: ", refreshToken, " ", email);
+                        //console.log("INFO: ", refreshToken, " ", email);
                         getPostAPIData('/api/auth/logout', { email: email, token: refreshToken })
                             .then(result => {
-                                console.log("logout");
+                                //console.log("logout");
                                 signOut();
                             }).catch(err => {
-                                console.log("Failed to logout: ", err);
+                                //console.log("Failed to logout: ", err);
                             });
                     })
             });
@@ -226,23 +226,23 @@ const UserInfo = ({ navigation }) => {
             .then(email => {
                 retrieveUnsecured('token')
                     .then(result => {
-                        //console.log("Retrieving: ", result);
-                        //console.log("id is", id);
+                        ////console.log("Retrieving: ", result);
+                        ////console.log("id is", id);
                         //Send API request with ID and bearer token
                         getPostAPIData('/api/user/info', { "email": email }, result)
                             //If completed, setData to screen and take off loading screen
                             .then(result => setData(result))
                             .then(() => setLoading(false))
                             .catch(error => {
-                                console.error(error);
+                                //console.error(error);
                             });
                     })
                     .catch(error => {
-                        console.error(error);
+                        //console.error(error);
                     });
             })
             .catch(error => {
-                console.error("Error in promise object retrieveTokenAsync():::", error);
+                //console.error("Error in promise object retrieveTokenAsync():::", error);
             });
     }, []);
 
@@ -251,7 +251,7 @@ const UserInfo = ({ navigation }) => {
         navigation.setOptions({
             headerRight: () => (
                 <TouchableOpacity style={{ paddingHorizontal: 20, paddingVertical: 13 }}
-                    //onPress={() => console.log("Bell Touched")}
+                    //onPress={() => //console.log("Bell Touched")}
                     onPress={() => navigation.push('UserNotification')}
                 >
                     <Icon name="bell-o" size={22} color={"white"} />
@@ -303,7 +303,7 @@ const UserInfo = ({ navigation }) => {
             <TouchableOpacity style={styles.startAlert}
                 onPress={update}
             >
-                <Text style={{ fontSize: 16, color: 'white' }}>Update Console</Text>
+                <Text style={{ fontSize: 16, color: 'white' }}>Update //console</Text>
 
             </TouchableOpacity>
 

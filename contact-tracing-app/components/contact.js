@@ -25,7 +25,7 @@ const updateContactList = () => {
             //Already a list of people to contact
             contact_point = JSON.parse(result);
             if(contact_point == null) { contact_point = []};
-            console.log("Getting list: ", contact_point);
+            //console.log("Getting list: ", contact_point);
         }).catch(error => {
             //No list in that key spot
             contact_point = [];
@@ -35,14 +35,14 @@ const updateContactList = () => {
 //Adds new contact and sends to server if new contact, otherwise checks time comparison
 //if > 15 mins, send to server, if < 15 mins do nothing
 const addNewContact = (id, time) => {
-    console.log("ID: " + id + " Time: " + time);
+    //console.log("ID: " + id + " Time: " + time);
     let iterator = searchJSON(contact_point, id);
     if (iterator == -2) {return}
     if (iterator != -1) {
         if (Math.abs(contact_point[iterator].time_met - time) >= 900000) {
-            console.log("Time value: ", Math.abs(contact_point[iterator].time_met - time))
+            //console.log("Time value: ", Math.abs(contact_point[iterator].time_met - time))
             contact_point[iterator].time_met = time;
-            console.log("It's been past 15 mins");
+            //console.log("It's been past 15 mins");
             saveUnsecured('contact', JSON.stringify(contact_point));
 
             //Get location at this instant
@@ -51,7 +51,7 @@ const addNewContact = (id, time) => {
             //send data to server
             //postContactInfo(id, time, latitude, longitude);
         } else {
-            console.log("15 minutes hasn't passed since they were last seen");
+            //console.log("15 minutes hasn't passed since they were last seen");
         }
     } else {
         let time_met = time;
@@ -61,7 +61,7 @@ const addNewContact = (id, time) => {
         });
         //Get current user location
         //send data to server
-        console.log("NEW");
+        //console.log("NEW");
         locationHandler(id, time);
         saveUnsecured('contact', JSON.stringify(contact_point));
     }
@@ -71,9 +71,9 @@ const searchJSON = (json, value) => {
     if (json == null) {return -2};
     for (let i = 0; i < json.length; i++) {
         if (json[i].id != null && json[i].id == value) {
-            //console.log("Existing Value: ", json[i].id);
-            //console.log("Value: ", value, " | ", json[i].time_met);
-            //console.log("Returning i:", i);
+            ////console.log("Existing Value: ", json[i].id);
+            ////console.log("Value: ", value, " | ", json[i].time_met);
+            ////console.log("Returning i:", i);
             return i;
         }
     }
@@ -89,9 +89,9 @@ const postContactInfo = (id, time, latitude, longitude) => {
                         { uuid_1: result, uuid_2: id, latitude: latitude, longitude: longitude, time_met: time },
                         token
                     ).then(result => {
-                        console.log("Success in sending contact info");
+                        //console.log("Success in sending contact info");
                     }).catch(result => {
-                        console.log("Failure in sending contact info");
+                        //console.log("Failure in sending contact info");
                     })
                 })
         })
@@ -105,21 +105,21 @@ const postLocationInfo = (id, time, latitude, longitude) => {
                         { uuid_1: result, uuid_2: id, latitude: latitude, longitude: longitude, time_met: time },
                         token
                     ).then(result => {
-                        console.log("Success in sending location info");
+                        //console.log("Success in sending location info");
                     }).catch(result => {
-                        console.log("Failure in sending location info");
+                        //console.log("Failure in sending location info");
                     })
                 })
         })
 }
 const locationHandler = (id, time) => {
     BackgroundGeoLocation.start();
-    console.log("LOCATION HANDLER");
+    //console.log("LOCATION HANDLER");
     //get location now
     var loop = 0;
     //post to /newcontact
     BackgroundGeoLocation.getCurrentLocation(location => {
-        console.log("Sending Contact data");
+        //console.log("Sending Contact data");
         retrieveUnsecured('token')
             .then(token => {
                 retrieveUnsecured('bt_uuid')
@@ -128,15 +128,15 @@ const locationHandler = (id, time) => {
                             { uuid_1: result, uuid_2: id, latitude: location.latitude, longitude: location.longitude, time_met: time },
                             token
                         ).then(result => {
-                            console.log("Success in sending contact info");
+                            //console.log("Success in sending contact info");
                         }).catch(result => {
-                            console.log("Failure in sending contact info");
+                            //console.log("Failure in sending contact info");
                         })
                     }).catch(error => {
-                        console.log("Failed to retrieve BT_UUID")
+                        //console.log("Failed to retrieve BT_UUID")
                     })
             }).catch(error => {
-                console.log("Failed to retrieve token")
+                //console.log("Failed to retrieve token")
             })
     });
 
@@ -148,7 +148,7 @@ const locationHandler = (id, time) => {
     //then call post to /newLocation with new location info and time
     const intervalLocation = BackgroundTimer.setInterval(() => {
         BackgroundGeoLocation.getCurrentLocation(location => {
-            console.log("Sending Location data");
+            //console.log("Sending Location data");
             retrieveUnsecured('token')
                 .then(token => {
                     retrieveUnsecured('bt_uuid')
@@ -157,14 +157,14 @@ const locationHandler = (id, time) => {
                                 { uuid_1: result, uuid_2: id, latitude: location.latitude, longitude: location.longitude, time_met: Date.now() },
                                 token
                             ).then(result => {
-                                console.log("Success in sending location info");
+                                //console.log("Success in sending location info");
                             }).catch(result => {
-                                console.log("Failure in sending location info");
+                                //console.log("Failure in sending location info");
                             })
                         })
                 })
         })
-        console.log("Loop: ", loop);
+        //console.log("Loop: ", loop);
         loop++;
         if (loop >= 14 || stopTimer == true) {
             BackgroundTimer.clearInterval(intervalLocation);
