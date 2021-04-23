@@ -82,6 +82,7 @@ const LoginScreen = ({ navigation }) => {
                                 saveUnsecured('token', result.accessToken);
                                 saveUnsecured('refresh', result.refreshToken);
                                 saveUnsecured('email', email);
+                                console.log(`Logging in User: ${email} with Bluetooth ID: ${bt_uuid}`);
                                 let token = result.accessToken;
                                 getPostAPIData('/api/user/updatebt', {email: email, token: token, bt_uuid: bt_uuid}, token)
                                 .then(success => {

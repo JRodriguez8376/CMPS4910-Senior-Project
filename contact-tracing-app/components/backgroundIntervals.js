@@ -20,7 +20,7 @@ const startContacting = () => {
             let keys = Object.keys(results)
             for(var i = 0; i < keys.length; i++) {
                 let value = results[keys[i]];
-                console.log(`Recieved and Processing BLE UserUUID: ${keys[i]} with Timestamp: ${new Date (value)}`)
+                console.log(`Recieved and Processing BLE UserUUID: ${keys[i]} with Timestamp: ${new Date (parseInt(value))}`)
                 addNewContact(keys[i], value)
             }
             //console.log(keys[0], "_", keys[1]);

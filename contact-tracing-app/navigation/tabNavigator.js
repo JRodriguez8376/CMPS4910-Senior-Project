@@ -57,7 +57,7 @@ const SignedInNavigator = () => {
     addBLEStartListener();
     return (
         <Tab.Navigator
-            initialRouteName="Test tab"
+            initialRouteName="User info"
             tabBarOptions={{
                 activeTintColor: '#ffffff',
                 activeBackgroundColor: '#ff0000',
