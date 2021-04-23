@@ -16,6 +16,7 @@ import { getPostAPIData } from '../api/helpers';
 import { Alert } from 'react-native';
 import { NativeModules } from 'react-native';
 import { saveUUID } from '../components/BLEModule';
+import { stopContacting } from '../components/backgroundIntervals';
 
 
 const Stack = createStackNavigator();
@@ -67,21 +68,9 @@ const Navigation = () => {
             } catch (e) {
                 console.log("Error in restoring token: RESTORE_TOKEN", e);
             }
+            dispatch({ type: 'RESTORE_TOKEN', token: null});
             //Validate token here
-            retrieveMulti(['email', 'bt_uuid', 'token'])
-            .then(keys => {
-                console.log("keys: ", keys);
-                let email = keys[0][1];
-                let bt_uuid = keys[1][1];
-                let token = keys[2][1];
-                getPostAPIData('/api/user/updatebt', {email: email, bt_uuid: bt_uuid }, token)
-                .then(result => {
-                    console.log("Updated bt UUID");
-                })
-            }).catch(error => {
-                console.log("Failed to retrieve key");
-            });
-            dispatch({ type: 'RESTORE_TOKEN', token: userToken });
+            
         };
         bootstrapAsync();
 
@@ -106,19 +95,6 @@ const Navigation = () => {
                 signIn: async data => {
                     //send sign in data here                  
                     if (data != null) {
-                        retrieveMulti(['bt_uuid', 'email'])
-                        .then(result => {
-                            let email = keys[1][0];
-                            let bt_uuid = keys[0][1];
-                            getPostAPIData('/api/user/updatebt', {email: email, bt_uuid: bt_uuid }, token)
-                            .then(result => {
-                                console.log("Updated bt UUID");
-                            }).catch(error => {
-                                console.log("Failed to update BT in SIGN_IN DISPATCH");
-                            })
-                        }).catch(err => {
-                            console.log("Failed to retrieve keys in SIGN_IN DISPATCH")
-                        })
                         dispatch({ type: 'SIGN_IN', token: data });
                     } else {
                         dispatch({ type: 'SIGN_IN', token: null })
@@ -134,6 +110,7 @@ const Navigation = () => {
                         }).catch(error => {
                             console.log("Error in clearing keys in SIGNOUT")
                         })
+                        stopContacting();
                     dispatch({ type: 'SIGN_OUT', token: null })
 
 

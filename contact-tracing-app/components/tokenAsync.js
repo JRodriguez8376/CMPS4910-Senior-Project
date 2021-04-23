@@ -51,7 +51,7 @@ const retrieveMulti = async (keys) => {
     }
 }
 const clearAllKeys = async () => {
-    const keys = ['token', 'email', 'refresh', 'fbToken'];
+    const keys = ['token', 'email', 'refresh', 'fbToken', 'contact'];
     try {
         return(await AsyncStorage.multiRemove(keys));
     } catch(err) {

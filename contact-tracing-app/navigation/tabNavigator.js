@@ -18,6 +18,7 @@ import BackgroundTimer from 'react-native-background-timer';
 import {addNewContact, updateContactList} from '../components/contact';
 import {NativeModules} from 'react-native';
 const {BLE} = NativeModules;
+import {startContacting} from '../components/backgroundIntervals';
 
 //import updateContactList from './components/contact';
 
@@ -30,13 +31,15 @@ const Tab = createBottomTabNavigator();
 
 const SignedInNavigator = () => {
     //bakcground geolocation
+    startContacting();
+    /*
     const intervalId = BackgroundTimer.setInterval(() => {
         //BLE.checkBLE();
         //If New data from BLE.getContactInfo(), 
         BLE.start();
         updateContactList();
         
-        BLE.getContactInfo()
+        BLE.getTestContactInfo()
         .then(results => {
             let keys = Object.keys(results)
             for(var i = 0; i < keys.length; i++) {
@@ -50,7 +53,7 @@ const SignedInNavigator = () => {
         })
         console.log('tic');
     }, 10000);
-
+*/
     addBLEStartListener();
     return (
         <Tab.Navigator

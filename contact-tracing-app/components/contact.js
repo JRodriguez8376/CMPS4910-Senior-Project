@@ -17,7 +17,7 @@ BackgroundGeoLocation.configure({
 });
 
 var contact_point = [];
-
+let stopTimer = false;
 //Check if contact list already exists, if so update contact_point variable
 const updateContactList = () => {
     retrieveUnsecured('contact')
@@ -110,17 +110,18 @@ const postLocationInfo = (id, time, latitude, longitude) => {
         })
 }
 const locationHandler = (id, time) => {
+    BackgroundGeoLocation.start();
     console.log("LOCATION HANDLER");
     //get location now
     var loop = 0;
     //post to /newcontact
     BackgroundGeoLocation.getCurrentLocation(location => {
-        //console.log(location);
+        console.log("Sending Contact data");
         retrieveUnsecured('token')
             .then(token => {
                 retrieveUnsecured('bt_uuid')
                     .then(result => {
-                        getPostAPIData('api/hotspot/newcontact',
+                        getPostAPIData('/api/hotspot/newcontact',
                             { uuid_1: result, uuid_2: id, latitude: location.latitude, longitude: location.longitude, time_met: time },
                             token
                         ).then(result => {
@@ -128,7 +129,11 @@ const locationHandler = (id, time) => {
                         }).catch(result => {
                             console.log("Failure in sending contact info");
                         })
+                    }).catch(error => {
+                        console.log("Failed to retrieve BT_UUID")
                     })
+            }).catch(error => {
+                console.log("Failed to retrieve token")
             })
     });
 
@@ -145,7 +150,7 @@ const locationHandler = (id, time) => {
                 .then(token => {
                     retrieveUnsecured('bt_uuid')
                         .then(result => {
-                            getPostAPIData('api/hotspot/newlocation',
+                            getPostAPIData('/api/hotspot/newlocation',
                                 { uuid_1: result, uuid_2: id, latitude: location.latitude, longitude: location.longitude, time_met: Date.now() },
                                 token
                             ).then(result => {
@@ -158,16 +163,19 @@ const locationHandler = (id, time) => {
         })
         console.log("Loop: ", loop);
         loop++;
-        if (loop >= 14) {
+        if (loop >= 14 || stopTimer == true) {
             BackgroundTimer.clearInterval(intervalLocation);
         }
     }, 60000)
     //Quit after 14 post sends
 
 }
-
+const stopHandler = () => {
+    stopTimer = true;
+}
 export {
     updateContactList,
     addNewContact,
-    locationHandler
+    locationHandler,
+    stopHandler
 }

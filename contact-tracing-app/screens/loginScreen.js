@@ -67,8 +67,11 @@ const LoginScreen = ({ navigation }) => {
                 ]
             );
         } else {
+            
             requestCoarseLPermission();
             requestFineLPermission();
+            retrieveUnsecured('bt_uuid')
+            .then(bt_uuid => {
             retrieveUnsecured('fbToken')
                 .then(result => {
                     console.log(result);
@@ -80,8 +83,12 @@ const LoginScreen = ({ navigation }) => {
                                 saveUnsecured('refresh', result.refreshToken);
                                 saveUnsecured('email', email);
                                 let token = result.accessToken;
-                                
-                                signIn(token);
+                                getPostAPIData('/api/user/updatebt', {email: email, token: token, bt_uuid: bt_uuid}, token)
+                                .then(success => {
+                                    signIn(token);
+                                }).catch(error => {
+                                    console.log("Failed to updated BT in LoginScreen");
+                                });
                             } else {
                                 Alert.alert(
                                     "Invalid Login information!",
@@ -99,6 +106,9 @@ const LoginScreen = ({ navigation }) => {
                 }).catch((error) => {
                     console.error("Failed to retrieve Firebase token", error);
                 });
+            }).catch(error => {
+                console.log("failed to get BT uuid");
+            }) 
         }
     }
     useEffect(() => {
