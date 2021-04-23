@@ -36,6 +36,9 @@ const ProfileData = () => {
     const [isLoading, setLoading] = useState(true);
 
     const recommendText = () => {
+        if(data.threat_level == null) {
+            data.threat_level = 0;
+        }
         switch(data.threat_level) {
             case 0: {
                 return <Text style={[styles.threatText]}>
@@ -130,7 +133,51 @@ const ProfileData = () => {
         Retrieve token id from storage, then auth token, then send POST request that
         returns data asynchronously
         */
-        retrieveUnsecured('email')
+        let mounted = true; 
+        const intervalID = setInterval( () => {
+            retrieveUnsecured('email')
+            .then(email => {
+                retrieveUnsecured('token')
+                    .then(result => {
+                        ////console.log("Retrieving: ", result);
+                        ////console.log("id is", id);
+                        //Send API request with ID and bearer token
+                        getPostAPIData('/api/user/info', { "email": email }, result)
+                            //If completed, setData to screen and take off loading screen
+                            .then(result => {
+                                if(mounted == false) {
+                                    return;
+                                }
+                                setData(result);
+                                return;
+                                //console.log(data);
+                            })
+                            .then(() => setLoading(false))
+                            .catch(error => {
+                                //console.error(error);
+                            });
+                    })
+                    .catch(error => {
+                        //console.error(error);
+                    });
+            })
+            .catch(error => {
+                //console.error("Error in promise object retrieveTokenAsync():::", error);
+            });
+        }, 10000);
+        return () => {
+            clearInterval(intervalID);
+            mounted = false;
+        }
+    
+    }, [setData]);
+    useEffect(() => {
+        /*
+        Retrieve token id from storage, then auth token, then send POST request that
+        returns data asynchronously
+        */
+
+            retrieveUnsecured('email')
             .then(email => {
                 retrieveUnsecured('token')
                     .then(result => {
