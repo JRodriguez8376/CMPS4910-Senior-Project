@@ -43,7 +43,7 @@ const getAPIData = (route, authorization) => {
             return result;
         })
         .catch((error) => {
-            console.error("Returned Status code was not 200(OK)!\n ");
+            console.log("Returned Status code was not 200(OK)!\n ");
         });
 }
 const postAPIData = (route, data, authorization) => {
@@ -66,7 +66,7 @@ const postAPIData = (route, data, authorization) => {
             }
         })
         .catch((error) => {
-            console.error("Returned Status code was not 200(OK)!\n ");
+            console.log("Returned Status code was not 200(OK)!\n ");
         });
 }
 const getPostAPIData = (route, data, authorization) => {
@@ -92,7 +92,7 @@ const getPostAPIData = (route, data, authorization) => {
             return result;
         })
         .catch((error) => {
-            console.error("Returned Status code was not 200(OK)!\n ");
+            console.log("Returned Status code was not 200(OK)!\n ");
         });
 }
 export {
