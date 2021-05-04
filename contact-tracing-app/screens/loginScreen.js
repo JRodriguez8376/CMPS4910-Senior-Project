@@ -67,48 +67,49 @@ const LoginScreen = ({ navigation }) => {
                 ]
             );
         } else {
-            
+
             requestCoarseLPermission();
             requestFineLPermission();
             retrieveUnsecured('bt_uuid')
-            .then(bt_uuid => {
-            retrieveUnsecured('fbToken')
-                .then(result => {
-                    console.log(result);
-                    getPostAPIData('/api/auth/login', { email: email, password: password, fb_token: result })
+                .then(bt_uuid => {
+                    retrieveUnsecured('fbToken')
                         .then(result => {
-                            //Save token information for later
-                            if (result != null) {
-                                saveUnsecured('token', result.accessToken);
-                                saveUnsecured('refresh', result.refreshToken);
-                                saveUnsecured('email', email);
-                                let token = result.accessToken;
-                                getPostAPIData('/api/user/updatebt', {email: email, token: token, bt_uuid: bt_uuid}, token)
-                                .then(success => {
-                                    signIn(token);
-                                }).catch(error => {
-                                    console.log("Failed to updated BT in LoginScreen");
+                            console.log(result);
+                            getPostAPIData('/api/auth/login', { email: email, password: password, fb_token: result })
+                                .then(result => {
+                                    //Save token information for later
+                                    if (result != null) {
+                                        saveUnsecured('token', result.accessToken);
+                                        saveUnsecured('refresh', result.refreshToken);
+                                        saveUnsecured('email', email);
+                                        console.log(`Logging in User: ${email} with Bluetooth ID: ${bt_uuid}`);
+                                        let token = result.accessToken;
+                                        getPostAPIData('/api/user/updatebt', { email: email, token: token, bt_uuid: bt_uuid }, token)
+                                            .then(success => {
+                                                signIn(token);
+                                            }).catch(error => {
+                                                console.log("Failed to updated BT in LoginScreen");
+                                            });
+                                    } else {
+                                        Alert.alert(
+                                            "Invalid Login information!",
+                                            "No user can be found for those credentials!",
+                                            [
+                                                {
+                                                    text: "Ok"
+                                                }
+                                            ]
+                                        );
+                                    }
+                                }).catch((error) => {
+                                    console.error('Login error: ', error);
                                 });
-                            } else {
-                                Alert.alert(
-                                    "Invalid Login information!",
-                                    "No user can be found for those credentials!",
-                                    [
-                                        {
-                                            text: "Ok"
-                                        }
-                                    ]
-                                );
-                            }
                         }).catch((error) => {
-                            console.error('Login error: ', error);
+                            console.error("Failed to retrieve Firebase token", error);
                         });
-                }).catch((error) => {
-                    console.error("Failed to retrieve Firebase token", error);
-                });
-            }).catch(error => {
-                console.log("failed to get BT uuid");
-            }) 
+                }).catch(error => {
+                    console.log("failed to get BT uuid");
+                })
         }
     }
     useEffect(() => {

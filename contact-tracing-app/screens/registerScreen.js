@@ -83,37 +83,49 @@ const RegisterScreen = ({ navigation }) => {
         } else {
             requestCoarseLPermission();
             requestFineLPermission();
-            retrieveUnsecured('fbToken')
-                .then(result => {
-                    console.log(result);
-                    getPostAPIData('/api/auth/signup', { email: email, password: password, fb_token: result })
-                        .then(result => {
-                            //Save token information for later
-                            if (result != null) {
-                                saveUnsecured('token', result.accessToken);
-                                saveUnsecured('refresh', result.refreshToken);
-                                saveUnsecured('email', email);
-                                let token = result.accessToken;
-                                signUp(token);
-                            } else {
-                                Alert.alert(
-                                    "Invalid SignUp information!",
-                                    "A user account cannot be created with that information",
-                                    [
-                                        {
-                                            text: "Ok"
-                                        }
-                                    ]
-                                );
-                            }
-                        }).catch((error) => {
-                            console.error('Signup error: ', error);
-                        });
-                }).catch((error) => {
-                    console.error("Failed to retrieve Firebase token", error);
-                });
-        }
 
+            retrieveUnsecured('bt_uuid')
+                .then(bt => {
+                    retrieveUnsecured('fbToken')
+                        .then(result => {
+                            console.log(result);
+                            getPostAPIData('/api/auth/signup', { email: email, password: password, fb_token: result })
+                                .then(result => {
+                                    //Save token information for later
+                                    if (result != null) {
+                                        saveUnsecured('token', result.accessToken);
+                                        saveUnsecured('refresh', result.refreshToken);
+                                        saveUnsecured('email', email);
+                                        console.log(`Signing up User: ${email} with Bluetooth ID: ${bt_uuid}`);
+                                        let token = result.accessToken;
+                                        getPostAPIData('/api/user/updatebt', { email: email, token: token, bt_uuid: bt_uuid }, token)
+                                            .then(success => {
+                                                signUp(token);
+                                            }).catch(error => {
+                                                console.log("Failed to updated BT in LoginScreen");
+                                            });
+
+                                    } else {
+                                        Alert.alert(
+                                            "Invalid SignUp information!",
+                                            "A user account cannot be created with that information",
+                                            [
+                                                {
+                                                    text: "Ok"
+                                                }
+                                            ]
+                                        );
+                                    }
+                                }).catch((error) => {
+                                    console.error('Signup error: ', error);
+                                });
+                        }).catch((error) => {
+                            console.error("Failed to retrieve Firebase token", error);
+                        });
+                }).catch(error => {
+                    console.log("Failed to get BT key")
+                })
+        }
     }
     return (
         <View style={styles.container}>

@@ -36,21 +36,24 @@ const ProfileData = () => {
     const [isLoading, setLoading] = useState(true);
 
     const recommendText = () => {
-        switch(data.threat_level) {
+        if (data.threat_level == null) {
+            data.threat_level = 0;
+        }
+        switch (data.threat_level) {
             case 0: {
                 return <Text style={[styles.threatText]}>
-                    Your Threat level is Green! 
-                    You may continue to follow safe CDC guidelines on 
+                    Your Threat level is Green!
+                    You may continue to follow safe CDC guidelines on
                     preventing COVID-19 from spreading!
                 </Text>
             }
             case 1:
                 {
                     return <Text style={[styles.threatText]}>
-                        Your Threat level is Yellow. We have determined that you may have been 
-                        in contact at some point with a COVID-19 source. 
+                        Your Threat level is Yellow. We have determined that you may have been
+                        in contact at some point with a COVID-19 source.
                         We recommend following stricter CDC guidelines
-                        and following stronger social distancing protocols. 
+                        and following stronger social distancing protocols.
 
                     </Text>
                 }
@@ -58,7 +61,7 @@ const ProfileData = () => {
                 {
                     return <Text style={[styles.threatText]}>
                         Your Threat level is ORANGE. We have determined that you have been in contact
-                        with COVID-19. We STRONGLY recommend social distancing 
+                        with COVID-19. We STRONGLY recommend social distancing
                         and staying at home as much as possible. Take the self-exam, and read
                         up possible COVID-19 symptoms to determine the best course of action.
                     </Text>
@@ -125,6 +128,7 @@ const ProfileData = () => {
         }
 
     }
+    //Initial Page load useEffect
     useEffect(() => {
         /*
         Retrieve token id from storage, then auth token, then send POST request that
@@ -134,8 +138,7 @@ const ProfileData = () => {
             .then(email => {
                 retrieveUnsecured('token')
                     .then(result => {
-                        //console.log("Retrieving: ", result);
-                        //console.log("id is", id);
+
                         //Send API request with ID and bearer token
                         getPostAPIData('/api/user/info', { "email": email }, result)
                             //If completed, setData to screen and take off loading screen
@@ -156,6 +159,44 @@ const ProfileData = () => {
                 console.error("Error in promise object retrieveTokenAsync():::", error);
             });
     }, []);
+
+    //UseEffect that refreshes every 10 seconds
+    useEffect(() => {
+        /*
+        Retrieve token id from storage, then auth token, then send POST request that
+        returns data asynchronously
+        */
+        let mounted = true;
+        const intervalThreatLevel = setInterval(() => {
+            retrieveUnsecured('email')
+                .then(email => {
+                    retrieveUnsecured('token')
+                        .then(result => {
+                            //Send API request with ID and bearer token
+                            getPostAPIData('/api/user/info', { "email": email }, result)
+                                //If completed, setData to screen and take off loading screen
+                                .then(result => {
+                                    setData(result);
+                                    console.log(data);
+                                })
+                                .then(() => setLoading(false))
+                                .catch(error => {
+                                    console.error(error);
+                                });
+                        })
+                        .catch(error => {
+                            console.error(error);
+                        });
+                })
+                .catch(error => {
+                    console.error("Error in promise object retrieveTokenAsync():::", error);
+                });
+        }, 10000);
+        return () => {
+            clearInterval(intervalThreatLevel);
+            mounted = false;
+        }
+    }, [setData]);
 
     //Less than 7ft threat level 3 RED
     // >= 7ft AND less than 16, threat level 2 Yellow
