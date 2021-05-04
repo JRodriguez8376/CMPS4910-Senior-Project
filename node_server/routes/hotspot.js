@@ -26,13 +26,15 @@ hotspotRouter.post('/locations', validateToken, (req, res) => {
 //Add new Contact to contact table
 
 hotspotRouter.post('/newcontact', validateToken, (req, res) => {
- const uuid_1 = req.body.uuid_1;
+    const uuid_1 = req.body.uuid_1;
     const uuid_2 = req.body.uuid_2;
     const latitude = req.body.latitude;
     const longitude = req.body.longitude;
-    let newDate = new Date(req.body.time_met);
-    time_recorded = newDate.toISOString();
+    let newDate = new Date(parseInt(req.body.time_met));
+    const time_recorded = newDate.toISOString();
+    console.log("CONVERTING TIME RECORDED", time_recorded);
     //console.log("Time: ", time_recorded);
+    console.log(`CONTACT VARIABLES: \n UUID1: ${uuid_1} \n UUID2: ${uuid_2} \n latitude: ${latitude} \n longitude: ${longitude}\n time_recorded: ${time_recorded}`)
 
     conn.db.one('SELECT device_id_1, device_id_2 FROM bluetooth_contact WHERE bt_uuid_1 = $1 AND bt_uuid_2 = $2', [uuid_1, uuid_2])
         .then(result => {
@@ -52,7 +54,7 @@ hotspotRouter.post('/newcontact', validateToken, (req, res) => {
             res.status(401).json({
                 message: "No info can be matched in /newcontact"
             });
-            console.error("Error occurred in query in /newcontact");
+            console.error("Error occurred in query in /newcontact ERROR:", error);
         })
 
 });
@@ -66,15 +68,17 @@ hotspotRouter.post('/newlocation', validateToken, (req, res) => {
     const latitude = req.body.latitude;
     const longitude = req.body.longitude;
     let newDate = new Date(req.body.time_met);
-    time_recorded = newDate.toISOString();
+    const time_recorded = newDate.toISOString();
+    console.log("CONVERTING TIME RECORDED", time_recorded);
+
 
     conn.db.one('SELECT device_id_1, device_id_2 FROM bluetooth_contact WHERE bt_uuid_1 = $1 AND bt_uuid_2 = $2', [uuid_1, uuid_2])
         .then(result => {
-            conn.db.none("INSERT into locations(fk_device_id_1, fk_device_id_2, latitude, \
+            conn.db.none("INSERT into locations(fk_device_id, fk_device_id_2, latitude, \
             longitude, time_recorded) VALUES($1, $2, $3, $4, $5)", [result.device_id_1, result.device_id_2,
                 latitude, longitude, time_recorded])
                 .then(() => {
-                    console.log("/newcontact successful");
+                    console.log("/newlocation successful");
                     res.sendStatus(200);
                 }).catch(error => {
                     res.status(400).json({
@@ -93,9 +97,9 @@ hotspotRouter.post('/newlocation', validateToken, (req, res) => {
 var refreshTime = 0;
 var coords = [];
 const miles_in_ft = 264000;
-const contact_radius = 3.3;
+const contact_radius = 10.0;
 //Return hotspot data
-//If < 15 mins, return JSON data matching the points given within 5 miles
+//If < 15 mins, return JSON data matching the points given within 10 miles
 // If > 15 mins, calculate any new hotspot points, then return JSON data
 const getHotspotCoords = (latitude, longitude, contact_point) => {
     let areas = []
@@ -148,7 +152,7 @@ const hotspotCalc = (contact_point) => {
         points.push(point);
     }
 }
-    
+
 
 //Midpoint Function of n points
 const calcMidpoint = (coordinates) => {
@@ -165,15 +169,8 @@ const calcMidpoint = (coordinates) => {
 
     return (midpoint);
 }
-//Calculate new circle radius of combined contact distance from the midpoint
-const newRadius = (coordinate, midpoint, pair_count) => {
 
-    let d = distance(coordinate, midpoint);
-    console.log("New radius distance", d);
-    return (d + 3.3 * pair_count);
-    //Should be new radius of combined circle of circles using radius
-}
-//Distance formula on a sphere
+//Distance formula on a sphere, Haversine Formula
 const distance = (coordinate1, coordinate2) => {
 
     let R = 6371;

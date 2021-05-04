@@ -23,7 +23,8 @@ console.log("------------------------------------------------");
 
 
 module.exports = {
-    db
+    db,
+    pgPromise
 };
 
 
