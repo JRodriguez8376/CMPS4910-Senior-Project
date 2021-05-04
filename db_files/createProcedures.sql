@@ -12,8 +12,6 @@ CREATE OR REPLACE FUNCTION notify_algorithm()
     payload = NEW.fk_device_id;
     fk_device_id = NEW.fk_device_id;
     time_stamp = NOW();
-    INSERT INTO notifications(fk_device_id, date_time_recieved)
-    VALUES (NEW.fk_device_id, NOW());
     PERFORM pg_notify('algorithm'::text, payload);
 
     RETURN NULL;
@@ -26,9 +24,27 @@ CREATE TRIGGER insert_on_infected
     FOR EACH ROW 
     EXECUTE FUNCTION notify_algorithm();
 
+CREATE OR REPLACE FUNCTION notifications_add()
+    RETURNS TRIGGER AS
+    $$
+    DECLARE
+    payload TEXT;
+    BEGIN
 
+    payload = NEW.device_id;
+    INSERT INTO notifications(fk_device_id, date_time_recieved) VALUES (NEW.device_id, NOW());
+    PERFORM pg_notify('new_notification'::text, payload);
+    RETURN NULL;
+    END;
+
+    $$ LANGUAGE plpgsql;
+
+CREATE TRIGGER threat_level_update
+    AFTER UPDATE OF threat_level ON users
+    FOR EACH ROW
+    EXECUTE FUNCTION notifications_add();
 CREATE OR REPLACE FUNCTION add_new_location()
-    RETURNS TRIGGER as
+    RETURNS TRIGGER AS
     $$
     BEGIN
     INSERT INTO locations(fk_device_id, fk_device_id_2, latitude, longitude, time_recorded)

@@ -32,7 +32,8 @@ INSERT INTO potential_contact(device_id_1, device_id_2, latitude, longitude, tim
 INSERT INTO potential_contact(device_id_1, device_id_2, latitude, longitude, time_met) values(10, 5, 35.596752, -119.350771, '2021-04-02 12:00:00');
 INSERT INTO potential_contact(device_id_1, device_id_2, latitude, longitude, time_met) values(5, 10, 35.596752, -119.350732, '2021-04-02 12:00:00');
 
---Mockaroo test data
+--Wasco Mockaroo test data
+
 -- 1 and 4 meet
 INSERT INTO potential_contact(device_id_1, device_id_2, latitude, longitude, time_met) values(1, 4, 35.5965585421, -119.3558934891, '2021-04-17 20:21:42');
 INSERT INTO potential_contact(device_id_1, device_id_2, latitude, longitude, time_met) values(4, 1, 35.5962750029, -119.3561713151, '2021-04-17 20:21:42');

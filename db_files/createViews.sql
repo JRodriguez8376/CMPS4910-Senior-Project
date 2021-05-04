@@ -11,7 +11,7 @@ CREATE OR REPLACE VIEW infected_users AS
 CREATE OR REPLACE VIEW hotspots AS
 
     SELECT device_id_1, device_id_2, latitude, longitude FROM potential_contact
-    --WHERE compared = 1
+    WHERE compared = 1
     ;
 CREATE OR REPLACE VIEW user_notifications AS
     SELECT device_id, email, threat_level, notifications_id, date_time_recieved

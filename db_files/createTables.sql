@@ -3,9 +3,9 @@ CREATE TABLE IF NOT EXISTS users
 (
     device_id SERIAL NOT NULL,
     email character varying(50),
-    passwrd character varying(150),
+    passwrd character varying(250),
     b_day date,
-    token character varying(150),
+    token character varying(250),
     bt_uuid uuid,
     fb_token character varying(250),
     threat_level integer,
