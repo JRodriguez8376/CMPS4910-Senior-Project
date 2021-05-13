@@ -1,7 +1,7 @@
-all: open
+all: simulation
 
-open: open.cpp
-	g++ open.cpp -Wall -oopen -lGL -lGLU -lglut -lm
+simulation: simulation.cpp
+	g++ simulation.cpp -Wall -osimulation -lGL -lGLU -lglut -lm
 
 clean:
-	rm -f open
+	rm -f simulation
